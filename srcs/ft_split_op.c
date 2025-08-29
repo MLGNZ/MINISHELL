@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_op.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:45:54 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 15:04:11 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 03:18:29 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "minishell.h"
 
-static int	word_length(char *s0, char *s);
 static int	is_op(char *s0, char *s);
 static char	*make_word(char *s0, int len);
 
@@ -46,28 +45,7 @@ char	**ft_split_op(char *s0, int *len)
 	return (*ret1 = 0, ret);
 }
 
-//Counts the number of different strings that are going to be in the char **
-int	cw(char *s0, int *len)
-{
-	char	*s1;
-	int		nw;
-
-	nw = 0;
-	s1 = (char *)s0;
-	while (*s1)
-	{
-		if (*s1 == ' ')
-				s1++;
-		else
-		{
-			nw++;
-			s1 += word_length(s0, s1);
-		}
-	}
-	return (*len = nw);
-}
-
-static int	word_length(char *s0, char *s)
+int	word_length(char *s0, char *s)
 {
 	char	q;
 	int		len;
@@ -161,9 +139,7 @@ static char	*make_word(char *s, int len)
 	if (!ret)
 		return (NULL);
 	while (++i < len)
-	{
 		ret[i] = s[i];
-	}
 	ret[i] = 0;
 	return (ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dive_into_lines.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:11:44 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:49:05 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:34:00 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	dive_into_lines(t_ms *ms, t_line **lns)
 		if (!split_and_init_pipelines(ms, lns, i))
 			return (0);
 		exec_line(ms, lns[i]);
-		printf("\n\n\n");
+		// printf("\n");
 	}
 	erase_lines(&(ms->lns));
 	return (1);
@@ -37,7 +37,6 @@ void	erase_lines(t_line ***lns_add)
 	lns = *lns_add;
 	while (lns && *lns)
 	{
-		// freesplit((*lns)->vars);
 		ft_lstclear(&(*lns)->lst_vars, free);
 		freesplit((*lns)->split_line);
 		if ((*lns)->pls)
@@ -47,6 +46,7 @@ void	erase_lines(t_line ***lns_add)
 		lns++;
 	}
 	free(*lns_add);
+	(void)lns;
 	*lns_add = NULL;
 }
 
@@ -62,7 +62,7 @@ void	erase_pipelines(t_pl ***pls_address)
 	{
 		pl = pls[i];
 		freesplit(pl->raw_pipeline);
-		free(pl->cmd);
+		// free(pl->cmd);
 		freesplit(pl->cmd_args);
 		freesplit(pl->redir);
 		freesplit(pl->var);

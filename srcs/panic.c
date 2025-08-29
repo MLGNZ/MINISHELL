@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   panic.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:25:11 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 20:07:56 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:02:55 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int	panic(t_ms *ms, int err_code)
 	}
 	if (err_code >= 0)
 		exit(err_code);
-	else
-		exit(ms->exit_code);
+	exit(ms->exit_code);
 	return (1);
 }

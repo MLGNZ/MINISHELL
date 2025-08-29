@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_split_just_replace.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 21:10:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 14:39:18 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 03:02:02 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ static char	*is_already_in(char **splt, char *s)
 	}
 	return (0);
 }
-
 
 int	update_split_just_replace(char **splt1, char **splt2)
 {

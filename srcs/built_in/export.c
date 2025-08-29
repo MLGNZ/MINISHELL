@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:15:23 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 23:04:25 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_valid_var_key(char *str)
+int	is_valid_var_key(char *str)
 {
 	while (str && *str && *str != '=' && *str != '+')
 	{
@@ -25,9 +25,9 @@ int is_valid_var_key(char *str)
 	return (1);
 }
 
-char *invalid_key(char *var)
+char	*invalid_key(char *var)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (var && var[++i])
@@ -36,9 +36,9 @@ char *invalid_key(char *var)
 	return (var);
 }
 
-void remove_invalid_arguments(t_list **args)
+void	remove_invalid_arguments(t_list **args)
 {
-	t_list *temp;
+	t_list	*temp;
 
 	temp = *args;
 	while (temp)
@@ -55,7 +55,6 @@ void remove_invalid_arguments(t_list **args)
 	}
 }
 
-
 // static char *invalid_export_arg(char **args);
 
 /*If no argument specified, the function does not do anything
@@ -64,9 +63,10 @@ variables, it is stated nowhere in the export manual that it is
 supposed to behave this way*/
 int	ft_export(char **args, t_ms *ms)
 {
-	t_list *lst_args;
-	
-	if (!args)
+	t_list	*lst_args;
+
+	lst_args = NULL;
+	if (!*(++args))
 		return (1);
 	if (!tab_to_lst(args, &lst_args))
 		return (panic(ms, 52));
@@ -80,7 +80,7 @@ int	ft_export(char **args, t_ms *ms)
 // static char *invalid_export_arg(char **args)
 // {
 // 	int i;
-	
+
 // 	while (args && *args)
 // 	{
 // 		i = -1;

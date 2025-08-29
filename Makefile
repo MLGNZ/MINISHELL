@@ -9,18 +9,22 @@ LIBFT_DIR	=	LIBFT
 
 # Compiler
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -I$(INCLUDES_DIR) -I$(LIBFT_DIR)
+CFLAGS		=	-Wall -Wextra -Werror -g3 -I$(INCLUDES_DIR) -I$(LIBFT_DIR)
 
 # Libraries
 LIBFT_A		=	$(LIBFT_DIR)/libft.a
 
 SRC	=	srcs/main.c\
 		srcs/split_and_init_pipelines.c\
+		srcs/split_and_init_pipelines2.c\
 		srcs/ft_split_op.c\
 		srcs/make_pipeline.c\
 		srcs/clean_line.c\
+		srcs/clean_line2.c\
 		srcs/cleaning_parsing.c\
 		srcs/alias_expansion.c\
+		srcs/alias_expansion2.c\
+		srcs/alias_expansion3.c\
 		srcs/ft_strjoin_free1.c\
 		srcs/split_lines.c\
 		srcs/parse_error_near.c\
@@ -34,6 +38,7 @@ SRC	=	srcs/main.c\
 		srcs/panic.c\
 		srcs/exec_line.c\
 		srcs/utils.c\
+		srcs/utils2.c\
 		srcs/get_readline.c\
 		srcs/utils_parsing.c\
 		srcs/find_file.c\
@@ -45,7 +50,7 @@ SRC	=	srcs/main.c\
 		srcs/built_in/echo.c \
 		srcs/built_in/env.c \
 		srcs/built_in/export.c \
-# 		srcs/red_out.c \
+		srcs/red_out.c \
 
 OBJS	=	$(SRC:%.c=%.o)
 

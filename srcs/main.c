@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 12:40:54 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 21:04:39 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int tab_to_lst(char **tab, t_list **p_lst)
+int	tab_to_lst(char **tab, t_list **p_lst)
 {
-	char *content;
-	t_list *temp_list;
-	
+	char	*content;
+	t_list	*temp_list;
+
 	while (tab && *tab)
 	{
 		content = ft_strdup(*tab);
@@ -35,21 +35,19 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_ms	ms;
 
-	(void)argc;
-	(void)argv;
-	ft_bzero(&ms, sizeof(t_ms));
-	// if (!dup_split(envp, &ms.envp, 0))
-	// 	return (ft_putstr_fd("Malloc error\n", 2), 1);
+	((void)argc, (void)argv, ft_bzero(&ms, sizeof(t_ms)));
 	if (!tab_to_lst(envp, &ms.lst_env))
 		return (ft_putstr_fd("Malloc error\n", 2), 1);
+	ms.fd_in = 1;
+	ms.fd_out = 0;
 	while (1)
 	{
-		if (!get_valid_line(&ms))
+		if (!get_valid_line(&ms, -1))
 			break ;
 		if (ms.s_readline)
 		{
 			if (**(ms.s_readline) == '-')
-				break ;//debug
+				break ;
 			ms.prev_exit_code = minishell(&ms, ms.s_readline);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning_parsing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 20:57:50 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:49:05 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:31:02 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,8 @@ int	clean_all_pipelines(t_ms *ms, t_line *ln)
 	i = -1;
 	pls = ln->pls;
 	while (pls && pls[++i])
-	{
 		if (!clean_pipeline(ms, ln, pls[i], i))
 			return (0);
-	}
 	return (1);
 }
 
@@ -61,27 +59,14 @@ static void	set_cmd_and_args(t_pl *pl)
 	if (pl->cmd_args)
 	{
 		pl->cmd = pl->cmd_args[0];
-		offset_array(&pl->cmd_args);
+		// offset_array(&pl->cmd_args);
 	}
 	else
 		pl->cmd = 0;
 }
 
-// static void	update_line_vars(t_ms *ms, t_line *ln, t_pl *pl)
-// {
-// 	ft_lstadd_back(&ln->lst_vars, pl->lst_var);//laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-// 	// if (pl->var && !join_split(&ln->vars, ln->vars, pl->var, 1))
-// 	// {
-// 	// 	pl->var = NULL;
-// 	// 	panic(ms, 52);
-// 	// }
-// 	(void)ms;
-// 	pl->var = NULL;
-// }
-
-void lst_print(t_list *lst)
-{
-	
+void	lst_print(t_list *lst)
+{	
 	while (lst)
 	{
 		puts(lst->content);
@@ -101,13 +86,12 @@ static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position)
 	find_cmd(pl->cmd_args, ms);
 	set_cmd_and_args(pl);
 	printshit(pl);
-	// update_line_vars(ms, ln, pl);
 	if (!tab_to_lst(pl->var, &pl->lst_var))
 		return (0);
 	update_lst(&ln->lst_vars, &pl->lst_var);
 	ft_lstadd_back(&ln->lst_vars, pl->lst_var);
 	pl->lst_var = NULL;
 	puts("line lstprint");
-	lst_print(ln->lst_vars);//laaaaaaaaaaaaaaaaaaaaa
+	lst_print(ln->lst_vars);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/27 19:15:27 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:37:57 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	my_get_env(char *var, t_list *env)
 {
-	int	i;
-	t_list *curr;
-	
+	int		i;
+	t_list	*curr;
+
 	i = 0;
 	curr = env;
 	while (curr)
@@ -32,7 +32,7 @@ int	my_get_env(char *var, t_list *env)
 
 void	env(t_ms *ms)
 {
-	t_list *curr;
+	t_list	*curr;
 
 	curr = ms->lst_env;
 	while (curr)
@@ -46,8 +46,7 @@ void	env(t_ms *ms)
 void	pwd(t_ms *ms)
 {
 	if (my_get_env("PWD=", ms->lst_env) != -1)
-		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms));
+		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms) + 4);
 	else
-		printf("PWD=%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms));
+		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms));
 }
-

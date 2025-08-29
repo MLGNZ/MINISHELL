@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_error_near.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:09 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:35:52 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 03:43:48 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,34 @@ X Si autre chose qu'un operateur (| || & && ;)
 touche l'exterieur d'une parenthese
 X Si la ligne commence par un operateur ou par une parenthese fermee
 X Si & ou ;;*/
+
+int	parse_error_needed(int op, char **tb, int p_op, int i)
+{
+	if (op == DBSEMICOLON || op == ESP)
+		return (parse_error(op, tb[i], 1));
+	if (i)
+		p_op = which_op(tb[i - 1]);
+	if (p_op == C_PAR && (!op || (op >= 3 && op <= 6)))
+		return (parse_error(op, tb[i], 0));
+	if (op == C_PAR && p_op && p_op != C_PAR)
+		return (parse_error(op, tb[i], 0));
+	if (op == O_PAR && (!p_op || (op >= 3 && op <= 6)))
+		return (parse_error(op, tb[i], 0));
+	if (p_op == O_PAR && (op == PIPE || op == AND \
+						|| op == SEMICOLON || op == OR))
+		return (parse_error(op, tb[i], 0));
+	if ((op == O_PAR && p_op == C_PAR) || (op == C_PAR && p_op == O_PAR))
+		return (parse_error(op, tb[i], 0));
+	if ((op == PIPE || op == AND || op == SEMICOLON || op == OR) \
+	&& (p_op == PIPE || p_op == AND || p_op == SEMICOLON || p_op == OR))
+		return (parse_error(op, tb[i], 0));
+	if (!tb[i + 1] && (op >= 3 && op <= 6))
+		return (parse_error(EOL, 0, 0));
+	if ((p_op >= 3 && p_op <= 6) && op)
+		return (parse_error(op, tb[i], 0));
+	return (1);
+}
+
 int	is_there_a_parse_error_near(char **tb)
 {
 	int	i;
@@ -56,35 +84,15 @@ int	is_there_a_parse_error_near(char **tb)
 		op == OR || op == C_PAR || op == DBSEMICOLON || op == ESP))
 		return (parse_error(op, tb[0], 0));
 	if (!tb[1] && (op >= 3 && op <= 6))
-			return (parse_error(EOL, 0, 0));
+		return (parse_error(EOL, 0, 0));
 	if (parenthesis(tb) == -1)
 		return (0);
 	i = 0;
 	while (tb[0] && tb[++i])
 	{
 		op = which_op(tb[i]);
-		if (op == DBSEMICOLON || op == ESP)
-			return (parse_error(op, tb[i], 1));
-		if (i)
-			p_op = which_op(tb[i - 1]);
-		if (p_op == C_PAR && (!op || (op >= 3 && op <= 6)))
-			return (parse_error(op, tb[i], 0));
-		if (op == C_PAR && p_op && p_op != C_PAR)
-			return (parse_error(op, tb[i], 0));
-		if (op == O_PAR && (!p_op || (op >= 3 && op <= 6)))
-			return (parse_error(op, tb[i], 0));
-		if (p_op == O_PAR && (op == PIPE || op == AND \
-							|| op == SEMICOLON || op == OR))
-			return (parse_error(op, tb[i], 0));
-		if ((op == O_PAR && p_op == C_PAR) || (op == C_PAR && p_op == O_PAR))
-			return (parse_error(op, tb[i], 0));
-		if ((op == PIPE || op == AND || op == SEMICOLON || op == OR) \
-		&& (p_op == PIPE || p_op == AND || p_op == SEMICOLON || p_op == OR))
-			return (parse_error(op, tb[i], 0));
-		if (!tb[i + 1] && (op >= 3 && op <= 6))
-			return (parse_error(EOL, 0, 0));
-		if ((p_op >= 3 && p_op <= 6) && op)
-			return (parse_error(op, tb[i], 0));
+		if (!parse_error_needed(op, tb, p_op, i))
+			return (0);
 	}
 	return (1);
 }

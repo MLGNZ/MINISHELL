@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 19:17:08 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:59:50 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	redirect_fds(t_pl *pl)
+{
+	if (!red_in(pl))
+		return (0);
+	if (!red_out(pl))
+		return (0);
+	return (1);
+}
 
 int	exec_build_in(t_pl *pls, t_ms *ms)
 {
@@ -25,18 +34,18 @@ int	exec_build_in(t_pl *pls, t_ms *ms)
 	else if (!ft_strncmp(pls->cmd, "unset", ft_strlen(pls->cmd)))
 		ft_unset(pls->cmd_args, ms);
 	else if (!ft_strncmp(pls->cmd, "cd", ft_strlen(pls->cmd)))
-		cd(pls->cmd_args[0], &ms);
+		cd(pls->cmd_args, &ms);
 	else if (!ft_strncmp(pls->cmd, "env", ft_strlen(pls->cmd)))
 		env(ms);
 	return (1);
 }
 
-char **lst_to_tab(t_list *env)
+char	**lst_to_tab(t_list *env)
 {
-	t_list *curr;
+	t_list	*curr;
 	char	**tab;
 	int		i;
-	
+
 	curr = env;
 	i = 0;
 	while (curr)
@@ -58,42 +67,100 @@ char **lst_to_tab(t_list *env)
 	return (tab);
 }
 
+// void	get_prev_pipes(t_pl **pls, int i)
+// {
+// 	close((pls[i - 1])->current_pipe[1]);
+// 	(pls[i])->current_pipe[0] = (pls[i - 1])->current_pipe[0];
+// }
+//Pour gerer les subshells, il faudra prendre un truc comme ms->fdin et ms->fdout au lieu de stdin et stdout
+void	handle_pipe(t_pl *pl)
+{
+	// static int last_out;
+	
+	if (pl->position == ALONE)
+		return ;
+	else if (pl->position == FIRST)
+	{
+		// last_out = dup(1);
+		dup2(pl->current_pipe[1], 1);
+		close(pl->current_pipe[1]);
+		close(pl->current_pipe[0]);
+	}
+	else if (pl->position == INTER)
+	{
+		close(pl->current_pipe[0]);
+		dup2(pl->previous_pipe[0], 0);
+		close(pl->previous_pipe[0]);
+		dup2(pl->current_pipe[1], 1);
+	}
+	else if (pl->position == LAST)
+	{
+    	dup2(pl->previous_pipe[0], 0);
+   		close(pl->previous_pipe[0]);
+    	close(pl->previous_pipe[1]);
+		// pl->current_pipe[1] = last_out;
+	}
+}
+
 int	exec_cmd(t_pl **pls, t_ms *ms)
 {
-	pid_t pid;
-	int status;
-	char **tab_env;
-	
-	while (*pls)
+	char	**tab_env;
+	int		i;
+	int		status;
+	(void)ms;
+	i = 0;
+	// (pls[i])->previous_pipe[1] = 1;
+	// (pls[i])->previous_pipe[0] = 0;// check b_zero deja fai
+	// printf("nb of pls %i\n", (*pls)->total_of_pipeline);
+	while (pls[i])
 	{
-		if ((*pls)->redir)
+		// if is in subshell handle here
+		if ((pls[i])->position != LAST && (pls[i])->position != ALONE && pipe((pls[i])->current_pipe) == -1)
 		{
-			redirect_fds(*pls);
+			perror("pipe");
+			return (0);
 		}
-		else
+		if ((pls[i])->redir && (pls[i])->redir[0])
+			if (!redirect_fds(pls[i]))
+				return (0);
+		if (!(pls[i]->cmd))
+			return (0);
+		if (is_build_in((pls[i])->cmd))
 		{
-			(*pls)->current_pipe[0] = 0;
-			(*pls)->current_pipe[1] = 1;
-		}
-		if (is_build_in((*pls)->cmd))
-		{
-			exec_build_in(*pls, ms);
-			(*pls)++;
+			exec_build_in(pls[i++], ms);
 			continue ;
 		}
-		pid = fork();
-		if (!pid)
+		(pls[i])->pid = fork();
+		if (!(pls[i])->pid)
 		{
+			handle_pipe(pls[i]);
+			if ((pls[i])->redir)
+			{
+				close((pls[i])->current_pipe[1]);
+				dup2((pls[i])->current_pipe[0], 0);
+				close((pls[i])->current_pipe[0]);
+			}
 			tab_env = lst_to_tab(ms->lst_env);
-			execve((*pls)->cmd, (*pls)->cmd_args, tab_env);
+			execve((pls[i])->cmd, (pls[i])->cmd_args, tab_env);
 			perror("execve");
-			// exit(errno);
+			panic(ms, 0);
 		}
-		else if (pid > 0)
-			waitpid(pid, &status, 0);
-		else
+		else if ((pls[i])->pid == -1)
 			perror("fork");
-		(*pls)++;
+		else
+		{
+			if (i > 0)
+			{
+				close((pls[i])->previous_pipe[1]);
+				close((pls[i])->previous_pipe[0]);
+				(pls[i])->previous_pipe[1] = (pls[i - 1])->current_pipe[1];
+				(pls[i])->previous_pipe[0] = (pls[i - 1])->current_pipe[0];
+			}
+		}
+		i++;
 	}
+	i = -1;
+	while (pls[++i] && pls[i]->cmd)
+		waitpid((pls[i])->pid, &status, 0);
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:45:54 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:36:16 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 04:10:40 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ char	**freesplit(char **tab)
 	while (tab && *tab)
 	{
 		free(*(tab));
-		// puts(*tab);
 		tab++;
 	}
 	free(tab0);

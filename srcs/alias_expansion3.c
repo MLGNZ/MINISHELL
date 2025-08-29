@@ -1,0 +1,82 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   alias_expansion3.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/29 03:09:25 by tchevall          #+#    #+#             */
+/*   Updated: 2025/08/29 03:24:50 by tchevall         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+char	*expanded_string(const char *s0, char *s, char *exp, int *len)
+{
+	int		alias_l;
+	char	*ret;
+
+	alias_l = 1;
+	while (s && (ft_isalnum(s[alias_l]) || s[alias_l] == '_'))
+		alias_l++;
+	if (s && s[1] == '?')
+		alias_l = 2;
+	*len = ft_strlen(exp);
+	ret = malloc(sizeof(char) * ((int)ft_strlen(s0) - alias_l + *len + 1));
+	if (!ret)
+		return (0);
+	ft_strlcpy(ret, s0, (s - s0) + 1);
+	ft_strlcat(ret, exp, (s - s0) + *len + 1);
+	ft_strlcat(ret, &s[alias_l], (s - s0) + *len + ft_strlen(&s[alias_l]) + 1);
+	free(exp);
+	return (ret);
+}
+
+static char	*get_var_exp(const char *s0, t_list *list, size_t len)
+{
+	while (list)
+	{
+		if (!ft_strncmp(s0, list->content, len) && \
+	ft_strlen(list->content) > len + 1 && ((char *)list->content)[len] == '=')
+			return (ft_strdup(&(list->content)[len + 1]));
+		list = list->next;
+	}
+	return (NULL);
+}
+
+char	*get_expansion(const char *s0, t_list *env, t_list *var, t_ms *ms)
+{
+	size_t	len;
+	char	*s;
+	char	*ret;
+
+	len = 0;
+	s = (char *)s0;
+	if (*s == '?')
+	{
+		ret = ft_itoa(ms->prev_exit_code);
+		if (!ret)
+			return (0);
+		return (ret);
+	}
+	while (ft_isalnum(*s) || *s == '_')
+	{
+		len++;
+		s++;
+	}
+	ret = get_var_exp(s0, var, len);
+	if (ret)
+		return (ret);
+	return (get_var_exp(s0, env, len));
+}
+
+int	is_ambiguous(char *exp)
+{
+	int	len;
+
+	len = 0;
+	if (cw(exp, &len) > 1)
+		return (1);
+	return (0);
+}

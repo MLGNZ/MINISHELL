@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/27 19:14:31 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 22:42:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 static int	is_n(char **tab)
 {
-	int i;
-	int is_n;
+	int	i;
+	int	is_n;
 	int	not_n;
 
 	i = 0;
 	is_n = 0;
 	not_n = 0;
+	if (!tab)
+		return (0);
 	while (tab[i])
 	{
 		if (!ft_strncmp(tab[i], "-n", ft_strlen(tab[i])) && !not_n)
@@ -32,13 +34,13 @@ static int	is_n(char **tab)
 	return (is_n);
 }
 
-static char **get_lines(char **tab)
+static char	**get_lines(char **tab)
 {
-	int	i;
-	int	j;
-	char **lines;
-	int	to_cpy;
-	
+	int		i;
+	int		j;
+	char	**lines;
+	int		to_cpy;
+
 	i = 0;
 	to_cpy = 0;
 	while (tab[i])
@@ -62,9 +64,9 @@ static char **get_lines(char **tab)
 
 static int	write_line(char **line, int option)
 {
-	int i;
+	int	i;
 
-	i = 0;
+	i = 1;
 	while (line[i])
 	{
 		if (!printf("%s", line[i]))
@@ -84,11 +86,11 @@ int	echo(char **tab)
 	int		option;
 	char	**line;
 
+	if (!tab)
+		return (printf("\n"), 0);
 	option = is_n(tab);
 	line = get_lines(tab);
 	if (!line)
 		return (0);
 	return (write_line(line, option));
 }
-
-

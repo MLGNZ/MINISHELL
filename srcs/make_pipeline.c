@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   make_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 16:49:05 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 02:43:21 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	make_arrays_pl(t_pl *pl, char **tb, int cmd_c, int red_c, int var_c);
+static int	make_arrays_pl(t_pl **pl, char **tb);
 static void	get_length_of(char **tab, int *op, int *cmd, int *var);
 static int	reassign(t_pl *pl, char **tab, int n_o_pls);
 // static void	print_split(char **tab);
 
-char **raw_pipeline(char **tb, int len)
+char	**raw_pipeline(char **tb, int len)
 {
-	char **ret;
-	int i;
+	char	**ret;
+	int		i;
 
 	i = -1;
 	ret = malloc(sizeof(char *) * (len + 1));
@@ -30,17 +30,17 @@ char **raw_pipeline(char **tb, int len)
 	{
 		ret[i] = ft_strdup(tb[i]);
 		if (!ret[i])
-			return (0); // ?
+			return (freesplit(ret), NULL);
 	}
 	ret[i] = NULL;
 	return (ret);
 }
 
-void update_r_l(t_pl *pl)
+void	update_r_l(t_pl *pl)
 {
-	free(pl->raw_pipeline[0]);
-	int i;
+	int	i;
 
+	free(pl->raw_pipeline[0]);
 	i = 1;
 	while (pl->raw_pipeline[i + 1])
 	{
@@ -60,7 +60,6 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 	if (!pl)
 		return (0);
 	ft_bzero(pl, sizeof(t_pl));
-	
 	*pl_address = pl;
 	pl->raw_pipeline = raw_pipeline(tb, len);
 	if (!pl->raw_pipeline)
@@ -76,7 +75,7 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 	}
 	else
 	{
-		if (!make_arrays_pl(pl, tb, 0, 0, 0))
+		if (!make_arrays_pl(&pl, tb))
 			return (0);
 		if (!reassign(pl, tb, n_o_pls))
 			return (0);
@@ -84,41 +83,38 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 	return (1);
 }
 
-static int	make_arrays_pl(t_pl *pl, char **tb, int cmd_c, int red_c, int var_c)
+int	malloc_shit(char ***tab, int size)
 {
-	get_length_of(tb, &red_c, &cmd_c, &var_c);
-	if (cmd_c)
-	{
-		pl->cmd_args = malloc(sizeof(char *) * (cmd_c + 1)); //removed +1
-		if (!pl->cmd_args)
-			return (0);
-		*pl->cmd_args = NULL;
-	}
-	else
-		pl->cmd_args = NULL;
-	if (red_c)
-	{
-		pl->redir = malloc(sizeof(char *) * (red_c * 2 + 1));
-		if (!pl->redir)
-			return (free(pl->cmd_args), 0);
-		*pl->redir = NULL;
-	}
-	else
-		pl->redir = NULL;
-	if (var_c)
-	{
-		pl->var = malloc(sizeof(char *) * (var_c + 1));
-		if (!pl->var)
-			return (0);
-		*pl->var = NULL;
-	}
-	else
-		pl->var = NULL;
+	*tab = malloc(sizeof(char *) * (size + 1)); //removed +1
+	if (!*tab)
+		return (0);
+	**tab = NULL;
 	return (1);
 }
 
+static int	make_arrays_pl(t_pl **pl, char **tb)
+{
+	int	cmd_c;
+	int	red_c;
+	int	var_c;
 
-int is_var_ass(char *str)
+	cmd_c = 0;
+	red_c = 0;
+	var_c = 0;
+	(*pl)->cmd_args = NULL;
+	(*pl)->redir = NULL;
+	(*pl)->var = NULL;
+	get_length_of(tb, &red_c, &cmd_c, &var_c);
+	if (cmd_c && !malloc_shit(&((*pl)->cmd_args), cmd_c))
+		return (0);
+	if (red_c && !malloc_shit(&((*pl)->redir), red_c * 2))
+		return (0);
+	if (var_c && !malloc_shit(&((*pl)->var), var_c))
+		return (0);
+	return (1);
+}
+
+int	is_var_ass(char *str)
 {
 	while (str && *str && *str != '=' && *str != '+')
 	{
@@ -175,7 +171,8 @@ static int	reassign(t_pl *pl, char **tab, int n_o_pls)
 			if (!(*(redir1++)))
 				return (0);
 		}
-		else if ((redir1 == pl->redir && cmd_args1 == pl->cmd_args && n_o_pls == 1) && is_var_ass(tab[i]))
+		else if ((redir1 == pl->redir && cmd_args1 == pl->cmd_args && \
+		n_o_pls == 1) && is_var_ass(tab[i]))
 		{
 			// ft_lstadd_back(&pl->lst_var, ft_lstnew(ft_strdup(tab[i]))); //////laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 			*(var1) = ft_strdup(tab[i]);
@@ -195,7 +192,6 @@ static int	reassign(t_pl *pl, char **tab, int n_o_pls)
 		if (pl->var)
 			*var1 = NULL;
 	}
-	
 	return (1);
 }
 

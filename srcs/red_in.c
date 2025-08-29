@@ -3,88 +3,109 @@
 /*                                                        :::      ::::::::   */
 /*   red_in.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 19:07:49 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 19:03:05 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_infile(t_pl *pipeline, int in_pos)
+static int	handle_infile(t_pl *pl, int in_pos)
 {
-	int fd;
-	char *in_file;
+	int		fd;
+	char	*in_file;
 
-	in_file = pipeline->redir[in_pos + 1];
+	in_file = pl->redir[in_pos + 1];
 	fd = open(in_file, O_RDONLY);
 	if (fd == -1)
+		return (perror(in_file), 0);
+	if (dup2(fd, 0) == -1)
+	{
+		perror("dup2");
+		close(fd);
 		return (0);
-	dup2(fd, pipeline->previous_pipe[0]);
+	}
 	close(fd);
 	return (1);
 }
 
-static int	open_hd(t_pl *pipeline, int red, int i, int in_pos)
+static int	hd_loop(t_pl **pl, char *delim, int check_free)
 {
-	char	*hd;
-	int		check_free;
-	char *delim;
+	char	*line;
 
-	delim = pipeline->redir[i + 1];
-	if (red)
-		close(pipeline->current_pipe[0]);
 	while (1)
 	{
 		ft_putstr_fd("> ", 1);
-		hd = get_next_line(0, &check_free);
-		if (!hd && check_free == 1)
-			return (free(hd), 0);
-		if (!ft_strncmp(delim, hd, ft_strlen(hd) - 1)
-			&& ft_strlen(hd) > 1)
-			return (free(hd), close(pipeline->current_pipe[1]), 1);
-		if (red)
-			ft_putstr_fd(hd, pipeline->current_pipe[1]);
-		free(hd);
+		line = get_next_line(0, &check_free);
+		if (!line && !check_free)
+			return (free(line), 0);
+		else if (!line && check_free)
+			break ;
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = 0;
+		if (!ft_strncmp(line, delim, ft_strlen(line) + 1))
+			return (free(line), 1);
+		ft_putstr_fd(line, (*pl)->current_pipe[1]);
+		ft_putstr_fd("\n", (*pl)->current_pipe[1]);
+		free(line);
 	}
-	if (!red)
-		handle_infile(pipeline, in_pos);
 	return (1);
 }
 
-int	red_in(t_pl *pipeline)
+static int	handle_heredoc(t_pl *pl, int hd_pos)
 {
-	int i;
-	int hd_pos;
-	int	in_pos;
+	char	*delim;
+	int		check_free;
 
-	i = 0;
-	hd_pos = -1;
-	in_pos = -1;
-	while (pipeline->redir[i])
-	{
-		if (!ft_strncmp(pipeline->redir[i], "<<", ft_strlen(pipeline->redir[i])))
-			hd_pos = i;
-		else if (!ft_strncmp(pipeline->redir[i], "<", ft_strlen(pipeline->redir[i])))
-			in_pos = i;
-		i++;
-	}
-	if (in_pos > hd_pos && hd_pos != -1)
-		open_hd(pipeline, 0, hd_pos, in_pos);
-	else if (in_pos < hd_pos && hd_pos != -1)
-		open_hd(pipeline, 1, hd_pos, in_pos);
-	else if (hd_pos == -1 && in_pos != -1)
-		if (!handle_infile(pipeline, in_pos))
-			return (0);
-	return (1);
-}
-
-int	redirect_fds(t_pl *pipeline)
-{
-	if (!red_in(pipeline))
+	check_free = 0;
+	delim = pl->redir[hd_pos + 1];
+	if (pipe(pl->current_pipe) == -1)
+		return (perror("pipe"), 0);
+	if (!hd_loop(&pl, delim, check_free))
 		return (0);
-	// if (!red_out(pipeline))
-	// 	return (0);
+	close(pl->current_pipe[1]);
+	return (1);
+}
+
+int	look_hd(t_pl *pl, int *last_in_pos, int *last_hd_pos, int *last_hd_fd)
+{
+	int	i;
+
+	i = -1;
+	while (pl->redir[++i])
+	{
+		if (!ft_strncmp(pl->redir[i], "<<", 2))
+		{
+			*last_hd_pos = i;
+			if (!handle_heredoc(pl, i))
+				return (0);
+			if (*last_hd_fd != -1)
+				close(*last_hd_fd);
+		}
+		else if (!ft_strncmp(pl->redir[i], "<", 1))
+			*last_in_pos = i;
+	}
+	return (1);
+}
+
+int	red_in(t_pl *pl)
+{
+	int	i;
+	int	last_in_pos;
+	int	last_hd_pos;
+	int	last_hd_fd;
+
+	if (!pl->redir)
+		return (1);
+	i = -1;
+	last_in_pos = -1;
+	last_hd_pos = -1;
+	last_hd_fd = -1;
+	if (!look_hd(pl, &last_in_pos, &last_hd_pos, &last_hd_fd))
+		return (perror("gnl"), 0);
+	if (last_in_pos != -1 && last_in_pos > last_hd_pos)
+		return (handle_infile(pl, last_in_pos));
 	return (1);
 }

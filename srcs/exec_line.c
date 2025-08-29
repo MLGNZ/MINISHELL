@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/27 18:33:00 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 23:07:23 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ Soit c'est un subshell, auquel cas je dois lancer la fonction subshell
 Si c'est une ligne, je rentrer dans pipelines qui va creer les pipelines
 Puis les cleaner
 En sortant de pipelines, je devrais pouvoir executer la ligne directement en dessous*/
+
 int	exec_line(t_ms *ms, t_line *line)
 {
 	t_pl	**pls;
@@ -49,54 +50,20 @@ int	exec_line(t_ms *ms, t_line *line)
 	else
 	{
 		update_vars(ms, line);
-
-		
 		puts("goint to exec");
-		// while (pls && *pls && )
-		// {
-		// 	execute_pipelines(ms, ) //TEO c'est ici que ca va se passer
-			
-		//	pls++;
-		// }
+		exec_cmd(pls, ms);
 		ms->prev_exit_code = ms->exit_code;
 	}
 	return (1);
 }
 
-// int size_of_key(char *content)
-// {
-// 	int len;
-
-// 	len = 0;
-// 	while (content && *content && *content != '=')
-// 	{
-// 		len++;
-// 		content++;
-// 	}
-// 	return (len);
-// }
-
-// t_list *exists_in_vars(char *content, t_list *vars)
-// {
-// 	int sok;
-
-// 	sok = size_of_key(content);
-// 	while (vars)
-// 	{
-// 		if (!ft_strncmp(vars->content, content, sok) && (!((char *)vars->content)[sok] || ((char *)vars->content)[sok] == '='))
-// 			return (vars);
-// 		vars = vars->next;
-// 	}
-// 	return (NULL);
-// }
-
 /*remove an element from a list and reconnect the list*/
 void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content)
 {
-	t_list *list;
+	t_list	*list;
 
 	if (!to_rem || !*p_list)
-		return ;	
+		return ;
 	list = *p_list;
 	if (list == to_rem)
 	{
@@ -106,7 +73,7 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content)
 		free(to_rem);
 		return ;
 	}
-	while (list->next)
+	while (list && list->next)
 	{
 		if (list->next == to_rem)
 		{
@@ -140,13 +107,11 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content)
 // 	}
 // }
 
+/*replace dans liste ms->env les elements de la liste ls->vars avec meme truc et les delete de la liste 2
+	Ajoute le reste de la liste ls->vars a celle de la liste ms->vars*/
 static int	update_vars(t_ms *ms, t_line *line)
 {
-	/*replace dans liste ms->env les elements de la liste ls->vars avec meme truc et les delete de la liste 2
-	Ajoute le reste de la liste ls->vars a celle de la liste ms->vars*/
 	update_lst(&ms->lst_env, &line->lst_vars);
-	// puts("env=========================");
-	// lst_print(ms->lst_env);
 	update_lst(&ms->lst_vars, &line->lst_vars);
 	ft_lstadd_back(&ms->lst_vars, line->lst_vars);
 	line->lst_vars = NULL;

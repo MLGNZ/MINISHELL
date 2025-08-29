@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_readline.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 14:58:12 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/08/29 18:54:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,14 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 	return (1);
 }
 
-int	get_valid_line(t_ms *ms)
+int	get_valid_line(t_ms *ms, int i)
 {
 	char	*rline;
-	int		i;
 	char	**temp_spltd;
 
-	i = -1;
 	while (1)
 	{
+		rl_on_new_line();
 		rline = readline("minishell% ");
 		if (!rline)
 			return (panic(ms, 52));
@@ -81,7 +80,7 @@ static int	valid_read_line(char *rline0, char *rline)
 			q = 0;
 		if (q && q == meta_char(rline, rline0))
 			q = 0;
-		if (!q && *rline == is_meta(&(*rline), '(', rline0))
+		else if (!q && *rline == is_meta(&(*rline), '(', rline0))
 			p++;
 		else if (!q && *rline == is_meta(&(*rline), ')', rline0))
 			p--;
