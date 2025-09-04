@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 23:07:23 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:41:34 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ int	exec_line(t_ms *ms, t_line *line)
 		return (1);
 	if (line->sub_shell)
 	{
-		puts("do_subshell shit");
+		// puts("do_subshell shit");
 		go_to_subshell(ms, line->split_line);
 	}
 	else
 	{
 		update_vars(ms, line);
-		puts("goint to exec");
+		// puts("goint to exec");
 		exec_cmd(pls, ms);
 		ms->prev_exit_code = ms->exit_code;
 	}
@@ -115,7 +115,7 @@ static int	update_vars(t_ms *ms, t_line *line)
 	update_lst(&ms->lst_vars, &line->lst_vars);
 	ft_lstadd_back(&ms->lst_vars, line->lst_vars);
 	line->lst_vars = NULL;
-	puts("minishell vars lstprint");
+	// puts("minishell vars lstprint");
 	lst_print(ms->lst_vars);
 	return (1);
 }

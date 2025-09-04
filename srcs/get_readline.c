@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 18:54:53 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:10:13 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 {
 	while (!valid_read_line(rline, rline))
 	{
+		rl_on_new_line();
 		rline = ft_strjoin_free12(rline, readline("> "));
 		if (!rline)
 			return (0);
@@ -45,7 +46,7 @@ int	get_valid_line(t_ms *ms, int i)
 		rl_on_new_line();
 		rline = readline("minishell% ");
 		if (!rline)
-			return (panic(ms, 52));
+			return (panic(ms, 0));
 		temp_spltd = ft_split_op(rline, &ms->s_readline_len);
 		if (!temp_spltd)
 			return (panic(ms, 52));

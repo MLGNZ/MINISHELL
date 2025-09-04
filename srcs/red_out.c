@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:28:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:41:55 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/03 18:56:26 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,16 @@ Pour >  : (which_op(\le char * de la redirection\)) == ROUT)
 
 #include "minishell.h"
 
-static int	handle_outfile(t_pl *pl, int out_pos, int is_last)
+static int	handle_outfile(t_pl *pl, int out_pos, int is_last, int option)
 {
 	int		fd;
 	char	*out_file;
 
 	out_file = pl->redir[out_pos + 1];
-	fd = open(out_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(out_file, O_WRONLY | O_CREAT | option, 0644);
 	if (fd == -1)
 		return (perror(out_file), 0);
-	if (is_last)
-		if (dup2(fd, 1) == -1)
-			return (perror("dup2"), close(fd), 0);
-	close(fd);
-	return (1);
-}
-
-static int	handle_append(t_pl *pl, int out_pos, int is_last)
-{
-	int		fd;
-	char	*out_file;
-
-	out_file = pl->redir[out_pos + 1];
-	fd = open(out_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-		return (perror(out_file), 0);
-	if (is_last)
+	if (is_last && pl->cmd)
 		if (dup2(fd, 1) == -1)
 			return (perror("dup2"), close(fd), 0);
 	close(fd);
@@ -62,14 +46,14 @@ int	red_out_loop(t_pl *pl, int *last_out_pos, int *last_is_append)
 		{
 			*last_out_pos = i;
 			*last_is_append = 1;
-			if (!handle_append(pl, i, 0))
+			if (!handle_outfile(pl, i, 0, O_APPEND))
 				return (0);
 		}
 		else if (!ft_strncmp(pl->redir[i], ">", 1))
 		{
 			*last_out_pos = i;
 			*last_is_append = 0;
-			if (!handle_outfile(pl, i, 0))
+			if (!handle_outfile(pl, i, 0, O_TRUNC))
 				return (0);
 		}
 	}
@@ -84,6 +68,7 @@ int	red_out(t_pl *pl)
 
 	if (!pl->redir)
 		return (1);
+	pl->has_red_out = 1;
 	i = -1;
 	last_out_pos = -1;
 	last_is_append = 0;
@@ -92,9 +77,9 @@ int	red_out(t_pl *pl)
 	if (last_out_pos != -1)
 	{
 		if (last_is_append)
-			return (handle_append(pl, last_out_pos, 1));
+			return (handle_outfile(pl, last_out_pos, 1, O_APPEND));
 		else
-			return (handle_outfile(pl, last_out_pos, 1));
+			return (handle_outfile(pl, last_out_pos, 1, O_TRUNC));
 	}
 	return (1);
 }

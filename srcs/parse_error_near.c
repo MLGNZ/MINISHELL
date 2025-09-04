@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:09 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:43:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/08/31 14:52:36 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	is_there_a_parse_error_near(char **tb)
 	int	p_op;
 
 	p_op = 0;
+	if (!tb[0])
+		return (1);
 	op = which_op(tb[0]);
 	if ((op == PIPE || op == SEMICOLON || op == DBSEMICOLON || op == AND || \
 		op == OR || op == C_PAR || op == DBSEMICOLON || op == ESP))
@@ -131,18 +133,19 @@ char	*operator_code_to_string(int operator_code)
 static int	parse_error(int operator, char *token, int is_unsupported)
 {
 	(void)is_unsupported;
+	(void)token;
 	if (operator == DBSEMICOLON || operator == ESP)
 		ft_putstr_fd("minishell: syntax error near unsupported token `", 2);
 	else
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-	if (operator >= 3 && operator <= 6 && token \
-		&& (ft_isdigit(*token) || *token == '&'))
-		while (token && *token && (ft_isdigit(*token) || *token == '&'))
-			printf("%c", *token++);
-	else if (!token)
-		printf("newline");
-	else
-		printf("%s", token);
-	printf("\'\n");
+	// if (operator >= 3 && operator <= 6 && token \
+	// 	&& (ft_isdigit(*token) || *token == '&'))
+	// 	while (token && *token && (ft_isdigit(*token) || *token == '&'))
+	// 		// printf("%c", *token++);
+	// else if (!token)
+	// 	printf("newline");
+	// else
+	// 	printf("%s", token);
+	// printf("\'\n");
 	return (0);
 }

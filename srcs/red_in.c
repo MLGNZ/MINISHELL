@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 19:03:05 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:09:54 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,20 @@ static int	handle_infile(t_pl *pl, int in_pos)
 	int		fd;
 	char	*in_file;
 
+	if (!pl->redir[in_pos + 1][0])
+		return (0);
 	in_file = pl->redir[in_pos + 1];
 	fd = open(in_file, O_RDONLY);
 	if (fd == -1)
 		return (perror(in_file), 0);
-	if (dup2(fd, 0) == -1)
+	if (pl->cmd)
 	{
-		perror("dup2");
-		close(fd);
-		return (0);
+		if (dup2(fd, 0) == -1)
+		{
+			perror("dup2");
+			close(fd);
+			return (0);
+		}
 	}
 	close(fd);
 	return (1);
@@ -71,41 +76,54 @@ static int	handle_heredoc(t_pl *pl, int hd_pos)
 
 int	look_hd(t_pl *pl, int *last_in_pos, int *last_hd_pos, int *last_hd_fd)
 {
-	int	i;
-
-	i = -1;
-	while (pl->redir[++i])
+	if (!ft_strncmp(pl->redir[pl->i], "<<", 2))
 	{
-		if (!ft_strncmp(pl->redir[i], "<<", 2))
+		pl->has_red_in = 1;
+		*last_hd_pos = pl->i;
+		if (*last_in_pos < *last_hd_pos)
 		{
-			*last_hd_pos = i;
-			if (!handle_heredoc(pl, i))
-				return (0);
-			if (*last_hd_fd != -1)
-				close(*last_hd_fd);
+			dup2(pl->fd_in, 0);
+			dup2(pl->fd_out, 1);
 		}
-		else if (!ft_strncmp(pl->redir[i], "<", 1))
-			*last_in_pos = i;
+		if (!handle_heredoc(pl, pl->i))
+			return (0);
+		if (*last_hd_fd != -1)
+			close(*last_hd_fd);
+		*last_hd_fd = dup(pl->current_pipe[0]);
+		close(pl->current_pipe[0]);
+	}
+	else if (!ft_strncmp(pl->redir[pl->i], "<", 1))
+	{
+		pl->has_red_in = 1;
+		*last_in_pos = pl->i;
+		if (!handle_infile(pl, *last_in_pos))
+			return (0);
 	}
 	return (1);
 }
 
-int	red_in(t_pl *pl)
+int	red_in(t_pl *pl, t_ms *ms)
 {
-	int	i;
-	int	last_in_pos;
-	int	last_hd_pos;
-	int	last_hd_fd;
+	static int	last_in_pos;
+	static int	last_hd_pos;
+	static int	last_hd_fd;
 
+	if (!pl->i)
+	{
+		last_in_pos = -1;
+		last_hd_pos = -1;
+		last_hd_fd = -1;
+	}
 	if (!pl->redir)
 		return (1);
-	i = -1;
-	last_in_pos = -1;
-	last_hd_pos = -1;
-	last_hd_fd = -1;
 	if (!look_hd(pl, &last_in_pos, &last_hd_pos, &last_hd_fd))
-		return (perror("gnl"), 0);
-	if (last_in_pos != -1 && last_in_pos > last_hd_pos)
-		return (handle_infile(pl, last_in_pos));
+		return (ms->exit_code = 1, 0);
+	if (last_hd_pos != -1 && last_hd_fd != -1 && last_hd_pos > last_in_pos)
+	{
+		if (pl->cmd)
+			if (dup2(last_hd_fd, 0) == -1)
+				return (perror("dup2"), close(last_hd_fd), 0);
+		close(last_hd_fd);
+	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 22:37:57 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:38:14 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,36 @@ void	env(t_ms *ms)
 	}
 }
 
-void	pwd(t_ms *ms)
+void	pwd(void)
 {
-	if (my_get_env("PWD=", ms->lst_env) != -1)
-		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms) + 4);
-	else
-		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms));
+	printf("%s\n", getcwd(NULL, 0));
+}
+
+void	ft_exit(t_ms *ms, char **cmd_args)
+{
+	int	exit_code;
+	int	i;
+
+	i = -1;
+	if (!cmd_args[1])
+		exit(0);
+	if (cmd_args[2])
+	{
+		ft_putstr_fd(" too many arguments", 2);
+		ms->exit_code = 1;
+		return ;
+	}
+	while(cmd_args[1][++i])
+	{
+		while (cmd_args[1][i] == '\"' || cmd_args[1][i] == '+' || cmd_args[1][i] == '-')
+			i++;
+		if (!ft_isdigit(cmd_args[1][i]))
+		{
+			ft_putstr_fd(" numeric argument required\n", 2);
+			ms->exit_code = 2;
+			return ;
+		}
+	}
+	exit_code = ft_atoi(cmd_args[1]);
+	exit(exit_code);
 }

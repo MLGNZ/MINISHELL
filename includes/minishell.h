@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 22:59:36 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/04 17:48:47 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 # include "libft.h"
 
 # define EOL 1
@@ -56,10 +57,8 @@ typedef struct s_ms
 	char			**s_readline; //ne pas considerer
 	int				s_readline_len;// ne pas considerer
 	struct s_line	**lns;
-	char			prev_exit_code; //pour $?, updater regulierement
-	char			exit_code;	//updater regulierement
-	int				fd_in;
-	int				fd_out;
+	unsigned char			prev_exit_code; //pour $?, updater regulierement
+	unsigned char			exit_code;	//updater regulierement
 }	t_ms;
 
 //Each line is composed of different pipelines connected by pipes if multiples.
@@ -96,6 +95,12 @@ typedef struct s_pipeline
 	int		nb_of_this_pipeline;//et son indice (regarder simplement "position")
 	/*Le pipe precedent et actuel*/
 	//rajouter le necessaire pour exec
+	int		i;
+	int		has_error;
+	int		has_red_out;
+	int		has_red_in;
+	int		fd_in;
+	int		fd_out;
 	int		pid;
 	int		previous_pipe[2];
 	int		current_pipe[2];
@@ -167,19 +172,19 @@ char	is_meta(char *c_address, char meta, char *s0);
 char	meta_char(char *rline, char *rline0);
 int		find_file(char *cmd, char **file_address, char *path);
 int		find_cmd(char**tab, t_ms *ms);
-void	offset_array(char ***tab_p);
 int		is_build_in(char *str);
 int		how_many_backslashes(char *s0, char *s);
 
-//Build in
+//Built in
 int		ft_export(char **args, t_ms *ms);
 int		ft_unset(char **args, t_ms *ms);
 char	*get_var(int pos, t_ms *ms);
 void	cd(char **path, t_ms **env);
 void	env(t_ms *ms);
 int		echo(char **tab);
+void	ft_exit(t_ms *ms, char **cmd_args);
 int		my_get_env(char *var, t_list *env);
-void	pwd(t_ms *ms);
+void	pwd(void);
 
 void	lst_print(t_list *lst);
 int		tab_to_lst(char **tab, t_list **p_lst);
@@ -189,9 +194,13 @@ t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
 int		size_of_key(char *content);
 int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 
-//EXEC
-int		redirect_fds(t_pl *pipeline);
-int		exec_cmd(t_pl **pls, t_ms *ms);
-int		red_in(t_pl *pipeline);
+//EXEC --> REDIRS
+int		redirect_fds(t_pl *pipeline, t_ms *ms);
+int		red_in(t_pl *pipeline, t_ms *ms);
 int		red_out(t_pl *pl);
+int		redirect_out_fd(t_pl *pl);
+
+//EXEC --> EXEC
+int		exec_cmd(t_pl **pls, t_ms *ms);
+
 #endif

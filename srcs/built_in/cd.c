@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 23:28:18 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:14:33 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,14 @@ static void	update_env(t_ms *ms, char *oldpwd, char *newpwd)
 	t_list	*curr;
 
 	curr = ms->lst_env;
-	// i = -1;
-	// while (++i < my_get_env("PWD=", ms->lst_env))
-	// 	curr = curr->next;
-	// i = my_get_env("PWD=", ms->lst_env);
 	set_newvar(&curr, newpwd, "PWD=");
-	// i = -1;
-	// curr = ms->lst_env;
-	// while (++i < my_get_env("OLDPWD=", ms->lst_env))
-	// 	curr = curr->next;
-	// i = my_get_env("OLDPWD=", ms->lst_env);
 	set_newvar(&curr, oldpwd, "OLDPWD=");
+}
+
+static void	error_mess(char *msg, char *oldpwd)
+{
+	perror(msg);
+	free(oldpwd);
 }
 
 void	cd(char **path, t_ms **ms)
@@ -72,15 +69,14 @@ void	cd(char **path, t_ms **ms)
 	}
 	else if (chdir(path[1]) == -1)
 	{
-		perror("cd");
-		free(oldpwd);
+		(*ms)->exit_code = 1;
+		perror(path[1]);
 		return ;
 	}
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 	{
-		perror("getcwd");
-		free(oldpwd);
+		error_mess("getcwd", oldpwd);
 		return ;
 	}
 	(update_env(*ms, oldpwd, newpwd), free(oldpwd), free(newpwd));

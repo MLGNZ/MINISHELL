@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 21:04:39 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:09:11 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int	main(int argc, char **argv, char **envp)
 	((void)argc, (void)argv, ft_bzero(&ms, sizeof(t_ms)));
 	if (!tab_to_lst(envp, &ms.lst_env))
 		return (ft_putstr_fd("Malloc error\n", 2), 1);
-	ms.fd_in = 1;
-	ms.fd_out = 0;
 	while (1)
 	{
 		if (!get_valid_line(&ms, -1))
@@ -51,13 +49,24 @@ int	main(int argc, char **argv, char **envp)
 			ms.prev_exit_code = minishell(&ms, ms.s_readline);
 		}
 	}
-	puts("+++++++++++++=exit++++++++++++++++++++++++++++++++++++++++++++++");
-	panic(&ms, -1);
+	// puts("+++++++++++++=exit++++++++++++++++++++++++++++++++++++++++++++++");
+	panic(&ms, 0);
 	return (0);
+}
+
+void sig_handler(int sig)
+{
+	(void)sig;
+	printf("\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
 int	minishell(t_ms *ms, char **s_readline)
 {
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	ms->s_readline = s_readline;
 	printsplit(ms->s_readline);
 	ms->lns = split_and_init_lines(ms, ms->s_readline);

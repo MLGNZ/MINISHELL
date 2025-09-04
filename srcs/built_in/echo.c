@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 22:42:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/02 17:31:25 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	is_n(char **tab)
 	int	is_n;
 	int	not_n;
 
-	i = 0;
+	i = 1;
 	is_n = 0;
 	not_n = 0;
 	if (!tab)
@@ -48,8 +48,8 @@ static char	**get_lines(char **tab)
 	lines = malloc(sizeof(char *) * (i + 1));
 	if (!lines)
 		return (NULL);
-	i = 0;
-	j = 0;
+	i = 1;
+	j = 1;
 	while (tab[i])
 	{
 		if (ft_strncmp(tab[i], "-n", ft_strlen(tab[i])))
@@ -69,14 +69,14 @@ static int	write_line(char **line, int option)
 	i = 1;
 	while (line[i])
 	{
-		if (!printf("%s", line[i]))
+		if (!ft_printf("%s", line[i]))
 			return (perror("printf"), 1);
 		if (line[i++ + 1])
-			if (!printf(" "))
+			if (!ft_printf(" "))
 				return (perror("printf"), 1);
 	}
 	if (!option)
-		if (!printf("\n"))
+		if (!ft_printf("\n"))
 			return (perror("printf"), 1);
 	return (0);
 }
@@ -86,7 +86,7 @@ int	echo(char **tab)
 	int		option;
 	char	**line;
 
-	if (!tab)
+	if (!tab[1])
 		return (printf("\n"), 0);
 	option = is_n(tab);
 	line = get_lines(tab);

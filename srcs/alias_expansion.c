@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 21:29:42 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:31:46 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/08/31 20:18:23 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	replace_token(char **string_address, char *expanded_string)
 {
 	if (!expanded_string)
 		return (0);
-	puts(*string_address);
+	// puts(*string_address);
 	free(*string_address);
 	*string_address = expanded_string;
 	return (1);

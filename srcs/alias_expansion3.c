@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:09:25 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 03:24:50 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:25:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,14 @@ char	*get_expansion(const char *s0, t_list *env, t_list *var, t_ms *ms)
 	len = 0;
 	s = (char *)s0;
 	if (*s == '?')
-	{
-		ret = ft_itoa(ms->prev_exit_code);
-		if (!ret)
-			return (0);
-		return (ret);
-	}
+		return (ft_itoa(ms->prev_exit_code));
 	while (ft_isalnum(*s) || *s == '_')
 	{
 		len++;
 		s++;
 	}
+	if (!len)
+		return (ft_strdup("$"));
 	ret = get_var_exp(s0, var, len);
 	if (ret)
 		return (ret);

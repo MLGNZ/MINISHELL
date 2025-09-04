@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:24:05 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 03:24:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/08/31 20:19:05 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	printsplit(char **split)
 		printf("none");
 	while (split && *split)
 	{
-		printf("[%s]", *split);
+		// printf("[%s]", *split);
 		split++;
 	}
-	printf("\n");
+	// printf("\n");
 }
 
 char	is_meta(char *c_address, char meta, char *s0)

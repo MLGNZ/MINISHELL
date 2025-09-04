@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:11:44 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 22:34:00 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/01 19:07:41 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int	dive_into_lines(t_ms *ms, t_line **lns)
 	i = -1;
 	while (lns && lns[++i])
 	{
-		printf("++++++++++++++++++++++++++++++++\n\nLine n.%i:\n", i + 1);
-		printf("control operator of line: %i\n", lns[i]->ctrl_op);
+		// printf("++++++++++++++++++++++++++++++++\n\nLine n.%i:\n", i + 1);
+		// printf("control operator of line: %i\n", lns[i]->ctrl_op);
 		if (!split_and_init_pipelines(ms, lns, i))
 			return (0);
 		exec_line(ms, lns[i]);
@@ -46,7 +46,6 @@ void	erase_lines(t_line ***lns_add)
 		lns++;
 	}
 	free(*lns_add);
-	(void)lns;
 	*lns_add = NULL;
 }
 

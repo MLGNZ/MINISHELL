@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 20:57:50 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 22:31:02 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/04 16:27:26 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 static void	printshit(t_pl *pl)
 {
-	printf("_____________________________\n");
-	printf("Command : %s\n", pl->cmd);
-	printf("Command chain: ");
-	printsplit(pl->cmd_args);
-	printf("Redirections: ");
-	printsplit(pl->redir);
-	printf("Variables assignations: ");
-	printsplit(pl->var);
-	printf("=============================\n");
+	(void)pl;
+	// printf("_____________________________\n");
+	// printf("Command : %s\n", pl->cmd);
+	// printf("Command chain: ");
+	// printsplit(pl->cmd_args);
+	// printf("Redirections: ");
+	// printsplit(pl->redir);
+	// printf("Variables assignations: ");
+	// printsplit(pl->var);
+	// printf("=============================\n");
 }
 
 static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position);
@@ -57,10 +58,7 @@ static int	get_pos_of_pipeline(int position, int n_of_pl)
 static void	set_cmd_and_args(t_pl *pl)
 {
 	if (pl->cmd_args)
-	{
 		pl->cmd = pl->cmd_args[0];
-		// offset_array(&pl->cmd_args);
-	}
 	else
 		pl->cmd = 0;
 }
@@ -91,7 +89,7 @@ static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position)
 	update_lst(&ln->lst_vars, &pl->lst_var);
 	ft_lstadd_back(&ln->lst_vars, pl->lst_var);
 	pl->lst_var = NULL;
-	puts("line lstprint");
+	// puts("line lstprint");
 	lst_print(ln->lst_vars);
 	return (1);
 }
