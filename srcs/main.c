@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 11:47:11 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:38:59 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 	}
 	// puts("+++++++++++++=exit++++++++++++++++++++++++++++++++++++++++++++++");
-	panic(&ms, 0);
+	panic(&ms, ms.exit_code);
 	return (0);
 }
 

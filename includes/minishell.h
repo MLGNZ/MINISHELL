@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 11:53:49 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:05:43 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ int		clean_all_pipelines(t_ms *ms, t_line *ln);
 t_line	**split_and_init_lines(t_ms *ms, char **rline);
 int		make_pipeline(char **tb, t_pl **pl_add, int len, int n_o_pls);
 int		split_and_init_pipelines(t_ms *ms, t_line **lns, int i);
+int   	update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars);
 int		pipeline_len(char **tb);
 
 //exec
@@ -184,13 +185,14 @@ void	env(t_ms *ms);
 int		echo(char **tab, t_ms *ms);
 void	ft_exit(t_ms *ms, char **cmd_args);
 int		my_get_env(char *var, t_list *env);
-void	pwd(void);
+int		pwd(void);
 
 void	lst_print(t_list *lst);
 int		tab_to_lst(char **tab, t_list **p_lst);
 void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
 
 t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
+char	*cat_vars(char *var1, char *var2, int free2);
 int		size_of_key(char *content);
 int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 

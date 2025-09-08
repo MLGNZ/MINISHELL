@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 13:41:03 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:40:21 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,20 @@
 void	handle_pipe(t_pl *pl)
 {
 	if (pl->position == FIRST && pl->has_red_out)
+		return ;
+	if (pl->position == LAST && pl->has_red_in)
 	{
-		close(pl->current_pipe[0]);
-		close(pl->current_pipe[1]);
-		// dup2(pl->fd_in, 0);
-		// dup2(pl->fd_out, 1);
+		close(pl->previous_pipe[0]);
+		close(pl->previous_pipe[1]);
 		return ;
 	}
-	if ((pl->position == LAST && pl->has_red_in))
-		return ;
     if (pl->position == LAST || pl->position == INTER)
 	{
 		dup2(pl->previous_pipe[0], 0);
         close(pl->previous_pipe[0]);
         close(pl->previous_pipe[1]);
-    }
-	if ((pl->position == FIRST || pl->position == INTER))
+	}
+	if ((pl->position == FIRST || pl->position == INTER) && !pl->has_red_out)
 	{
 		dup2(pl->current_pipe[1], 1);
         close(pl->current_pipe[0]);
@@ -51,7 +49,7 @@ int	redirect_fds(t_pl *pl, t_ms *ms)
 				return (0);
 		if (!ft_strncmp(pl->redir[i], "<<", 2) || !ft_strncmp(pl->redir[i], "<", 1))
 			if(!red_in(pl, ms))
-				return (ms->exit_code = 1, 0);
+				return (dup2(pl->fd_in, 0), ms->exit_code = 1, 0);
 		if (!ft_strncmp(pl->redir[i], ">>", 2) || !ft_strncmp(pl->redir[i], ">", 1))
 			if(!red_out(pl, ms))
 				return (0);
@@ -115,16 +113,14 @@ char	**lst_to_tab(t_list *env)
 	return (tab);
 }
 
-
 int	handle_fds(t_pl **pls, int i)
 {
-	if (pls[i]->position == ALONE || pls[i]->position == LAST || pls[i]->position == FIRST)
-	{
-		if (dup2(pls[i]->fd_in, 0) == -1)
-			return (0);
+	if (pls[i]->has_red_out && pls[i]->position != ALONE)
 		if (dup2(pls[i]->fd_out, 1) == -1)
 			return (0);
-	}
+	if (pls[i]->has_red_in && pls[i]->position != ALONE)
+		if (dup2(pls[i]->fd_in, 0) == -1)
+			return (0);
 	if (i > 0)
 	{
 		close(pls[i]->previous_pipe[0]);
@@ -135,6 +131,13 @@ int	handle_fds(t_pl **pls, int i)
 		(pls[i + 1])->previous_pipe[0] = pls[i]->current_pipe[0];
 		(pls[i + 1])->previous_pipe[1] = pls[i]->current_pipe[1];
 	}
+	if (pls[i]->position == ALONE)
+	{
+		dup2(pls[i]->fd_in, 0);
+		dup2(pls[i]->fd_out, 1);
+	}
+	close(pls[i]->fd_in);
+	close(pls[i]->fd_out);
 	return (1);
 }
 
@@ -187,11 +190,13 @@ int	handle_execve(t_pl **pls, int i, t_ms *ms)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(pls[i]->cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);
+		close(pls[i]->fd_in);
+		close(pls[i]->fd_out);
 		panic(ms, 127);
 	}
 	execve(pls[i]->cmd, pls[i]->cmd_args, tab_env);
 	perror("minishell");
-	panic(ms, errno);
+	panic(ms, 1);
 	return (1);
 }
 
@@ -285,7 +290,6 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 	{
 		pls[i]->fd_in = dup(0);
 		pls[i]->fd_out = dup(1);
-		// if is in subshell handle here
 		if (pipe_needed(pls[i]) && pipe(pls[i]->current_pipe) == -1)
             return (perror("pipe"), 0);
 		redir_val = handle_redirs(ms, pls, &i);
@@ -319,13 +323,12 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 				return (0);
 		}
 		else
-			if (!handle_fds(pls, i++))
-				return (perror("dup2"), 0);
+			if (!handle_fds(pls, i))
+				return (0);
+		i++;
 	}
 	return (1);
 }
-
-//Pour gerer les subshells, il faudra prendre un truc comme ms->fdin et ms->fdout au lieu de stdin et stdout
 
 int	exec_cmd(t_pl **pls, t_ms *ms)
 {

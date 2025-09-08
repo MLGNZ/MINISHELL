@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/04 18:38:14 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:51:42 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,16 @@ void	env(t_ms *ms)
 	}
 }
 
-void	pwd(void)
+int    pwd(void)
 {
-	printf("%s\n", getcwd(NULL, 0));
+    char *pwd;
+
+    pwd = getcwd(NULL, 0);
+    if (!pwd)
+        return (0);
+    printf("%s\n", pwd);
+    free(pwd);
+    return (1);
 }
 
 void	ft_exit(t_ms *ms, char **cmd_args)

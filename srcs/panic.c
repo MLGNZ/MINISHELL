@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 11:25:11 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/04 17:35:07 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 18:43:55 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	panic(t_ms *ms, int err_code)
 {
+	ms->exit_code = err_code;
 	if (err_code == 52)
 		ft_putstr_fd("minishell: malloc failure\n", 2);
 	if (ms)
@@ -28,6 +29,6 @@ int	panic(t_ms *ms, int err_code)
 	}
 	if (err_code >= 0)
 		exit(err_code);
-	exit(ms->exit_code);
+	exit(err_code);
 	return (1);
 }

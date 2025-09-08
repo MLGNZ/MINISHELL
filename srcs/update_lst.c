@@ -6,13 +6,13 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:05:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:00:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:51:01 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*cat_vars(char *var1, char *var2)
+char	*cat_vars(char *var1, char *var2, int free2)
 {
 	char	*to_cat;
 	char	*ret;
@@ -31,7 +31,8 @@ char	*cat_vars(char *var1, char *var2)
 	ft_strlcat(ret, var1, ft_strlen(var1) + 1);
 	ft_strlcat(ret, to_cat, ft_strlen(var1) + ft_strlen(to_cat) + 1);
 	free(var1);
-	free(var2);
+	if (free2)
+		free(var2);
 	return (ret);
 }
 
@@ -39,7 +40,7 @@ int	update_list_needed(int cat, t_list *env, t_list *temp, t_list **p_lst_b)
 {
 	if (cat)
 	{
-		env->content = cat_vars(env->content, temp->content);
+		env->content = cat_vars(env->content, temp->content, 1);
 		if (!env->content)
 			return (0);
 	}
