@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/04 17:48:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 11:53:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ int		ft_unset(char **args, t_ms *ms);
 char	*get_var(int pos, t_ms *ms);
 void	cd(char **path, t_ms **env);
 void	env(t_ms *ms);
-int		echo(char **tab);
+int		echo(char **tab, t_ms *ms);
 void	ft_exit(t_ms *ms, char **cmd_args);
 int		my_get_env(char *var, t_list *env);
 void	pwd(void);
@@ -197,7 +197,7 @@ int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 //EXEC --> REDIRS
 int		redirect_fds(t_pl *pipeline, t_ms *ms);
 int		red_in(t_pl *pipeline, t_ms *ms);
-int		red_out(t_pl *pl);
+int		red_out(t_pl *pl, t_ms *ms);
 int		redirect_out_fd(t_pl *pl);
 
 //EXEC --> EXEC

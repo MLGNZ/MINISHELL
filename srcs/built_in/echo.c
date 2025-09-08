@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/02 17:31:25 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 11:50:02 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static int	write_line(char **line, int option)
 	return (0);
 }
 
-int	echo(char **tab)
+int	echo(char **tab, t_ms *ms)
 {
 	int		option;
 	char	**line;
@@ -92,5 +92,6 @@ int	echo(char **tab)
 	line = get_lines(tab);
 	if (!line)
 		return (0);
-	return (write_line(line, option));
+	ms->exit_code = write_line(line, option);
+	return (ms->exit_code);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 02:43:21 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/08 11:47:15 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,9 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 		return (0); // ?
 	printsplit(pl->raw_pipeline);
 	if (pl->raw_pipeline[0][0] == '(')
-	// if (is_pipeline_subshell(pl, tb))
 	{
 		pl->sub_shell = 1;
 		update_r_l(pl);
-		puts("do some subshell shit");
 		return (1);
 	}
 	else
