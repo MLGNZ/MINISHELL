@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 18:05:43 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 17:41:35 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <readline/history.h>
 # include <errno.h>
 # include "libft.h"
+# include <dirent.h>
 
 # define EOL 1
 # define PIPE 2
@@ -59,6 +60,8 @@ typedef struct s_ms
 	struct s_line	**lns;
 	unsigned char			prev_exit_code; //pour $?, updater regulierement
 	unsigned char			exit_code;	//updater regulierement
+	int						fd_in;
+	int						fd_out;
 }	t_ms;
 
 //Each line is composed of different pipelines connected by pipes if multiples.
@@ -75,6 +78,13 @@ typedef struct s_line
 	char				**split_line;//ne pas considerer
 	int					split_line_length;//ne pas considerer
 }	t_line;
+
+typedef struct s_fd
+{
+	int		fd;
+	int		fd_temp;
+	struct s_fd	*next;
+}	t_fd;
 
 //Each line has a pipeline, this is something between two pipes or beginning or end or line.
 //Each pipeline has a string as command
@@ -95,6 +105,7 @@ typedef struct s_pipeline
 	int		nb_of_this_pipeline;//et son indice (regarder simplement "position")
 	/*Le pipe precedent et actuel*/
 	//rajouter le necessaire pour exec
+	t_fd 	*fds;
 	int		i;
 	int		has_error;
 	int		has_red_out;
@@ -118,6 +129,10 @@ int		make_pipeline(char **tb, t_pl **pl_add, int len, int n_o_pls);
 int		split_and_init_pipelines(t_ms *ms, t_line **lns, int i);
 int   	update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars);
 int		pipeline_len(char **tb);
+char	**raw_pipeline(char **tb, int len);
+void	update_r_l(t_pl *pl);
+int		make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls);
+int		malloc_shit(char ***tab, int size);
 
 //exec
 int		exec_line(t_ms *ms, t_line *line);
@@ -194,15 +209,32 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
 t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
 char	*cat_vars(char *var1, char *var2, int free2);
 int		size_of_key(char *content);
+char	*every_matching_files(char **wild_sequ, int first_n_last);
 int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 
-//EXEC --> REDIRS
-int		redirect_fds(t_pl *pipeline, t_ms *ms);
+//EXEC --> REDIRS / PIPE
+char	**lst_to_tab(t_list *env);
+void	handle_pipe(t_pl *pl);
 int		red_in(t_pl *pipeline, t_ms *ms);
+int		redirect_out_fd(t_pl **pl, char *redir, t_pl *temp, int i);
+int		pipe_needed(t_pl *pl);
+void	reset_out_fds(t_pl *pl);
+int		handle_fds(t_pl **pls, int i, t_ms *ms);
 int		red_out(t_pl *pl, t_ms *ms);
-int		redirect_out_fd(t_pl *pl);
+int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
 
 //EXEC --> EXEC
 int		exec_cmd(t_pl **pls, t_ms *ms);
+
+//WILDCARDS
+void	remove_quotes(const char *s0, char *s);
+void	remove_backslashes(const char *s0, char *s);
+int		wildcards_in_redir(char **s);
+int		wildcards_expansion(char **s);
+int		manage_wildcards(char **tab, int type);
+void	ambiguous_message(char *s);
+char	**get_wild_pattern(char **s, int *first_n_last);
+char	*wild_join(char *src, char *d_name);
+int		match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last);
 
 #endif

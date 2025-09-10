@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/08 16:51:42 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:26:04 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,28 @@ void	env(t_ms *ms)
 	}
 }
 
-int    pwd(void)
+int	pwd(void)
 {
-    char *pwd;
+	char	*pwd;
 
-    pwd = getcwd(NULL, 0);
-    if (!pwd)
-        return (0);
-    printf("%s\n", pwd);
-    free(pwd);
-    return (1);
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		return (0);
+	printf("%s\n", pwd);
+	free(pwd);
+	return (1);
+}
+
+int	is_ok(char **cmd_args, int i)
+{
+	return (cmd_args[1][i] == '\"' || \
+		cmd_args[1][i] == '+' || cmd_args[1][i] == '-');
 }
 
 void	ft_exit(t_ms *ms, char **cmd_args)
 {
-	int	exit_code;
-	int	i;
+	long long int	exit_code;
+	int				i;
 
 	i = -1;
 	if (!cmd_args[1])
@@ -69,17 +75,26 @@ void	ft_exit(t_ms *ms, char **cmd_args)
 		ms->exit_code = 1;
 		return ;
 	}
-	while(cmd_args[1][++i])
+	while (cmd_args[1][++i])
 	{
-		while (cmd_args[1][i] == '\"' || cmd_args[1][i] == '+' || cmd_args[1][i] == '-')
+		while (is_ok(cmd_args, i))
 			i++;
 		if (!ft_isdigit(cmd_args[1][i]))
 		{
+			ft_putstr_fd("minishell:", 2);
+			ft_putstr_fd(cmd_args[1], 2);
 			ft_putstr_fd(" numeric argument required\n", 2);
 			ms->exit_code = 2;
 			return ;
 		}
 	}
-	exit_code = ft_atoi(cmd_args[1]);
+	exit_code = ft_atoi(cmd_args[1]); // mettre atol
+	if (exit_code > 2147483647)
+	{
+		ft_putstr_fd(cmd_args[1], 2);
+		ft_putstr_fd(" numeric argument required\n", 2);
+		exit(2);
+	}
+	printf("exit\n");
 	exit(exit_code);
 }

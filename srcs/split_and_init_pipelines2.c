@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:25:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/08 16:49:51 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:25:51 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,24 +74,24 @@ void	remove_parenthesis_of_line_subshell(t_line *line)
 	line->split_line[i - 1] = line->split_line[i];
 }
 
-int    update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars)
+int	update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars)
 {
-    t_list    *lst_vars;
-    t_list    *temp;
-    int        cat;
+	t_list	*lst_vars;
+	t_list	*temp;
+	int		cat;
 
-    cat = 0;
-    lst_vars = *p_lst_vars;
-    while (lst_vars)
-    {
-        temp = exists_in_vars((char *)lst_vars->content, *p_lst_args, &cat);
-        if (cat)
-        {
-            lst_vars->content = cat_vars(lst_vars->content, temp->content, 0);
-            if (!lst_vars->content)
-                return (0);
-        }
-        lst_vars = lst_vars->next;
-    }
-    return (1);
+	cat = 0;
+	lst_vars = *p_lst_vars;
+	while (lst_vars)
+	{
+		temp = exists_in_vars((char *)lst_vars->content, *p_lst_args, &cat);
+		if (cat)
+		{
+			lst_vars->content = cat_vars(lst_vars->content, temp->content, 0);
+			if (!lst_vars->content)
+				return (0);
+		}
+		lst_vars = lst_vars->next;
+	}
+	return (1);
 }

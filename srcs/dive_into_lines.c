@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 21:11:44 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 11:46:40 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:22:18 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,9 @@ int	dive_into_lines(t_ms *ms, t_line **lns)
 	i = -1;
 	while (lns && lns[++i])
 	{
-		// printf("++++++++++++++++++++++++++++++++\n\nLine n.%i:\n", i + 1);
-		// printf("control operator of line: %i\n", lns[i]->ctrl_op);
 		if (!split_and_init_pipelines(ms, lns, i))
 			return (0);
 		exec_line(ms, lns[i]);
-		// printf("\n");
 	}
 	erase_lines(&(ms->lns));
 	return (1);
@@ -61,7 +58,6 @@ void	erase_pipelines(t_pl ***pls_address)
 	{
 		pl = pls[i];
 		freesplit(pl->raw_pipeline);
-		// free(pl->cmd);
 		freesplit(pl->cmd_args);
 		freesplit(pl->redir);
 		freesplit(pl->var);

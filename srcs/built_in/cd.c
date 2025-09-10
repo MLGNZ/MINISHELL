@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/02 17:14:33 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:17:12 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ char	*get_var(int pos, t_ms *ms)
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find)
 {
-	t_list *var;
-	char *final_wd;
-	
+	t_list	*var;
+	char	*final_wd;
+
 	final_wd = ft_strjoin(to_find, pwd);
 	var = ft_lstnew(final_wd);
-
-	update_lst(curr, &var);	
+	update_lst(curr, &var);
 	ft_lstadd_back(curr, var);
 }
 

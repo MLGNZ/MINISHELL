@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 18:38:59 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 17:34:57 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ int	tab_to_lst(char **tab, t_list **p_lst)
 	return (1);
 }
 
+void	sig_handler(int sig)
+{
+	(void)sig;
+	printf("\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_ms	ms;
@@ -38,6 +47,10 @@ int	main(int argc, char **argv, char **envp)
 	((void)argc, (void)argv, ft_bzero(&ms, sizeof(t_ms)));
 	if (!tab_to_lst(envp, &ms.lst_env))
 		return (ft_putstr_fd("Malloc error\n", 2), 1);
+	ms.fd_in = dup(0);
+	ms.fd_out = dup(1);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		if (!get_valid_line(&ms, -1))
@@ -49,24 +62,13 @@ int	main(int argc, char **argv, char **envp)
 			ms.prev_exit_code = minishell(&ms, ms.s_readline);
 		}
 	}
-	// puts("+++++++++++++=exit++++++++++++++++++++++++++++++++++++++++++++++");
+	ft_putstr_fd("end", 2);
 	panic(&ms, ms.exit_code);
 	return (0);
 }
 
-void sig_handler(int sig)
-{
-	(void)sig;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
 int	minishell(t_ms *ms, char **s_readline)
 {
-	signal(SIGINT, sig_handler);
-	signal(SIGQUIT, SIG_IGN);
 	ms->s_readline = s_readline;
 	printsplit(ms->s_readline);
 	ms->lns = split_and_init_lines(ms, ms->s_readline);

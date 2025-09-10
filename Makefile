@@ -1,24 +1,25 @@
+NAME        = minishell
 
-NAME        = 	minishell
+SRC_DIR     = srcs
+LIBFT_DIR   = LIBFT
+BUILD_DIR   = build
 
-# Directories
-SRCS_DIR	=	srcs
-INCLUDES_DIR=	includes
-DIR_OBJ		=	obj
-LIBFT_DIR	=	LIBFT
+INC         = includes
 
-# Compiler
-CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -g3 -I$(INCLUDES_DIR) -I$(LIBFT_DIR)
+CC          = cc
+CFLAGS      =  -g3 -I$(INC) -I$(LIBFT_DIR)
+LDFLAGS 	= -lreadline -lncurses
 
-# Libraries
-LIBFT_A		=	$(LIBFT_DIR)/libft.a
+# -Wall -Wextra -Werror
+
+LIBFT_A     = $(LIBFT_DIR)/libft.a
 
 SRC	=	srcs/main.c\
 		srcs/split_and_init_pipelines.c\
 		srcs/split_and_init_pipelines2.c\
 		srcs/ft_split_op.c\
 		srcs/make_pipeline.c\
+		srcs/make_pipeline2.c\
 		srcs/clean_line.c\
 		srcs/clean_line2.c\
 		srcs/cleaning_parsing.c\
@@ -44,36 +45,69 @@ SRC	=	srcs/main.c\
 		srcs/find_file.c\
 		srcs/update_lst.c\
 		srcs/exec.c \
-		srcs/red_in.c \
 		srcs/built_in/cd.c \
 		srcs/built_in/unset.c \
 		srcs/built_in/echo.c \
 		srcs/built_in/env.c \
 		srcs/built_in/export.c \
-		srcs/red_out.c \
+		srcs/redirs/fd_n_pipe.c \
+		srcs/redirs/fds.c \
+		srcs/redirs/red_out.c \
+		srcs/redirs/red_in.c \
+		srcs/wildcards.c \
+		srcs/wildcards2.c 
 
-OBJS	=	$(SRC:%.c=%.o)
+OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))
 
-all: $(LIBFT_A) $(NAME) 
+# ================================[ Couleurs ]================================
 
-$(LIBFT_A): $(LIBFT_DIR)
-	make bonus -C $(LIBFT_DIR)
+GREEN       = \033[0;32m
+BLUE        = \033[0;34m
+BLUE        = \033[1;34m
+END         = \033[0m
+TITLE       = \033[1m
+BG_GREEN    = \033[42m
+UNDERLINE   = \033[4m
+GREY_LIGHT  = \033[38;5;250m
 
-$(NAME): $(LIBFT_DIR) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT_A) -lreadline -o $(NAME) 
+
+BOLD        = \033[1m
+
+# ================================[ Règles Make ]==============================
+
+all: $(NAME)
+
+$(NAME): $(OBJ) $(LIBFT_A)
+	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make $(NAME)$(END)"
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(LDFLAGS) -o $(NAME) && \
+	echo "   $(BLUE)⤷ $(END)Executable: $(BG_GREEN)$(BOLD)$(NAME)$(END)"
+
+$(LIBFT_A):
+	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)compiling libft... $(END)"
+	@make -s -C $(LIBFT_DIR) bonus && echo "   $(BLUE)⤷ $(END)Success $(GREEN)(libft.a)$(END)"
 
 
-%.o: %.c $(INCLUDES_DIR)/minishell.h
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@if [ -z "$$(ls -A $(BUILD_DIR) 2>/dev/null)" ]; then \
+		echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)Create object files$(END)"; fi
+	@$(CC) $(CFLAGS) -c $< -o $@ > /dev/null && \
+	printf "   $(BLUE)⤷ $(GREEN)%-38s $(BLUE)-->  $(GREEN)%s$(END)\n" "$<" "$@"
 
-clean:
-	rm -f ${OBJS}
-	make -C $(LIBFT_DIR) clean
+# ================================[ Nettoyage ]===============================
 
-fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT_DIR) fclean
+c clean:
+	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make clean$(END)"
+	@rm -f $(OBJ) && echo "   $(BG_WHITE)⤷ $(END)Removed object files"
+	@make -s -C $(LIBFT_DIR) clean
+	
+fc fclean:
+	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make fclean$(END)"
+	@if [ -f $(NAME) ]; then rm -f $(NAME) && echo "   $(BLUE)⤷ $(END)Removed binary $(NAME)"; fi
+	@if [ -d $(BUILD_DIR) ]; then rm -rf $(BUILD_DIR) && echo "   $(BLUE)⤷ $(END)Removed build dir"; fi
+	@make -s -C $(LIBFT_DIR) fclean
 
-re: fclean all
 
-.PHONY: all clean fclean re
+re: fc all
+
+.PHONY: all clean c fclean fc re

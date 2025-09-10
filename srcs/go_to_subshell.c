@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 11:48:22 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:22:02 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 	status = 0;
 	pid = fork();
 	if (!pid)
-		exit(minishell(ms, s_readline));
+	{
+		minishell(ms, s_readline);
+		close(ms->fd_in);
+		exit(ms->exit_code);
+	}
 	if (pid < 0)
 		return (0);
 	if (pid)

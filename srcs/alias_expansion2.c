@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:08:14 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/31 20:20:15 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:21:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	ambiguous_message(char *s)
 {
-	// ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(s, 2);
 	ft_putstr_fd(": ambiguous redirect\n", 2);
 }
@@ -48,7 +47,6 @@ static int	make_it(t_ms *ms, char **s, int ww, int *i)
 				return (0);
 			if (is_ambiguous(exp))
 				return (ambiguous_message(*s), 0);
-			// printf("%s\n", exp);
 			if (!replace_token(s, exp))
 				return (0);
 		}
@@ -73,7 +71,6 @@ static int	make_it2(t_ms *ms, char **s, int ww, int *i)
 				return (0);
 			if (is_ambiguous(exp))
 				return (ambiguous_message(*s), 0);
-			// printf("%s\n", exp);
 			if (!replace_token(s, exp))
 				return (0);
 		}

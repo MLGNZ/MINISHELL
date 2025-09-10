@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:28:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 11:52:56 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:03:12 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	red_out_loop(t_pl *pl, int *last_out_pos, t_ms *ms)
 			dup2(pl->fd_out, 1);
 		*last_out_pos = pl->i;
 		if (!handle_outfile(pl, pl->i, O_APPEND))
-			return (ms->exit_code = 1, 0);
+			return (0);
 	}
 	else if (!ft_strncmp(pl->redir[pl->i], ">", 1))
 	{
@@ -52,7 +52,7 @@ int	red_out_loop(t_pl *pl, int *last_out_pos, t_ms *ms)
 		if (*last_out_pos != -1)
 			dup2(pl->fd_out, 1);
 		if (!handle_outfile(pl, pl->i, O_TRUNC))
-			return (ms->exit_code = 1, 0);
+			return (0);
 	}
 	return (1);
 }

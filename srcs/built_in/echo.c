@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/08 16:53:30 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:25:44 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,26 @@ static char	**get_lines(char **tab)
 	int		i;
 	int		j;
 	char	**lines;
+	int		to_cpy;
 
 	i = 0;
+	to_cpy = 0;
 	while (tab[i])
 		i++;
 	lines = malloc(sizeof(char *) * (i + 1));
 	if (!lines)
 		return (NULL);
-	i = 0;
-	j = -1;
-	while (tab[++i])
+	i = 1;
+	j = 0;
+	while (tab[i])
 	{
 		if (ft_strncmp(tab[i], "-n", ft_strlen(tab[i])))
-		{	
-			lines[++j] = ft_strdup(tab[i]);
-			if (!lines[j])
-				return (freesplit(lines), NULL);
-		}
+			to_cpy = 1;
+		if (to_cpy)
+			lines[j++] = ft_strdup(tab[i]);
+		i++;
 	}
-	lines[++j] = NULL;
+	lines[j] = NULL;
 	return (lines);
 }
 

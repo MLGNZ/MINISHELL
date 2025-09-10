@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:09 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/31 14:52:36 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 19:26:19 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,6 @@ int	parenthesis(char **tb)
 	}
 	return (count);
 }
-
-/*Donc...
-si un operateur ou parenthese est apres une redirection
-X Si deux parentheses differentes se touchent
-Si deux operateurs (| || & && ;) se touchent 
-X Si un operateur (| || & && ;) touche l'interieur d'une parenthese
-X Si autre chose qu'un operateur (| || & && ;)
-touche l'exterieur d'une parenthese
-X Si la ligne commence par un operateur ou par une parenthese fermee
-X Si & ou ;;*/
 
 int	parse_error_needed(int op, char **tb, int p_op, int i)
 {
@@ -133,19 +123,18 @@ char	*operator_code_to_string(int operator_code)
 static int	parse_error(int operator, char *token, int is_unsupported)
 {
 	(void)is_unsupported;
-	(void)token;
 	if (operator == DBSEMICOLON || operator == ESP)
 		ft_putstr_fd("minishell: syntax error near unsupported token `", 2);
 	else
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-	// if (operator >= 3 && operator <= 6 && token \
-	// 	&& (ft_isdigit(*token) || *token == '&'))
-	// 	while (token && *token && (ft_isdigit(*token) || *token == '&'))
-	// 		// printf("%c", *token++);
-	// else if (!token)
-	// 	printf("newline");
-	// else
-	// 	printf("%s", token);
-	// printf("\'\n");
+	if (operator >= 3 && operator <= 6 && token \
+		&& (ft_isdigit(*token) || *token == '&'))
+		while (token && *token && (ft_isdigit(*token) || *token == '&'))
+			printf("%c", *token++);
+	else if (!token)
+		printf("newline");
+	else
+		printf("%s", token);
+	printf("\'\n");
 	return (0);
 }

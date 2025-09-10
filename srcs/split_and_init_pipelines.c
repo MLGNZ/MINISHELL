@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 17:21:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:28:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/10 10:31:27 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,13 @@ int	split_and_init_pipelines(t_ms *ms, t_line **lns, int i)
 	line = lns[i];
 	if (i > 1)
 		get_previous_data(line, lns[i - 1]);
-	//SUBSHELL
-	if (is_subshell(line->split_line)) //do that
+	if (is_subshell(line->split_line))
 	{
 		line->sub_shell = 1;
 		remove_parenthesis_of_line_subshell(line);
-		// go_to_subshell(ms, line->split_line); //?
 	}
-	else //NOT SUBSHELL
+	else
 	{
-		// puts("line:");
-		// printsplit(line->split_line);
 		line->nb_of_pls = count_pipelines(line->split_line);
 		line->pls = malloc(sizeof(t_pl) * (line->nb_of_pls + 1));
 		if (!line->pls)

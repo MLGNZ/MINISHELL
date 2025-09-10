@@ -6,15 +6,37 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 04:09:18 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 18:47:12 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		remove_quotes(const char *s0, char *s);
-static int	cat_over_quotes(const char *s0, char *s, char q);
 void		remove_backslashes(const char *s0, char *s);
+static int	cat_over_quotes(const char *s0, char *s, char q);
+
+static int	clean_expand_in_array2(char **t0, char **t, char ***t_adr, int type)
+{
+	while (t && *t)
+	{
+		if (((t == t0) || which_op(*(t - 1)) != HDOC) && \
+		!manage_wildcards(t, type))
+			return (0);
+		t++;
+	}
+	if (type == CMD_LT && !update_tab(&t0, t0, 0))
+		return (0);
+	t = t0;
+	while (t && *t)
+	{
+		remove_quotes(*t, *t);
+		remove_backslashes(*t, *t);
+		t++;
+	}
+	*t_adr = t0;
+	return (1);
+}
 
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
@@ -31,13 +53,8 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 	if (type == CMD_LT && !update_tab(&tab0, tab0, 0))
 		return (0);
 	tab = tab0;
-	while (tab && *tab)
-	{
-		remove_quotes(*tab, *tab);
-		remove_backslashes(*tab, *tab);
-		tab++;
-	}
-	*tab_addr = tab0;
+	if (!clean_expand_in_array2(tab0, tab, tab_addr, type))
+		return (0);
 	return (1);
 }
 

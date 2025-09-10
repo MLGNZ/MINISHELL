@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 16:48:40 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:20:31 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,46 +59,21 @@ void	remove_invalid_arguments(t_list **args, t_ms *ms)
 	}
 }
 
-// static char *invalid_export_arg(char **args);
-
-/*If no argument specified, the function does not do anything
-even though you might think is dispays the list of exported
-variables, it is stated nowhere in the export manual that it is
-supposed to behave this way*/
-int    ft_export(char **args, t_ms *ms)
+int	ft_export(char **args, t_ms *ms)
 {
-    t_list    *lst_args;
-    t_list    *lst_vars;
+	t_list	*lst_args;
+	t_list	*lst_vars;
 
-    lst_vars = ms->lst_vars;
-
-    lst_args = NULL;
-    if (!*(++args))
-        return (1);
-    if (!tab_to_lst(args, &lst_args))
-        return (panic(ms, 52));
-    remove_invalid_arguments(&lst_args, ms);
-    update_vars_from_export_args(&lst_args, &ms->lst_vars);
-    update_lst(&lst_args, &ms->lst_vars);
-    update_lst(&ms->lst_env, &lst_args);
-    ft_lstadd_back(&ms->lst_env, lst_args);
-    return (1);
+	lst_vars = ms->lst_vars;
+	lst_args = NULL;
+	if (!*(++args))
+		return (1);
+	if (!tab_to_lst(args, &lst_args))
+		return (panic(ms, 52));
+	remove_invalid_arguments(&lst_args, ms);
+	update_vars_from_export_args(&lst_args, &ms->lst_vars);
+	update_lst(&lst_args, &ms->lst_vars);
+	update_lst(&ms->lst_env, &lst_args);
+	ft_lstadd_back(&ms->lst_env, lst_args);
+	return (1);
 }
-
-/*Parse the args of export, if any is invalid, it returns it*/
-// static char *invalid_export_arg(char **args)
-// {
-// 	int i;
-
-// 	while (args && *args)
-// 	{
-// 		i = -1;
-// 		while ((*args)[++i])
-// 		{
-// 			if (!ft_isalnum((*args)[i]) && (*args)[i] != '_')
-// 				return (*args);
-// 		}
-// 		args++;
-// 	}
-// 	return (NULL);
-// }

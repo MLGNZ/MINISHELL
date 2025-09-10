@@ -6,13 +6,12 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 21:29:42 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/31 20:18:23 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:21:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//Counts the number of different strings that are going to be in the char **
 int	cw(char *s0, int *len)
 {
 	char	*s1;
@@ -98,7 +97,6 @@ int	replace_token(char **string_address, char *expanded_string)
 {
 	if (!expanded_string)
 		return (0);
-	// puts(*string_address);
 	free(*string_address);
 	*string_address = expanded_string;
 	return (1);

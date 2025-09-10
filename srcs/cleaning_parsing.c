@@ -6,30 +6,29 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 20:57:50 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/04 16:27:26 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:53:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	printshit(t_pl *pl)
-{
-	(void)pl;
-	// printf("_____________________________\n");
-	// printf("Command : %s\n", pl->cmd);
-	// printf("Command chain: ");
-	// printsplit(pl->cmd_args);
-	// printf("Redirections: ");
-	// printsplit(pl->redir);
-	// printf("Variables assignations: ");
-	// printsplit(pl->var);
-	// printf("=============================\n");
-}
+// static void	printshit(t_pl *pl)
+// {
+// 	(void)pl;
+// 	// printf("_____________________________\n");
+// 	// printf("Command : %s\n", pl->cmd);
+// 	// printf("Command chain: ");
+// 	// printsplit(pl->cmd_args);
+// 	// printf("Redirections: ");
+// 	// printsplit(pl->redir);
+// 	// printf("Variables assignations: ");
+// 	// printsplit(pl->var);
+// 	// printf("=============================\n");
+// }
 
 static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position);
 static int	get_pos_of_pipeline(int position, int n_of_pl);
 static void	set_cmd_and_args(t_pl *pl);
-// static void	update_line_vars(t_ms *ms, t_line *ln, t_pl *pl);
 
 int	clean_all_pipelines(t_ms *ms, t_line *ln)
 {
@@ -83,13 +82,11 @@ static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position)
 		return (0);
 	find_cmd(pl->cmd_args, ms);
 	set_cmd_and_args(pl);
-	printshit(pl);
 	if (!tab_to_lst(pl->var, &pl->lst_var))
 		return (0);
 	update_lst(&ln->lst_vars, &pl->lst_var);
 	ft_lstadd_back(&ln->lst_vars, pl->lst_var);
 	pl->lst_var = NULL;
-	// puts("line lstprint");
 	lst_print(ln->lst_vars);
 	return (1);
 }

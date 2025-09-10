@@ -6,17 +6,11 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 21:10:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:01:37 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/09 17:25:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*The purpose of this function is to update an array of string
-containing variables
-it will take two arrays of string as parameters and append the second to the first
-However, if a key from the second already exists in the first, it will replace it
-if it doesn't exist, it will simply be added at the end.*/
 
 int	key_len_of(char *s)
 {
