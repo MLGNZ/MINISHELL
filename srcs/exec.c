@@ -6,11 +6,36 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 17:44:13 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:27:32 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
+{
+	pls[*i]->pid = fork();
+	if (pls[*i]->pid == -1)
+		return (perror("fork"), 0);
+	else if (!pls[*i]->pid)
+	{
+		dup2(pls[*i]->current_pipe[1], ms->fd_out);
+		handle_pipe(pls[*i]);
+		minishell(ms, pls[*i]->raw_pipeline);
+		exit(0);
+	}
+	else
+	{
+		if (pls[*i]->position == FIRST || pls[*i]->position == INTER)
+		{
+			pls[*i + 1]->previous_pipe[0] = pls[*i]->current_pipe[0];
+			pls[*i + 1]->previous_pipe[1] = pls[*i]->current_pipe[1];
+		}
+		handle_fds(pls, *i, ms);
+		(*i)++;
+	}
+	return (1);
+}
 
 int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 {
@@ -40,33 +65,67 @@ int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 		close(pl->fd_in);
 		close(pl->fd_out);
 		close(ms->fd_in);
+		close(ms->fd_out);
 		exit(0);
 	}
 	return (1);
 }
 
+void	close_fds(int fd1, int fd2, int fd3, int fd4)
+{
+	if (fd1)
+		close(fd1);
+	if (fd2)
+		close(fd2);
+	if (fd3)
+		close(fd3);
+	if (fd4)
+		close(fd4);
+}
+
+int	handle_execve(t_pl *pl, int i, t_ms *ms)
+{
+	char	**tab_env;
+
+	handle_pipe(pl);
+	close_fds(ms->fd_in, ms->fd_out, 0, 0);
+	tab_env = lst_to_tab(ms->lst_env);
+	if (access(pl->cmd, F_OK))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(pl->cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
+		close_fds(pl->fd_in, pl->fd_out, 0, 0);
+		panic(ms, 127);
+	}
+	execve(pl->cmd, pl->cmd_args, tab_env);
+	perror("minishell");
+	panic(ms, 1);
+	return (1);
+}
+
 int	handle_built_in(t_pl **pls, int *i, t_ms *ms)
 {
-	if (pls[*i]->position == ALONE || pls[*i]->position == LAST)
+	if (pls[*i]->position == ALONE)
 	{
 		handle_pipe(pls[*i]);
 		if (pls[*i]->redir && pls[*i]->has_red_in)
 		{
-			close(pls[*i]->current_pipe[1]);
 			dup2(pls[*i]->current_pipe[0], 0);
-			close(pls[*i]->current_pipe[0]);
+			close_fds(pls[*i]->current_pipe[1], pls[*i]->current_pipe[0], 0, 0);
 		}
 		exec_build_in(pls[*i], ms, 0);
 		dup2(pls[*i]->fd_in, 0);
 		dup2(pls[*i]->fd_out, 1);
-		close(pls[*i]->fd_in);
 		if (pls[*i]->fds)
 			reset_out_fds(pls[*i]);
-		close(pls[(*i)++]->fd_out);
+		close_fds(pls[*i]->fd_in, pls[(*i)++]->fd_out, 0, 0);
 	}
 	else
 	{
 		(pls[*i])->pid = fork();
+		if (pls[*i]->pid == -1)
+			return (perror("fork"), 0);
 		if (!(pls[*i])->pid)
 		{
 			handle_pipe(pls[*i]);
@@ -84,41 +143,29 @@ int	handle_built_in(t_pl **pls, int *i, t_ms *ms)
 	return (2);
 }
 
-int	handle_execve(t_pl **pls, int i, t_ms *ms)
+void	init_temp_fds(t_pl *pl)
 {
-	char	**tab_env;
+	pl->fd_in = dup(0);
+	pl->fd_out = dup(1);
+}
 
-	handle_pipe(pls[i]);
-	close(ms->fd_in);
-	close(ms->fd_out);
-	tab_env = lst_to_tab(ms->lst_env);
-	if (access(pls[i]->cmd, F_OK))
+int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
+{
+	if (is_build_in(pl->cmd))
+		return (handle_built_in(pls, i, ms));
+	else
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(pls[i]->cmd, 2);
-		ft_putstr_fd(": command not found\n", 2);
-		close(pls[i]->fd_in);
-		close(pls[i]->fd_out);
-		panic(ms, 127);
+		pl->pid = fork();
+		if (pl->pid == -1)
+			return (perror("fork"), 0);
+		if (!pl->pid)
+			handle_execve(pl, *i, ms);
+		else
+			if (!handle_fds(pls, (*i)++, ms))
+				return (0);
 	}
-	execve(pls[i]->cmd, pls[i]->cmd_args, tab_env);
-	perror("minishell");
-	panic(ms, 1);
 	return (1);
 }
-
-int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
-{
-	handle_pipe(pls[*i]);
-	close(pls[*i]->fd_in);
-	close(pls[*i]->fd_out);
-	if (!go_to_subshell(ms, pls[*i]->raw_pipeline))
-		return (perror("fork"), 0);
-	handle_fds(pls, *i, ms);
-	(*i)++;
-	return (1);
-}
-
 
 int	exec_loop(t_pl **pls, t_ms *ms)
 {
@@ -128,8 +175,7 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 	i = 0;
 	while (pls[i])
 	{
-		pls[i]->fd_in = dup(0);
-		pls[i]->fd_out = dup(1);
+		init_temp_fds(pls[i]);
 		if (pipe_needed(pls[i]) && pipe(pls[i]->current_pipe) == -1)
 			return (perror("pipe"), 0);
 		if (pls[i]->sub_shell)
@@ -139,31 +185,9 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 			continue ;
 		}
 		redir_val = handle_redirs(ms, pls, &i);
-		if (redir_val == 2)
+		if (redir_val != 1)
 			continue ;
-		else if (!redir_val)
-			continue ;
-		if (is_build_in(pls[i]->cmd))
-		{
-			if (handle_built_in(pls, &i, ms) == 2)
-				continue ;
-			else
-				return (0);
-		}
-		pls[i]->pid = fork();
-		if (pls[i]->pid == -1)
-			perror("fork");
-		if (!pls[i]->pid)
-		{
-			if (!handle_execve(pls, i, ms))
-				return (0);
-		}
-		else if (pls[i]->pid < 0)
-			return (perror("fork"), 0);
-		else
-			if (!handle_fds(pls, i, ms))
-				return (0);
-		i++;
+		exec_pl(pls[i], ms, &i, pls);
 	}
 	return (1);
 }
@@ -178,11 +202,11 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 	if (!exec_loop(pls, ms))
 		return (0);
 	i = -1;
-	while (pls[++i] && pls[i]->cmd)
+	while (pls[++i] && (pls[i]->cmd || pls[i]->sub_shell))
 	{
 		if (!is_build_in(pls[i]->cmd) || \
-		((pls[i]->position != ALONE && pls[i]->position != LAST) \
-		&& is_build_in(pls[i]->cmd)))
+		(pls[i]->position != ALONE \
+		&& is_build_in(pls[i]->cmd)) || pls[i]->sub_shell)
 		{
 			if (pls[i]->pid == -1)
 				continue ;

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 17:34:06 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:28:05 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	update_vars(t_ms *ms, t_line *line);
 int	exec_line(t_ms *ms, t_line *line)
 {
 	t_pl	**pls;
+	int		status;
+	int		pid;
 
 	pls = line->pls;
 	if (line->ctrl_op == AND && ms->prev_exit_code)
@@ -24,7 +26,13 @@ int	exec_line(t_ms *ms, t_line *line)
 	else if (line->ctrl_op == OR && !ms->prev_exit_code)
 		return (1);
 	if (line->sub_shell)
-		go_to_subshell(ms, line->split_line);
+	{
+		status = 0;
+		pid = go_to_subshell(ms, line->split_line);
+		if (pid)
+			waitpid(pid, &status, 0);
+		ms->prev_exit_code = status;
+	}
 	else
 	{
 		update_vars(ms, line);

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 17:16:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 14:20:22 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static int	valid_read_line(char *rline0, char *rline)
 	q = 0;
 	while (*rline)
 	{
-		if (q == '|' && *rline)
+		if (q == '|' && *rline && *rline != ' ')
 			q = 0;
 		if (q && q == meta_char(rline, rline0))
 			q = 0;

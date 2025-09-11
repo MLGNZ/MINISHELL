@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/10 17:45:16 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:04:47 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,21 +53,18 @@ void	handle_pipe(t_pl *pl)
 		return ;
 	if (pl->position == LAST && pl->has_red_in)
 	{
-		close(pl->previous_pipe[0]);
-		close(pl->previous_pipe[1]);
+		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 		return ;
 	}
 	if (pl->position == LAST || pl->position == INTER)
 	{
 		dup2(pl->previous_pipe[0], 0);
-		close(pl->previous_pipe[0]);
-		close(pl->previous_pipe[1]);
+		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 	}
 	if ((pl->position == FIRST || pl->position == INTER) && !pl->has_red_out)
 	{
 		dup2(pl->current_pipe[1], 1);
-		close(pl->current_pipe[0]);
-		close(pl->current_pipe[1]);
+		close_fds(pl->current_pipe[0], pl->current_pipe[1], 0, 0);
 	}
 }
 
@@ -86,8 +83,8 @@ void	reset_out_fds(t_pl *pl)
 
 int	handle_fds(t_pl **pls, int i, t_ms *ms)
 {
-	dup2(ms->fd_in, 0);
 	dup2(ms->fd_out, 1);
+	dup2(ms->fd_in, 0);
 	if (pls[i]->has_red_out && pls[i]->position != ALONE)
 		if (dup2(pls[i]->fd_out, 1) == -1)
 			return (0);
@@ -95,10 +92,7 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		if (dup2(pls[i]->fd_in, 0) == -1)
 			return (0);
 	if (i > 0)
-	{
-		close(pls[i]->previous_pipe[0]);
-		close(pls[i]->previous_pipe[1]);
-	}
+		close_fds(pls[i]->previous_pipe[0], pls[i]->previous_pipe[1], 0, 0);
 	if (pls[i]->position == FIRST || pls[i]->position == INTER)
 	{
 		(pls[i + 1])->previous_pipe[0] = pls[i]->current_pipe[0];
@@ -109,8 +103,7 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		dup2(pls[i]->fd_in, 0);
 		dup2(pls[i]->fd_out, 1);
 	}
-	close(pls[i]->fd_in);
-	close(pls[i]->fd_out);
+	close_fds(pls[i]->fd_in, pls[i]->fd_out, 0, 0);
 	return (1);
 }
 

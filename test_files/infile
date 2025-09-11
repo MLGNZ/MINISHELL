@@ -1,4 +1,0 @@
-echo <"./test_files/infile_big | cat <"./test_files/infile" hi
-hello
-world
-42

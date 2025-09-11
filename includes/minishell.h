@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 17:41:35 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 12:57:46 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ void	reset_out_fds(t_pl *pl);
 int		handle_fds(t_pl **pls, int i, t_ms *ms);
 int		red_out(t_pl *pl, t_ms *ms);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
+void	close_fds(int fd1, int fd2, int fd3, int fd4);
 
 //EXEC --> EXEC
 int		exec_cmd(t_pl **pls, t_ms *ms);

@@ -6,12 +6,13 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 19:22:02 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/11 16:28:34 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//ne pas effacer, si pas change, ajouter waitpid dans le gt subshell in line
 int	go_to_subshell(t_ms *ms, char **s_readline)
 {
 	int	pid;
@@ -27,8 +28,5 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 	}
 	if (pid < 0)
 		return (0);
-	if (pid)
-		waitpid(pid, &status, 0);
-	ms->prev_exit_code = status;
-	return (1);
+	return (pid);
 }
