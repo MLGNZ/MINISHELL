@@ -6,34 +6,11 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:09 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/10 19:26:19 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/12 16:55:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	parse_error(int operator, char *token, int is_unsupported);
-
-int	parenthesis(char **tb)
-{
-	int	i;
-	int	op;
-	int	count;
-
-	count = 0;
-	i = -1;
-	while (tb[++i])
-	{
-		op = which_op(tb[i]);
-		if (op == O_PAR)
-			count++;
-		else if (op == C_PAR)
-			count--;
-		if (count < 0)
-			return (parse_error(op, tb[i], 0), -1);
-	}
-	return (count);
-}
 
 int	parse_error_needed(int op, char **tb, int p_op, int i)
 {
@@ -89,6 +66,23 @@ int	is_there_a_parse_error_near(char **tb)
 	return (1);
 }
 
+static char	*operator_code_to_string2(int operator_code)
+{
+	if (operator_code == DBSEMICOLON)
+		return (";;");
+	if (operator_code == ESP)
+		return ("&");
+	if (operator_code == AND)
+		return ("&&");
+	if (operator_code == OR)
+		return ("||");
+	if (operator_code == O_PAR)
+		return ("(");
+	if (operator_code == C_PAR)
+		return (")");
+	return (0);
+}
+
 char	*operator_code_to_string(int operator_code)
 {
 	if (operator_code == EOL)
@@ -105,24 +99,11 @@ char	*operator_code_to_string(int operator_code)
 		return (">>");
 	if (operator_code == SEMICOLON)
 		return (";");
-	if (operator_code == DBSEMICOLON)
-		return (";;");
-	if (operator_code == ESP)
-		return ("&");
-	if (operator_code == AND)
-		return ("&&");
-	if (operator_code == OR)
-		return ("||");
-	if (operator_code == O_PAR)
-		return ("(");
-	if (operator_code == C_PAR)
-		return (")");
-	return (0);
+	return (operator_code_to_string2(operator_code));
 }
 
-static int	parse_error(int operator, char *token, int is_unsupported)
+int	parse_error(int operator, char *token, int is_unsupported)
 {
-	(void)is_unsupported;
 	if (operator == DBSEMICOLON || operator == ESP)
 		ft_putstr_fd("minishell: syntax error near unsupported token `", 2);
 	else

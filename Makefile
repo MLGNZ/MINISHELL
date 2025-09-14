@@ -55,7 +55,9 @@ SRC	=	srcs/main.c\
 		srcs/redirs/red_out.c \
 		srcs/redirs/red_in.c \
 		srcs/wildcards.c \
-		srcs/wildcards2.c 
+		srcs/wildcards2.c \
+		srcs/exec_built_in.c \
+		srcs/errors_utils.c
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))
 
@@ -78,6 +80,7 @@ BOLD        = \033[1m
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT_A)
+	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet --metal
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make $(NAME)$(END)"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(LDFLAGS) -o $(NAME) && \
 	echo "   $(BLUE)⤷ $(END)Executable: $(BG_GREEN)$(BOLD)$(NAME)$(END)"

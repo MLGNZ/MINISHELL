@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/11 16:04:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 16:05:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,20 +29,12 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 			if (tmp)
 				tmp = tmp->next;
 		}
-		if (!ft_strncmp(pl->redir[i], "<<", 2) || \
-		!ft_strncmp(pl->redir[i], "<", 1))
-			if (!red_in(pl, ms))
-				return (dup2(pl->fd_in, 0), ms->exit_code = 1, 0);
-		if (!ft_strncmp(pl->redir[i], ">>", 2) || \
-		!ft_strncmp(pl->redir[i], ">", 1))
-			if (!red_out(pl, ms))
-				return (dup2(pl->fd_out, 1), ms->exit_code = 1, 0);
-	}
-	if (!pl->cmd)
-	{
-		dup2(pl->fd_in, 0);
-		dup2(pl->fd_out, 1);
-		return (0);
+		if ((!ft_strncmp(pl->redir[i], "<<", 2) || \
+		!ft_strncmp(pl->redir[i], "<", 1)) && !red_in(pl, ms))
+			return (dup2(pl->fd_in, 0), ms->exit_code = 1, 0);
+		if ((!ft_strncmp(pl->redir[i], ">>", 2) || \
+		!ft_strncmp(pl->redir[i], ">", 1)) && !red_out(pl, ms))
+			return (dup2(pl->fd_out, 1), ms->exit_code = 1, 0);
 	}
 	return (1);
 }
@@ -61,7 +53,7 @@ void	handle_pipe(t_pl *pl)
 		dup2(pl->previous_pipe[0], 0);
 		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 	}
-	if ((pl->position == FIRST || pl->position == INTER) && !pl->has_red_out)
+	if ((pl->position == FIRST || pl->position == INTER) && !pl->has_red_out && (pl->cmd || pl->sub_shell))
 	{
 		dup2(pl->current_pipe[1], 1);
 		close_fds(pl->current_pipe[0], pl->current_pipe[1], 0, 0);
@@ -83,8 +75,7 @@ void	reset_out_fds(t_pl *pl)
 
 int	handle_fds(t_pl **pls, int i, t_ms *ms)
 {
-	dup2(ms->fd_out, 1);
-	dup2(ms->fd_in, 0);
+	my_dup2(ms->fd_out, 1, ms->fd_in, 0);
 	if (pls[i]->has_red_out && pls[i]->position != ALONE)
 		if (dup2(pls[i]->fd_out, 1) == -1)
 			return (0);
@@ -99,11 +90,8 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		(pls[i + 1])->previous_pipe[1] = pls[i]->current_pipe[1];
 	}
 	if (pls[i]->position == ALONE)
-	{
-		dup2(pls[i]->fd_in, 0);
-		dup2(pls[i]->fd_out, 1);
-	}
-	close_fds(pls[i]->fd_in, pls[i]->fd_out, 0, 0);
+		my_dup2(pls[i]->fd_in, 0, pls[i]->fd_out, 1);
+	close_fds(ms->fd_in, ms->fd_out, pls[i]->fd_in, pls[i]->fd_out);
 	return (1);
 }
 

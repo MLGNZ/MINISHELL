@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/10 19:26:04 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/12 17:53:11 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,38 @@ int	pwd(void)
 	return (1);
 }
 
-int	is_ok(char **cmd_args, int i)
+static int	check_errors(char **cmd_args, t_ms *ms)
 {
-	return (cmd_args[1][i] == '\"' || \
-		cmd_args[1][i] == '+' || cmd_args[1][i] == '-');
+	int	i;
+
+	i = -1;
+	while (cmd_args[1][++i])
+	{
+		while (cmd_args[1][i] == '\"' || \
+		cmd_args[1][i] == '+' || cmd_args[1][i] == '-')
+			i++;
+		if (!ft_isdigit(cmd_args[1][i]))
+		{
+			ft_putstr_fd("minishell:", 2);
+			ft_putstr_fd(" numeric argument required\n", 2);
+			ms->exit_code = 2;
+			return (0);
+		}
+	}
+	return (1);
 }
 
+/*The  exit  status shall be n, if specified,
+except that the behavior is unspecified if n is not an unsigned 
+decimal integer or is greater than 255.  Otherwise,
+the  value  shall  be the exit value of the last command executed, or zero if no
+command was executed. When exit is executed in a trap action, the  last  command
+is considered to be the command that executed immediately preceding the trap ac‐
+tion.*/
 void	ft_exit(t_ms *ms, char **cmd_args)
 {
 	long long int	exit_code;
-	int				i;
 
-	i = -1;
 	if (!cmd_args[1])
 		exit(0);
 	if (cmd_args[2])
@@ -75,26 +95,9 @@ void	ft_exit(t_ms *ms, char **cmd_args)
 		ms->exit_code = 1;
 		return ;
 	}
-	while (cmd_args[1][++i])
-	{
-		while (is_ok(cmd_args, i))
-			i++;
-		if (!ft_isdigit(cmd_args[1][i]))
-		{
-			ft_putstr_fd("minishell:", 2);
-			ft_putstr_fd(cmd_args[1], 2);
-			ft_putstr_fd(" numeric argument required\n", 2);
-			ms->exit_code = 2;
-			return ;
-		}
-	}
-	exit_code = ft_atoi(cmd_args[1]); // mettre atol
-	if (exit_code > 2147483647)
-	{
-		ft_putstr_fd(cmd_args[1], 2);
-		ft_putstr_fd(" numeric argument required\n", 2);
-		exit(2);
-	}
+	if (!check_errors(cmd_args, ms))
+		return ;
+	exit_code = ft_atoi(cmd_args[1]);
 	printf("exit\n");
 	exit(exit_code);
 }

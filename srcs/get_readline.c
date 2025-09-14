@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/11 14:20:22 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:34:27 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	get_valid_line(t_ms *ms, int i)
 	while (1)
 	{
 		rl_on_new_line();
-		rline = readline("minishell% ");
+		rline = readline("\1\e[4;100m\2minishell\1\e[0;31m\2\1\e[97m:\1\e[0m\2 ");
 		if (!rline)
 			return (panic(ms, 0));
 		temp_spltd = ft_split_op(rline, &ms->s_readline_len);
@@ -53,10 +53,9 @@ int	get_valid_line(t_ms *ms, int i)
 		if (!is_there_a_parse_error_near(temp_spltd))
 			return (add_history(rline), free(rline), freesplit(temp_spltd), -1);
 		freesplit(temp_spltd);
-		i = -1;
-		while (rline[++i])
-			if (rline[i] != ' ')
-				break ;
+		i = 0;
+		while (rline[i] && rline[i] == ' ')
+			i++;
 		if (rline[i])
 			break ;
 		free(rline);

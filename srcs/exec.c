@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/11 16:27:32 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 15:58:10 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 {
+	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
 	pls[*i]->pid = fork();
 	if (pls[*i]->pid == -1)
 		return (perror("fork"), 0);
@@ -22,6 +23,7 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 		dup2(pls[*i]->current_pipe[1], ms->fd_out);
 		handle_pipe(pls[*i]);
 		minishell(ms, pls[*i]->raw_pipeline);
+		close_fds(ms->fd_in, ms->fd_out, pls[*i]->current_pipe[1], 0);
 		exit(0);
 	}
 	else
@@ -31,56 +33,9 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 			pls[*i + 1]->previous_pipe[0] = pls[*i]->current_pipe[0];
 			pls[*i + 1]->previous_pipe[1] = pls[*i]->current_pipe[1];
 		}
-		handle_fds(pls, *i, ms);
-		(*i)++;
+		handle_fds(pls, (*i)++, ms);
 	}
 	return (1);
-}
-
-int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
-{
-	if (!ft_strncmp(pl->cmd, "echo", ft_strlen(pl->cmd)))
-		echo(pl->cmd_args, ms);
-	else if (!ft_strncmp(pl->cmd, "exit", ft_strlen(pl->cmd)))
-		ft_exit(ms, pl->cmd_args);
-	else if (!ft_strncmp(pl->cmd, "pwd", ft_strlen(pl->cmd)))
-		pwd();
-	else if (!ft_strncmp(pl->cmd, "export", ft_strlen(pl->cmd)))
-		ft_export(pl->cmd_args, ms);
-	else if (!ft_strncmp(pl->cmd, "unset", ft_strlen(pl->cmd)))
-		ft_unset(pl->cmd_args, ms);
-	else if (!ft_strncmp(pl->cmd, "cd", ft_strlen(pl->cmd)))
-	{
-		if (pl->cmd_args[2])
-		{
-			ms->exit_code = 1;
-			ft_putstr_fd(" too many arguments", 2);
-		}
-		cd(pl->cmd_args, &ms);
-	}
-	else if (!ft_strncmp(pl->cmd, "env", ft_strlen(pl->cmd)))
-		env(ms);
-	if (in_child)
-	{
-		close(pl->fd_in);
-		close(pl->fd_out);
-		close(ms->fd_in);
-		close(ms->fd_out);
-		exit(0);
-	}
-	return (1);
-}
-
-void	close_fds(int fd1, int fd2, int fd3, int fd4)
-{
-	if (fd1)
-		close(fd1);
-	if (fd2)
-		close(fd2);
-	if (fd3)
-		close(fd3);
-	if (fd4)
-		close(fd4);
 }
 
 int	handle_execve(t_pl *pl, int i, t_ms *ms)
@@ -88,7 +43,7 @@ int	handle_execve(t_pl *pl, int i, t_ms *ms)
 	char	**tab_env;
 
 	handle_pipe(pl);
-	close_fds(ms->fd_in, ms->fd_out, 0, 0);
+	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
 	tab_env = lst_to_tab(ms->lst_env);
 	if (access(pl->cmd, F_OK))
 	{
@@ -104,51 +59,6 @@ int	handle_execve(t_pl *pl, int i, t_ms *ms)
 	return (1);
 }
 
-int	handle_built_in(t_pl **pls, int *i, t_ms *ms)
-{
-	if (pls[*i]->position == ALONE)
-	{
-		handle_pipe(pls[*i]);
-		if (pls[*i]->redir && pls[*i]->has_red_in)
-		{
-			dup2(pls[*i]->current_pipe[0], 0);
-			close_fds(pls[*i]->current_pipe[1], pls[*i]->current_pipe[0], 0, 0);
-		}
-		exec_build_in(pls[*i], ms, 0);
-		dup2(pls[*i]->fd_in, 0);
-		dup2(pls[*i]->fd_out, 1);
-		if (pls[*i]->fds)
-			reset_out_fds(pls[*i]);
-		close_fds(pls[*i]->fd_in, pls[(*i)++]->fd_out, 0, 0);
-	}
-	else
-	{
-		(pls[*i])->pid = fork();
-		if (pls[*i]->pid == -1)
-			return (perror("fork"), 0);
-		if (!(pls[*i])->pid)
-		{
-			handle_pipe(pls[*i]);
-			exec_build_in(pls[*i], ms, 1);
-		}
-		else
-		{
-			dup2(ms->fd_in, 0);
-			if (pls[*i]->fds)
-				reset_out_fds(pls[*i]);
-			if (!handle_fds(pls, (*i)++, ms))
-				return (0);
-		}
-	}
-	return (2);
-}
-
-void	init_temp_fds(t_pl *pl)
-{
-	pl->fd_in = dup(0);
-	pl->fd_out = dup(1);
-}
-
 int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 {
 	if (is_build_in(pl->cmd))
@@ -160,9 +70,8 @@ int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 			return (perror("fork"), 0);
 		if (!pl->pid)
 			handle_execve(pl, *i, ms);
-		else
-			if (!handle_fds(pls, (*i)++, ms))
-				return (0);
+		else if (!handle_fds(pls, (*i)++, ms))
+			return (0);
 	}
 	return (1);
 }
@@ -175,9 +84,10 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 	i = 0;
 	while (pls[i])
 	{
-		init_temp_fds(pls[i]);
+		pls[i]->fd_in = dup(0);
+		pls[i]->fd_out = dup(1);
 		if (pipe_needed(pls[i]) && pipe(pls[i]->current_pipe) == -1)
-			return (perror("pipe"), 0);
+			return (perror("pipe"), 0); 
 		if (pls[i]->sub_shell)
 		{
 			if (!handle_subshell(pls, &i, ms))
@@ -187,6 +97,13 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 		redir_val = handle_redirs(ms, pls, &i);
 		if (redir_val != 1)
 			continue ;
+		if (!pls[i]->cmd)
+		{
+			handle_pipe(pls[i]);
+			handle_fds(pls, i, ms);
+			i++;
+			continue ;
+		}
 		exec_pl(pls[i], ms, &i, pls);
 	}
 	return (1);

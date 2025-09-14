@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/11 16:28:05 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/12 16:40:33 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@ int	exec_line(t_ms *ms, t_line *line)
 	int		pid;
 
 	pls = line->pls;
-	if (line->ctrl_op == AND && ms->prev_exit_code)
-		return (1);
-	else if (line->ctrl_op == OR && !ms->prev_exit_code)
+	if ((line->ctrl_op == AND && ms->prev_exit_code) || \
+	(line->ctrl_op == OR && !ms->prev_exit_code))
 		return (1);
 	if (line->sub_shell)
 	{

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/11 12:57:46 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/12 17:19:55 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,60 +52,49 @@
 
 typedef struct s_ms
 {
-	t_list			*lst_env; // environnement
-	t_list			*lst_vars; // variables locales
-	char			*readline; //ne pas considerer
-	char			**s_readline; //ne pas considerer
-	int				s_readline_len;// ne pas considerer
+	t_list			*lst_env;
+	t_list			*lst_vars;
+	char			*readline;
+	char			**s_readline;
+	int				s_readline_len;
 	struct s_line	**lns;
-	unsigned char			prev_exit_code; //pour $?, updater regulierement
-	unsigned char			exit_code;	//updater regulierement
-	int						fd_in;
-	int						fd_out;
+	unsigned char	prev_exit_code;
+	unsigned char	exit_code;
+	int				fd_in;
+	int				fd_out;
 }	t_ms;
 
-//Each line is composed of different pipelines connected by pipes if multiples.
-//Execution of lines depend on priority order, logical operators (ıı, &&, ;, \n) and exit codes of each lines.
 typedef struct s_line
 {
-	struct s_pipeline	**pls; //l'exec se fera la dessus
-	// char **vars;
-	t_list				*lst_vars; //Ne pas considerer, regarder uniquement ms->lst_vars
+	struct s_pipeline	**pls;
+	t_list				*lst_vars;
 	int					nb_of_pls;
-	int					ctrl_op; //operateur precedant la pipeline &&, || ou ;
-	int					sub_shell;//vrai si subshell
-	// char *raw_line;
-	char				**split_line;//ne pas considerer
-	int					split_line_length;//ne pas considerer
+	int					ctrl_op;
+	int					sub_shell;
+	char				**split_line;
+	int					split_line_length;
 }	t_line;
 
 typedef struct s_fd
 {
-	int		fd;
-	int		fd_temp;
+	int			fd;
+	int			fd_temp;
 	struct s_fd	*next;
 }	t_fd;
 
-//Each line has a pipeline, this is something between two pipes or beginning or end or line.
-//Each pipeline has a string as command
-//An array of string that are cmd + argos
-//stored array of string represents redirections (that are going to be freed soon enough)
-//the stored in, out, and err as files.
 typedef struct s_pipeline
 {
-	char	*cmd; //commande
-	char	**cmd_args; //les arguments
-	int		position; //ALONE, FIRST, LAST ou INTER, position de la pipeline dans l'ensemble local de pipelines
-	int		sub_shell; //Vrai quand subshell
-	char	**redir; //Attention, des fds de gauche peuvent etre invalides (entre 1.048.575 et 2.147.483.647 pour bash
-	char	**var; //temp for expansion, ne pas considerer
-	t_list	*lst_var;//liste des variables locales assignees par la pipeline, ne pas considerer, regarder uniquement ms->lst_vars
-	char	**raw_pipeline;//Ne aps considerer
-	int		total_of_pipeline;//Nombre total de pipelines dans cet ensemble
-	int		nb_of_this_pipeline;//et son indice (regarder simplement "position")
-	/*Le pipe precedent et actuel*/
-	//rajouter le necessaire pour exec
-	t_fd 	*fds;
+	char	*cmd;
+	char	**cmd_args;
+	int		position;
+	int		sub_shell;
+	char	**redir;
+	char	**var;
+	t_list	*lst_var;
+	char	**raw_pipeline;
+	int		total_of_pipeline;
+	int		nb_of_this_pipeline;
+	t_fd	*fds;
 	int		i;
 	int		has_error;
 	int		has_red_out;
@@ -124,15 +113,19 @@ int		dive_into_lines(t_ms *ms, t_line **lns);
 
 //parsing
 int		clean_all_pipelines(t_ms *ms, t_line *ln);
+int		parenthesis(char **tb);
 t_line	**split_and_init_lines(t_ms *ms, char **rline);
 int		make_pipeline(char **tb, t_pl **pl_add, int len, int n_o_pls);
 int		split_and_init_pipelines(t_ms *ms, t_line **lns, int i);
-int   	update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars);
+int		update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars);
 int		pipeline_len(char **tb);
 char	**raw_pipeline(char **tb, int len);
 void	update_r_l(t_pl *pl);
+int		parse_error(int operator, char *token, int is_unsupported);
 int		make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls);
 int		malloc_shit(char ***tab, int size);
+int		make_arrays_pl(t_pl **pl, char **tb);
+int		is_var_ass(char *str);
 
 //exec
 int		exec_line(t_ms *ms, t_line *line);
@@ -215,11 +208,15 @@ int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 //EXEC --> REDIRS / PIPE
 char	**lst_to_tab(t_list *env);
 void	handle_pipe(t_pl *pl);
+int		handle_built_in(t_pl **pls, int *i, t_ms *ms);
 int		red_in(t_pl *pipeline, t_ms *ms);
 int		redirect_out_fd(t_pl **pl, char *redir, t_pl *temp, int i);
 int		pipe_needed(t_pl *pl);
 void	reset_out_fds(t_pl *pl);
+int		handle_built_in(t_pl **pls, int *i, t_ms *ms);
 int		handle_fds(t_pl **pls, int i, t_ms *ms);
+void	close_fds(int fd1, int fd2, int fd3, int fd4);
+void	my_dup2(int fd1, int fd2, int fd3, int fd4);
 int		red_out(t_pl *pl, t_ms *ms);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
 void	close_fds(int fd1, int fd2, int fd3, int fd4);

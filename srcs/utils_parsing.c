@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:27:34 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/04 16:26:46 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/12 16:42:50 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,26 @@ int	find_cmd(char**tab, t_ms *ms)
 	return (1);
 }
 
-// void	offset_array(char ***tab_p)
-// {
-// 	char	**tab;
-// 	int		i;
+int	parenthesis(char **tb)
+{
+	int	i;
+	int	op;
+	int	count;
 
-// 	tab = *tab_p;
-// 	i = -1;
-// 	while (tab && tab[++i])
-// 		tab[i] = tab[i + 1];
-// 	if (!tab[0])
-// 	{
-// 		free(tab);
-// 		tab = NULL;
-// 	}	
-// 	*tab_p = tab;
-// }
+	count = 0;
+	i = -1;
+	while (tb[++i])
+	{
+		op = which_op(tb[i]);
+		if (op == O_PAR)
+			count++;
+		else if (op == C_PAR)
+			count--;
+		if (count < 0)
+			return (parse_error(op, tb[i], 0), -1);
+	}
+	return (count);
+}
 
 int	is_build_in(char *str)
 {
