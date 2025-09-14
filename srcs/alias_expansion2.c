@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   alias_expansion2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:08:14 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/09 17:21:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 18:52:22 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,10 @@ static int	make_it(t_ms *ms, char **s, int ww, int *i)
 			exp = expanded_string(*s, &((*s)[*i]), \
 		get_expansion(&((*s)[*i]) + 1, ms->lst_env, ms->lst_vars, ms), &len);
 			if (!exp)
-				return (0);
+				return (panic(ms, 52), 0);
 			if (is_ambiguous(exp))
-				return (ambiguous_message(*s), 0);
-			if (!replace_token(s, exp))
-				return (0);
+				return (free(exp), ambiguous_message(*s), 0);
+			replace_token(s, exp);
 		}
 		*i += len;
 	}
@@ -68,11 +67,10 @@ static int	make_it2(t_ms *ms, char **s, int ww, int *i)
 			exp = expanded_string(*s, &((*s)[*i]), \
 		get_expansion(&((*s)[*i]) + 1, ms->lst_env, ms->lst_vars, ms), &len);
 			if (!exp)
-				return (0);
+				return (panic(ms, 52), 0);
 			if (is_ambiguous(exp))
-				return (ambiguous_message(*s), 0);
-			if (!replace_token(s, exp))
-				return (0);
+				return (free(exp), ambiguous_message(*s), 0);
+			replace_token(s, exp);
 		}
 		*i += len;
 	}
@@ -97,13 +95,9 @@ int	alias_in_redir(t_ms *ms, char **s)
 			while ((*s)[i] && which_word(&(*s)[i++], *s) != ww)
 				(void)i;
 		else if (ww == '\"' && ++i && !make_it(ms, s, ww, &i))
-		{
-			if (!make_it(ms, s, ww, &i))
-				return (0);
-		}
-		else
-			if (!make_it2(ms, s, ww, &i))
-				return (0);
+			return (0);
+		else if (!make_it2(ms, s, ww, &i))
+			return (0);
 	}
 	return (1);
 }

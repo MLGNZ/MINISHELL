@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning_parsing.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 20:57:50 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/09 17:53:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 18:34:44 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,12 @@ static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position)
 	find_cmd(pl->cmd_args, ms);
 	set_cmd_and_args(pl);
 	if (!tab_to_lst(pl->var, &pl->lst_var))
-		return (0);
-	update_lst(&ln->lst_vars, &pl->lst_var);
+		return (panic(ms, 52), 0);
+	if (!update_lst(&ln->lst_vars, &pl->lst_var))
+		return (panic(ms, 52), 0);
 	ft_lstadd_back(&ln->lst_vars, pl->lst_var);
 	pl->lst_var = NULL;
-	lst_print(ln->lst_vars);
+	if (0)
+		lst_print(ln->lst_vars);
 	return (1);
 }

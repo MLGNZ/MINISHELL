@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   alias_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 21:29:42 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/09 17:21:49 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 18:01:38 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	make_it_alias_exp(t_ms *ms, char **s, int *i, int ww)
 		{
 			if (!replace_token(s, expanded_string(*s, &((*s)[*i]), \
 		get_expansion(&((*s)[*i]) + 1, ms->lst_env, ms->lst_vars, ms), &len)))
-				return (0);
+				return (panic(ms, 52), 0);
 		}
 		*i += len;
 	}
@@ -61,7 +61,7 @@ static int	make_it_alias_exp2(t_ms *ms, char **s, int *i, int ww)
 		{
 			if (!replace_token(s, expanded_string(*s, &((*s)[*i]), \
 		get_expansion(&((*s)[*i]) + 1, ms->lst_env, ms->lst_vars, ms), &len)))
-				return (0);
+				return (panic(ms, 52), 0);
 		}
 		*i += len;
 	}

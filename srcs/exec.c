@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 15:58:10 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 17:52:02 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 		pls[i]->fd_in = dup(0);
 		pls[i]->fd_out = dup(1);
 		if (pipe_needed(pls[i]) && pipe(pls[i]->current_pipe) == -1)
-			return (perror("pipe"), 0); 
+			return (perror("pipe"), 0);
 		if (pls[i]->sub_shell)
 		{
 			if (!handle_subshell(pls, &i, ms))
@@ -101,6 +101,7 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 		{
 			handle_pipe(pls[i]);
 			handle_fds(pls, i, ms);
+			pls[i]->pid = -1;
 			i++;
 			continue ;
 		}
@@ -119,7 +120,7 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 	if (!exec_loop(pls, ms))
 		return (0);
 	i = -1;
-	while (pls[++i] && (pls[i]->cmd || pls[i]->sub_shell))
+	while (pls[++i])
 	{
 		if (!is_build_in(pls[i]->cmd) || \
 		(pls[i]->position != ALONE \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/09 18:16:34 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:07:21 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,20 @@ int	wildcards_expansion(char **s)
 	int		first_n_last;
 	char	**wild_requ;
 	char	*ret;
+	int		check;
 
+	check = 1;
 	first_n_last = 0;
 	if (!s)
 		return (1);
-	wild_requ = get_wild_pattern(s, &first_n_last);
-	ret = every_matching_files(wild_requ, first_n_last);
+	wild_requ = get_wild_pattern(s, &first_n_last, 0, &check);
+	if (!check)
+		return (0);
+	if (!wild_requ)
+		return (1);
+	ret = every_matching_files(wild_requ, first_n_last, &check);
+	if (!check)
+		return (0);
 	if (!ret)
 		return (1);
 	free(*s);
@@ -30,34 +38,42 @@ int	wildcards_expansion(char **s)
 	return (1);
 }
 
-int	wildcards_in_redir(char **s)
+int	wildcards_in_redir(t_ms *ms, char **s)
 {
 	int		first_n_last;
 	char	**wild_requ;
 	char	*ret;
+	int		check;
 
+	check = 1;
 	first_n_last = 0;
 	if (!s)
 		return (1);
-	wild_requ = get_wild_pattern(s, &first_n_last);
-	ret = every_matching_files(wild_requ, first_n_last);
+	wild_requ = get_wild_pattern(s, &first_n_last, 0, &check);
+	if (!check)
+		return (panic(ms, 52), 0);
+	if (!wild_requ)
+		return (1);
+	ret = every_matching_files(wild_requ, first_n_last, &check);
+	if (!check)
+		return (panic(ms, 52), 0);
 	if (!ret)
 		return (1);
 	if (is_ambiguous(ret))
-		return (ambiguous_message(*s), 0);
+		return (free(ret), ambiguous_message(*s), 0);
 	free(*s);
 	*s = ret;
 	return (1);
 }
 
-int	manage_wildcards(char **tab, int type)
+int	manage_wildcards(t_ms *ms, char **tab, int type)
 {
 	if (type == CMD_LT && !wildcards_expansion(tab))
-		return (0);
-	if (type == REDIR && !wildcards_in_redir(tab))
+		return (panic(ms, 52), 0);
+	if (type == REDIR && !wildcards_in_redir(ms, tab))
 		return (0);
 	if (type == VAR && !wildcards_expansion(tab))
-		return (0);
+		return (panic(ms, 52), 0);
 	return (1);
 }
 
@@ -101,12 +117,8 @@ char	*wild_join(char *src, char *d_name)
 	{
 		ret = ft_strjoin_free1(src, " ");
 		if (!ret)
-			return (0);
+			return (NULL);
 	}
-	else
-		ret = NULL;
 	ret = ft_strjoin_free1(ret, d_name);
-	if (!ret)
-		return (0);
 	return (ret);
 }

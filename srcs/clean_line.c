@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/09 18:47:12 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 19:10:30 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@ static int	cat_over_quotes(const char *s0, char *s, char q);
 
 static int	clean_expand_in_array2(char **t0, char **t, char ***t_adr, int type)
 {
-	while (t && *t)
-	{
-		if (((t == t0) || which_op(*(t - 1)) != HDOC) && \
-		!manage_wildcards(t, type))
-			return (0);
-		t++;
-	}
 	if (type == CMD_LT && !update_tab(&t0, t0, 0))
 		return (0);
 	t = t0;
@@ -47,14 +40,21 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 	{
 		if (((tab == tab0) || which_op(*(tab - 1)) != HDOC) && \
 		!manage_aliases(ms, tab, type))
-			return (0);
+			return (*tab_addr = tab0, 0);
 		tab++;
 	}
 	if (type == CMD_LT && !update_tab(&tab0, tab0, 0))
-		return (0);
+		return (*tab_addr = tab0, panic(ms, 52), 0);
 	tab = tab0;
+	while (tab && *tab)
+	{
+		if (((tab == tab0) || which_op(*(tab - 1)) != HDOC) && \
+		!manage_wildcards(ms, tab, type))
+			return (0);
+		tab++;
+	}
 	if (!clean_expand_in_array2(tab0, tab, tab_addr, type))
-		return (0);
+		return (*tab_addr = tab0, panic(ms, 52), 0);
 	return (1);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:11:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/08/29 03:12:00 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/13 18:33:36 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	update_tab(char ***tab_address, char **tab, int i)
 		return (free_supertab(supertab, 1), 0);
 	ret = NULL;
 	update_tab_needed(ret, supertab, ret0);
-	printsplit(*tab_address);
 	freesplit(*tab_address);
 	*tab_address = ret0;
 	free_supertab(supertab, 0);
@@ -93,11 +92,11 @@ int	update_tab(char ***tab_address, char **tab, int i)
 
 int	manage_aliases(t_ms *ms, char **tab, int type)
 {
-	if (type == CMD_LT && !alias_expansion(ms, tab))
-		return (0);
+	if (type == CMD_LT)
+		alias_expansion(ms, tab);
 	if (type == REDIR && !alias_in_redir(ms, tab))
 		return (0);
-	if (type == VAR && !alias_expansion(ms, tab))
-		return (0);
+	if (type == VAR)
+		alias_expansion(ms, tab);
 	return (1);
 }

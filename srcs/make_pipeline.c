@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 15:38:57 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 16:25:19 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 	pl->raw_pipeline = raw_pipeline(tb, len);
 	if (!pl->raw_pipeline)
 		return (0);
-	printsplit(pl->raw_pipeline);
 	if (pl->raw_pipeline[0][0] == '(')
 	{
 		pl->sub_shell = 1;

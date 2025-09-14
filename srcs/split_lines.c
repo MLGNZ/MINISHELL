@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:58:18 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 02:22:41 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 17:07:35 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_line	**split_and_init_lines(t_ms *ms, char **rline)
 		return (panic(ms, 52), NULL);
 	ft_bzero(ret, sizeof(t_line *));
 	ret0 = ret;
-	while (*rline)
+	while (rline && *rline && ((rline[1] || which_op(*rline) != SEMICOLON)))
 	{
 		*ret = make_line(&(*rline), line_len(rline, &len));
 		if (!*ret++)
@@ -84,12 +84,15 @@ static t_line	*make_line(char **rline, int len)
 static int	count_lines(char **rline, int *nb_of_lines)
 {
 	int	len;
+	int	line_l;
 
+	line_l = 0;
 	len = 0;
-	while (rline && *rline)
+	while (rline && *rline && ((rline[1] || which_op(*rline) != SEMICOLON)))
 	{
-		rline += line_len(rline, &len);
+		line_l = line_len(rline, &len);
 		(*nb_of_lines)++;
+		rline += line_l;
 	}
 	return (*nb_of_lines);
 }

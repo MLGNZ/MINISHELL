@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/12 17:43:46 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 16:46:37 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	main(int argc, char **argv, char **envp)
 int	minishell(t_ms *ms, char **s_readline)
 {
 	ms->s_readline = s_readline;
-	printsplit(ms->s_readline);
 	ms->lns = split_and_init_lines(ms, ms->s_readline);
 	dive_into_lines(ms, ms->lns);
 	return (ms->exit_code);

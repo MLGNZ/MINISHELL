@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/14 16:05:53 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/14 17:16:13 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ void	handle_pipe(t_pl *pl)
 		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 		return ;
 	}
-	if (pl->position == LAST || pl->position == INTER)
+	if ((pl->position == LAST || pl->position == INTER) && pl->cmd)
 	{
 		dup2(pl->previous_pipe[0], 0);
 		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 	}
-	if ((pl->position == FIRST || pl->position == INTER) && !pl->has_red_out && (pl->cmd || pl->sub_shell))
+	if ((pl->position == FIRST || pl->position == INTER) && \
+	!pl->has_red_out && (pl->cmd || pl->sub_shell))
 	{
 		dup2(pl->current_pipe[1], 1);
 		close_fds(pl->current_pipe[0], pl->current_pipe[1], 0, 0);
