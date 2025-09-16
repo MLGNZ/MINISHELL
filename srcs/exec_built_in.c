@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:31:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/12 16:44:10 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:42:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	my_dup2(int fd1, int fd2, int fd3, int fd4)
 
 static void	handle_cd(t_pl *pl, t_ms *ms)
 {
-	if (pl->cmd_args[2])
+	if (pl->cmd_args[1] && pl->cmd_args[2])
 	{
 		ms->exit_code = 1;
 		ft_putstr_fd("minishell: ", 2);
@@ -38,7 +38,7 @@ static int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 	else if (!ft_strncmp(pl->cmd, "exit", ft_strlen(pl->cmd)))
 		ft_exit(ms, pl->cmd_args);
 	else if (!ft_strncmp(pl->cmd, "pwd", ft_strlen(pl->cmd)))
-		pwd();
+		pwd(ms);
 	else if (!ft_strncmp(pl->cmd, "export", ft_strlen(pl->cmd)))
 		ft_export(pl->cmd_args, ms);
 	else if (!ft_strncmp(pl->cmd, "unset", ft_strlen(pl->cmd)))

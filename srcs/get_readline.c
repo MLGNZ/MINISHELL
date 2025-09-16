@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 19:23:42 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:27:31 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	get_valid_line(t_ms *ms, int i)
 	while (1)
 	{
 		rl_on_new_line();
-		rline = readline("zsh: segmentation fault (core dumped)  ./minishell\nf6r11s3% ");//"\1\e[4;100m\2minishell\1\e[0;31m\2\1\e[97m:\1\e[0m\2 ");
+		rline = readline("minishell% ");
 		if (!rline)
 			return (panic(ms, 0));
 		temp_spltd = ft_split_op(rline, &ms->s_readline_len);

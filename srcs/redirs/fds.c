@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:24:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/09 18:46:56 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:15:35 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ int	redirect_out_fd(t_pl **pl, char *redir, t_pl *temp, int i)
 		return (0);
 	while (ft_isdigit(redir[j]))
 		j++;
+	if (redir[j] != '>')
+		return (1);
 	new_fd = malloc(sizeof(t_fd));
 	if (!new_fd)
 		return (0);

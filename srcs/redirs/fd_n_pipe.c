@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/14 17:16:13 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:29:04 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 	while (pl->redir && pl->redir[++i])
 	{
 		pl->i = i;
-		if (ft_isdigit(pl->redir[i][0]))
+		if (ft_strchr(pl->redir[i], '>') && ft_isdigit(pl->redir[i][0]))
 		{
 			if (!redirect_out_fd(&pl, pl->redir[i], pl, i))
 				return (0);
@@ -41,6 +41,8 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 
 void	handle_pipe(t_pl *pl)
 {
+	if (pl->position == ALONE)
+		return ;
 	if (pl->position == FIRST && pl->has_red_out)
 		return ;
 	if (pl->position == LAST && pl->has_red_in)

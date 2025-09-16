@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 16:24:40 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:35:16 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ void	env(t_ms *ms);
 int		echo(char **tab, t_ms *ms);
 void	ft_exit(t_ms *ms, char **cmd_args);
 int		my_get_env(char *var, t_list *env);
-int		pwd(void);
+int		pwd(t_ms *ms);
 
 void	lst_print(t_list *lst);
 int		tab_to_lst(char **tab, t_list **p_lst);

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/12 17:53:11 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/15 17:40:16 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,16 @@ void	env(t_ms *ms)
 	}
 }
 
-int	pwd(void)
+int	pwd(t_ms *ms)
 {
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
+	{
+		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms) + 4);
 		return (0);
+	}
 	printf("%s\n", pwd);
 	free(pwd);
 	return (1);
@@ -73,6 +76,12 @@ static int	check_errors(char **cmd_args, t_ms *ms)
 			return (0);
 		}
 	}
+	if (cmd_args[2])
+	{
+		ft_putstr_fd(" too many arguments", 2);
+		ms->exit_code = 1;
+		return (0);
+	}
 	return (1);
 }
 
@@ -88,12 +97,9 @@ void	ft_exit(t_ms *ms, char **cmd_args)
 	long long int	exit_code;
 
 	if (!cmd_args[1])
-		exit(0);
-	if (cmd_args[2])
 	{
-		ft_putstr_fd(" too many arguments", 2);
-		ms->exit_code = 1;
-		return ;
+		printf("exit\n");
+		exit(0);
 	}
 	if (!check_errors(cmd_args, ms))
 		return ;
