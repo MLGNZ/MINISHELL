@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:45:54 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/29 03:18:29 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/16 15:52:16 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,9 @@ int	word_length(char *s0, char *s)
 			q = '\"';
 		len++;
 		s++;
-		while (*s && (q != ' ' || *s != ' ') && (!is_op(s0, s) || q != ' ') \
-		&& !(is_meta(s, '\'', s0) || is_meta(s, '\"', s0)) && ++len)
+		while (*s && ((q == ' ' && *s != ' ' && !is_op(s0, s) \
+		&& !is_meta(s, '\'', s0) && !is_meta(s, '\"', s0)) || (q != ' ' && \
+		!(q == is_meta(s, '\'', s0) || q == is_meta(s, '\"', s0)))) && ++len)
 			s++;
 		if (*s && *s == q && q != ' ' && ++len)
 			s++;
