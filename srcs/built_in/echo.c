@@ -6,11 +6,25 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/15 15:09:00 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:39:38 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int its_opt(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i++] != '-')
+		return (0);
+	while (str[i] && str[i] == 'n')
+		i++;
+	if (str[i])
+		return (0);
+	return (1);
+}
 
 static int	is_n(char **tab)
 {
@@ -25,7 +39,7 @@ static int	is_n(char **tab)
 		return (0);
 	while (tab[i])
 	{
-		if (!ft_strncmp(tab[i], "-n", ft_strlen(tab[i])) && !not_n)
+		if (its_opt(tab[i]) && !not_n)
 			is_n++;
 		else
 			not_n = 1;
@@ -52,7 +66,7 @@ static char	**get_lines(char **tab)
 	j = 0;
 	while (tab[i])
 	{
-		if (ft_strncmp(tab[i], "-n", ft_strlen(tab[i])))
+		if (!its_opt(tab[i]))
 			to_cpy = 1;
 		if (to_cpy)
 			lines[j++] = ft_strdup(tab[i]);

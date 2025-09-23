@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 17:52:02 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:07:55 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 		redir_val = handle_redirs(ms, pls, &i);
 		if (redir_val != 1)
 			continue ;
+		if (g_sig)
+			return (0);
 		if (!pls[i]->cmd)
 		{
 			handle_pipe(pls[i]);
@@ -128,10 +130,14 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 		{
 			if (pls[i]->pid == -1)
 				continue ;
+			signal(SIGINT, sig_handler_no);
 			waitpid(pls[i]->pid, &status, 0);
 			if (WIFEXITED(status))
 				ms->exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				ms->exit_code = 128 + WTERMSIG(status);
 		}
+		signal(SIGINT, sig_handler);
 		if (pls[i]->fds)
 			reset_out_fds(pls[i]);
 	}

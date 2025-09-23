@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/15 17:35:16 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:33:22 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include "libft.h"
 # include <dirent.h>
 
+extern volatile sig_atomic_t g_sig;
+ 
 # define EOL 1
 # define PIPE 2
 # define RIN 3
@@ -109,7 +111,9 @@ typedef struct s_pipeline
 //minishell
 int		go_to_subshell(t_ms *ms, char **s_readline);
 int		minishell(t_ms *ms, char **s_readline);
+void	sig_handler(int sig);
 int		dive_into_lines(t_ms *ms, t_line **lns);
+void	sig_handler_no(int sig);
 
 //parsing
 int		clean_all_pipelines(t_ms *ms, t_line *ln);

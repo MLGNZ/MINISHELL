@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"minishell.h": "c"
-	},
-	"github.copilot.chat.agent.autoFix": false,
-	"github.copilot.chat.agent.runTasks": false
-}

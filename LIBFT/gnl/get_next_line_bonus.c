@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/04 13:38:24 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/03 17:10:21 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/19 11:43:59 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*get_next_line(int fd, int *check)
 		return (*check = 0, tail[fd][0] = 0, NULL);
 	*ret = 0;
 	p_ret = &ret;
-	if (tail[0] && !update(p_ret, tail[fd]))
+	if (!update(p_ret, tail[fd]))
 		return (*check = 0, free(ret), tail[fd][0] = 0, NULL);
 	if (is_end(*p_ret))
 		return (*p_ret);

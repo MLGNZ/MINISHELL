@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/11 12:45:51 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:08:22 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free)
 	{
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0, &check_free);
-		if (!line && !check_free)
+		if ((!line && !check_free) ||g_sig)
 			return (free(line), 0);
 		else if (!line && check_free)
 			break ;
@@ -69,7 +69,7 @@ static int	handle_heredoc(t_pl *pl, int hd_pos)
 	if (pipe(pl->current_pipe) == -1)
 		return (perror("pipe"), 0);
 	if (!hd_loop(&pl, delim, check_free))
-		return (0);
+		return (0);	
 	close(pl->current_pipe[1]);
 	return (1);
 }

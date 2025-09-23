@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:09:25 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/03 17:25:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/19 12:03:10 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*get_var_exp(const char *s0, t_list *list, size_t len)
 	{
 		if (!ft_strncmp(s0, list->content, len) && \
 	ft_strlen(list->content) > len + 1 && ((char *)list->content)[len] == '=')
-			return (ft_strdup(&(list->content)[len + 1]));
+			return (ft_strdup(&((char *)list->content)[len + 1]));
 		list = list->next;
 	}
 	return (NULL);

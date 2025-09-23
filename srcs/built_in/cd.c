@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/15 17:42:20 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:36:48 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,10 @@ void	cd(char **path, t_ms **ms)
 {
 	char	*oldpwd;
 	char	*newpwd;
+	DIR		*file;
 
 	oldpwd = getcwd(NULL, 0);
+	file = opendir(path[1]);
 	if (!path[1])
 	{
 		if (chdir(get_var(my_get_env("HOME=", (*ms)->lst_env), *ms) + 5) == -1)
@@ -66,7 +68,9 @@ void	cd(char **path, t_ms **ms)
 		update_env(*ms, oldpwd, newpwd);
 		return ;
 	}
-	else if (chdir(path[1]) == -1)
+	else if(file == ENOENT)
+		perror(path[1]);
+	else if (closedir(file) && chdir(path[1]) == -1)
 	{
 		(*ms)->exit_code = 1;
 		perror(path[1]);

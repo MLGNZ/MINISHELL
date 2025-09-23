@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/15 14:27:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/22 19:52:12 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ int	get_valid_line(t_ms *ms, int i)
 		rline = readline("minishell% ");
 		if (!rline)
 			return (panic(ms, 0));
+		if (g_sig)
+		{
+			ms->prev_exit_code = g_sig;
+			g_sig = 0;
+		}
 		temp_spltd = ft_split_op(rline, &ms->s_readline_len);
 		if (!temp_spltd)
 			return (panic(ms, 52));

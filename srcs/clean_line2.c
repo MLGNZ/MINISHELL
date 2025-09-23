@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:11:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/13 18:33:36 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/16 18:44:41 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,11 @@ int	update_tab_needed2(int *superlen, char **tab, char ***supertab, int i)
 	return (1);
 }
 
-int	update_tab(char ***tab_address, char **tab, int i)
+int   	update_tab(char ***tab_address, char **tab, int i)
 {
 	char	***supertab;
 	char	**ret0;
 	int		superlen;
-	char	**ret;
 
 	superlen = 0;
 	while (tab && tab[i])
@@ -82,12 +81,14 @@ int	update_tab(char ***tab_address, char **tab, int i)
 	ret0 = malloc(sizeof(char *) * (superlen + 1));
 	if (!ret0)
 		return (free_supertab(supertab, 1), 0);
-	ret = NULL;
-	update_tab_needed(ret, supertab, ret0);
+	update_tab_needed(NULL, supertab, ret0);
+	if (!*ret0)
+	{
+		free(ret0);
+		ret0 = NULL;
+	}
 	freesplit(*tab_address);
-	*tab_address = ret0;
-	free_supertab(supertab, 0);
-	return (1);
+	return (*tab_address = ret0, free_supertab(supertab, 0), 1);
 }
 
 int	manage_aliases(t_ms *ms, char **tab, int type)

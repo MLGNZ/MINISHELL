@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 13:05:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/08 16:51:01 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/16 16:30:54 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,13 +97,14 @@ t_list	*exists_in_vars(char *content, t_list *vars, int *cat)
 	while (vars)
 	{
 		if (!ft_strncmp(vars->content, content, sok) && \
-	(!((char *)vars->content)[sok] || ((char *)vars->content)[sok] == '=' || \
+	(((char *)vars->content)[sok] == '=' || \
 	((char *)vars->content)[sok] == '+'))
 		{
 			if (((char *)vars->content)[sok] == '+')
 				*cat = 1;
 			return (vars);
 		}
+		
 		vars = vars->next;
 	}
 	return (NULL);
