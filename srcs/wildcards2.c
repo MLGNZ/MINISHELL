@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/13 19:07:21 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:52:51 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ int	wildcards_expansion(char **s)
 	wild_requ = get_wild_pattern(s, &first_n_last, 0, &check);
 	if (!check)
 		return (0);
-	if (!wild_requ)
-		return (1);
 	ret = every_matching_files(wild_requ, first_n_last, &check);
 	if (!check)
 		return (0);
@@ -52,8 +50,6 @@ int	wildcards_in_redir(t_ms *ms, char **s)
 	wild_requ = get_wild_pattern(s, &first_n_last, 0, &check);
 	if (!check)
 		return (panic(ms, 52), 0);
-	if (!wild_requ)
-		return (1);
 	ret = every_matching_files(wild_requ, first_n_last, &check);
 	if (!check)
 		return (panic(ms, 52), 0);
@@ -81,9 +77,12 @@ int	match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last)
 {
 	int	i;
 
-	if (!wild_pattern || !*wild_pattern || !d_name)
+	if (!wild_pattern || !d_name)
 		return (0);
+	if (!*wild_pattern)
+		return (1);
 	i = 0;
+	//dois faire recursivite avec toutes combinaisons d'iteration de while en dessous...
 	if (first_n_last == 1 || first_n_last == 3)
 	{
 		if (!ft_strncmp(wild_pattern[i], d_name, ft_strlen(wild_pattern[i])))

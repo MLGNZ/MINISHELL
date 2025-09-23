@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/13 19:00:12 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/23 16:51:48 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	first_and_last(char *str)
 {
 	int	ret;
 
+	printf("<%s>\n", str);
+	
 	ret = 0;
 	if (!str)
 		return (ret);
@@ -51,6 +53,7 @@ int	first_and_last(char *str)
 		ret += 1;
 	if (str[ft_strlen(str) - 1] != ' ')
 		ret += 2;
+	printf("%i\n", ret);
 	return (ret);
 }
 
@@ -92,7 +95,7 @@ char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check)
 	*first_n_last = first_and_last(temp_s);
 	wild_requ = ft_split_op(temp_s, &len);
 	if (!wild_requ)
-		return (free(temp_s), *check = 0, NULL);
+		return (free(temp_s), *check = 0, puts("vide"), NULL);
 	i = -1;
 	while (wild_requ[++i])
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 14:07:55 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/23 15:53:45 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,10 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 				return (0);
 			continue ;
 		}
+		signal(SIGINT, sig_handler_hd);
 		redir_val = handle_redirs(ms, pls, &i);
+		signal(SIGINT, sig_handler);
+
 		if (redir_val != 1)
 			continue ;
 		if (g_sig)
@@ -102,6 +105,7 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 		if (!pls[i]->cmd)
 		{
 			handle_pipe(pls[i]);
+			
 			handle_fds(pls, i, ms);
 			pls[i]->pid = -1;
 			i++;
