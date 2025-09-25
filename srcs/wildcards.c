@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 16:51:48 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/23 17:47:44 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ int	first_and_last(char *str)
 {
 	int	ret;
 
-	printf("<%s>\n", str);
-	
 	ret = 0;
 	if (!str)
 		return (ret);
@@ -53,7 +51,6 @@ int	first_and_last(char *str)
 		ret += 1;
 	if (str[ft_strlen(str) - 1] != ' ')
 		ret += 2;
-	printf("%i\n", ret);
 	return (ret);
 }
 

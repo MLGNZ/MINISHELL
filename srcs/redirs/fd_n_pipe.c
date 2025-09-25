@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fd_n_pipe.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/23 16:56:36 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:06:07 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 		if (ft_strchr(pl->redir[i], '>') && ft_isdigit(pl->redir[i][0]))
 		{
 			if (!redirect_out_fd(&pl, pl->redir[i], pl, i))
-				return (ms->exit_code = 1, 0);
+				return (0);
 			if (tmp)
 				tmp = tmp->next;
 		}
 		if ((!ft_strncmp(pl->redir[i], "<<", 2) || \
 		!ft_strncmp(pl->redir[i], "<", 1)) && !red_in(pl, ms))
-			return (dup2(pl->fd_in, 0), 0);
+			return (dup2(pl->fd_in, 0), ms->exit_code = 1, 0);
 		if ((!ft_strncmp(pl->redir[i], ">>", 2) || \
 		!ft_strncmp(pl->redir[i], ">", 1)) && !red_out(pl, ms))
 			return (dup2(pl->fd_out, 1), ms->exit_code = 1, 0);
@@ -50,7 +50,8 @@ void	handle_pipe(t_pl *pl)
 		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
 		return ;
 	}
-	if ((pl->position == LAST || pl->position == INTER) && (pl->cmd || pl->sub_shell))
+	if ((pl->position == LAST || pl->position == INTER) && (pl->cmd \
+	|| pl->sub_shell))
 	{
 		dup2(pl->previous_pipe[0], 0);
 		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
@@ -104,6 +105,7 @@ int	handle_redirs(t_ms *ms, t_pl **pls, int *i)
 	{
 		if (!redirect_fds(pls[*i], ms))
 		{
+			ms->exit_code = 1;
 			pls[*i]->pid = -1;
 			if (!handle_fds(pls, (*i)++, ms))
 				return (perror("dup2"), 0);

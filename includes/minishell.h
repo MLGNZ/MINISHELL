@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 15:47:16 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:21:12 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,10 @@ int		minishell(t_ms *ms, char **s_readline);
 void	sig_handler(int sig);
 int		dive_into_lines(t_ms *ms, t_line **lns);
 void	sig_handler_no(int sig);
+void	sig_handler_prompt(int sig);
+void	sig_handler(int sig);
 void	sig_handler_hd(int sig);
+int		handle_subshell(t_pl **pls, int *i, t_ms *ms);
 
 //parsing
 int		clean_all_pipelines(t_ms *ms, t_line *ln);
@@ -240,7 +243,8 @@ char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check);
 char	*wild_join(char *src, char *d_name);
 int		match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last);
 
-
+//TBD
+int get_valid_line_inter(t_ms *ms, int i);
 
 
 #endif

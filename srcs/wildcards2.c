@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/23 16:52:51 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:09:18 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ int	match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last)
 	if (!*wild_pattern)
 		return (1);
 	i = 0;
-	//dois faire recursivite avec toutes combinaisons d'iteration de while en dessous...
 	if (first_n_last == 1 || first_n_last == 3)
 	{
 		if (!ft_strncmp(wild_pattern[i], d_name, ft_strlen(wild_pattern[i])))

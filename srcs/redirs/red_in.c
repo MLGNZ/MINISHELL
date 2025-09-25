@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   red_in.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 16:01:22 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:05:45 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free)
 {
 	char	*line;
 
-	while (1 && !g_sig)
+	while (1)
 	{
-		
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0, &check_free);
 		if ((!line && !check_free) || g_sig)
@@ -57,7 +56,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free)
 		ft_putstr_fd("\n", (*pl)->current_pipe[1]);
 		free(line);
 	}
-	return (1 * !g_sig);
+	return (1);
 }
 
 static int	handle_heredoc(t_pl *pl, int hd_pos)
@@ -70,14 +69,13 @@ static int	handle_heredoc(t_pl *pl, int hd_pos)
 	if (pipe(pl->current_pipe) == -1)
 		return (perror("pipe"), 0);
 	if (!hd_loop(&pl, delim, check_free))
-		return (0);	
+		return (0);
 	close(pl->current_pipe[1]);
 	return (1);
 }
 
 int	look_hd(t_pl *pl, int *last_in_pos, int *last_hd_pos, int *last_hd_fd)
 {
-	
 	if (!ft_strncmp(pl->redir[pl->i], "<<", 2))
 	{
 		pl->has_red_in = 1;
@@ -119,14 +117,12 @@ int	red_in(t_pl *pl, t_ms *ms)
 	if (!pl->redir)
 		return (1);
 	if (!look_hd(pl, &last_in_pos, &last_hd_pos, &last_hd_fd))
-		return (ms->exit_code = (!g_sig) + (g_sig), 0);
-	
-	
+		return (ms->exit_code = 1, 0);
 	if (last_hd_pos != -1 && last_hd_fd != -1 && last_hd_pos > last_in_pos)
 	{
 		if (pl->cmd)
 			if (dup2(last_hd_fd, 0) == -1)
-				return (perror("dup2"), close(last_hd_fd), ms->exit_code = 1, 0);
+				return (perror("dup2"), close(last_hd_fd), 0);
 		close(last_hd_fd);
 	}
 	return (1);

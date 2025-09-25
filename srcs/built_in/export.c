@@ -6,11 +6,25 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/09 17:20:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:05:51 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*get_var(int pos, t_ms *ms)
+{
+	t_list	*curr;
+	int		i;
+
+	if (pos == -1)
+		return (getcwd(NULL, 0));
+	curr = ms->lst_env;
+	i = -1;
+	while (++i < pos)
+		curr = curr->next;
+	return (curr->content);
+}
 
 int	is_valid_var_key(char *str)
 {

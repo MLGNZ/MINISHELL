@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 16:54:25 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/25 13:53:13 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,32 +33,6 @@ int	tab_to_lst(char **tab, t_list **p_lst)
 	return (1);
 }
 
-void	sig_handler(int sig)
-{
-	g_sig = sig + 128;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	sig_handler_no(int sig)
-{
-	g_sig = sig + 128;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-}
-
-void	sig_handler_hd(int sig)
-{
-	g_sig = sig + 128;
-	close(0);
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_ms	ms;
@@ -77,7 +51,7 @@ int	main(int argc, char **argv, char **envp)
 			ms.exit_code = g_sig;
 			g_sig = 0;
 		}
-		if (!get_valid_line(&ms, -1))
+		if (!get_valid_line_inter(&ms, -1))
 			break ;
 		if (ms.s_readline)
 		{

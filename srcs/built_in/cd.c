@@ -6,25 +6,11 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/19 13:36:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:06:00 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*get_var(int pos, t_ms *ms)
-{
-	t_list	*curr;
-	int		i;
-
-	if (pos == -1)
-		return (getcwd(NULL, 0));
-	curr = ms->lst_env;
-	i = -1;
-	while (++i < pos)
-		curr = curr->next;
-	return (curr->content);
-}
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find)
 {
@@ -52,6 +38,24 @@ static void	error_mess(char *msg, char *oldpwd)
 	free(oldpwd);
 }
 
+static int	error_cd(DIR *file, char **path, t_ms **ms)
+{
+	file = opendir(path[1]);
+	if (errno == ENOTDIR)
+	{
+		perror(path[1]);
+		return (0);
+	}
+	closedir(file);
+	if (chdir(path[1]) == -1)
+	{
+		(*ms)->exit_code = 1;
+		perror(path[1]);
+		return (0);
+	}
+	return (1);
+}
+
 void	cd(char **path, t_ms **ms)
 {
 	char	*oldpwd;
@@ -59,7 +63,6 @@ void	cd(char **path, t_ms **ms)
 	DIR		*file;
 
 	oldpwd = getcwd(NULL, 0);
-	file = opendir(path[1]);
 	if (!path[1])
 	{
 		if (chdir(get_var(my_get_env("HOME=", (*ms)->lst_env), *ms) + 5) == -1)
@@ -68,19 +71,15 @@ void	cd(char **path, t_ms **ms)
 		update_env(*ms, oldpwd, newpwd);
 		return ;
 	}
-	else if(file == ENOENT)
-		perror(path[1]);
-	else if (closedir(file) && chdir(path[1]) == -1)
-	{
-		(*ms)->exit_code = 1;
-		perror(path[1]);
+	if (!error_cd(file, path, ms))
 		return ;
-	}
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 	{
 		error_mess("getcwd", oldpwd);
 		return ;
 	}
-	(update_env(*ms, oldpwd, newpwd), free(oldpwd), free(newpwd));
+	update_env(*ms, oldpwd, newpwd);
+	free(oldpwd);
+	free(newpwd);
 }

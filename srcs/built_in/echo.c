@@ -6,13 +6,13 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/19 13:39:38 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/24 16:05:56 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int its_opt(char *str)
+static int	its_opt(char *str)
 {
 	int	i;
 
@@ -104,7 +104,7 @@ int	echo(char **tab, t_ms *ms)
 	{
 		if (!is_n(tab))
 			ft_printf("\n");
-		return 0;
+		return (0);
 	}
 	option = is_n(tab);
 	line = get_lines(tab);

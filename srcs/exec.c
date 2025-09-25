@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 15:53:45 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/09/24 17:25:04 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
-{
-	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
-	pls[*i]->pid = fork();
-	if (pls[*i]->pid == -1)
-		return (perror("fork"), 0);
-	else if (!pls[*i]->pid)
-	{
-		dup2(pls[*i]->current_pipe[1], ms->fd_out);
-		handle_pipe(pls[*i]);
-		minishell(ms, pls[*i]->raw_pipeline);
-		close_fds(ms->fd_in, ms->fd_out, pls[*i]->current_pipe[1], 0);
-		exit(0);
-	}
-	else
-	{
-		if (pls[*i]->position == FIRST || pls[*i]->position == INTER)
-		{
-			pls[*i + 1]->previous_pipe[0] = pls[*i]->current_pipe[0];
-			pls[*i + 1]->previous_pipe[1] = pls[*i]->current_pipe[1];
-		}
-		handle_fds(pls, (*i)++, ms);
-	}
-	return (1);
-}
 
 int	handle_execve(t_pl *pl, int i, t_ms *ms)
 {
@@ -61,6 +35,14 @@ int	handle_execve(t_pl *pl, int i, t_ms *ms)
 
 int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 {
+	if (!pls[*i]->cmd)
+	{
+		handle_pipe(pls[*i]);
+		handle_fds(pls, *i, ms);
+		pls[*i]->pid = -1;
+		(*i)++;
+		return (0);
+	}
 	if (is_build_in(pl->cmd))
 		return (handle_built_in(pls, i, ms));
 	else
@@ -94,26 +76,22 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 				return (0);
 			continue ;
 		}
-		signal(SIGINT, sig_handler_hd);
 		redir_val = handle_redirs(ms, pls, &i);
-		signal(SIGINT, sig_handler);
-
 		if (redir_val != 1)
 			continue ;
 		if (g_sig)
 			return (0);
-		if (!pls[i]->cmd)
-		{
-			handle_pipe(pls[i]);
-			
-			handle_fds(pls, i, ms);
-			pls[i]->pid = -1;
-			i++;
-			continue ;
-		}
 		exec_pl(pls[i], ms, &i, pls);
 	}
 	return (1);
+}
+
+static void	get_status(int status, t_ms *ms)
+{
+	if (WIFEXITED(status))
+		ms->exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		ms->exit_code = 128 + WTERMSIG(status);
 }
 
 int	exec_cmd(t_pl **pls, t_ms *ms)
@@ -136,10 +114,7 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 				continue ;
 			signal(SIGINT, sig_handler_no);
 			waitpid(pls[i]->pid, &status, 0);
-			if (WIFEXITED(status))
-				ms->exit_code = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
-				ms->exit_code = 128 + WTERMSIG(status);
+			get_status(status, ms);
 		}
 		signal(SIGINT, sig_handler);
 		if (pls[i]->fds)
