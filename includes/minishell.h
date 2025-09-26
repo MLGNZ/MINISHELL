@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/25 16:21:12 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:30:33 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <sys/wait.h>
-# include <sys/wait.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
+# include <sys/stat.h>
 # include "libft.h"
 # include <dirent.h>
 
@@ -210,7 +210,7 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
 t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
 char	*cat_vars(char *var1, char *var2, int free2);
 int		size_of_key(char *content);
-char	*every_matching_files(char **wild_sequ, int first_n_last, int *check);
+char	*every_matching_files(char **wild_sequ, int first_n_last, int *check, int directory);
 int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 
 //EXEC --> REDIRS / PIPE

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/24 17:25:04 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:35:36 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	handle_execve(t_pl *pl, int i, t_ms *ms)
 {
 	char	**tab_env;
+	struct stat st;
 
 	handle_pipe(pl);
 	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
@@ -24,8 +25,20 @@ int	handle_execve(t_pl *pl, int i, t_ms *ms)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(pl->cmd, 2);
 		ft_putstr_fd(": command not found\n", 2);
-		close_fds(pl->fd_in, pl->fd_out, 0, 0);
 		panic(ms, 127);
+	}
+	if (!stat(pl->cmd, &st) && S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(pl->cmd, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		panic(ms, 126);
+	}
+	if (access(pl->cmd, X_OK))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(pl->cmd);
+		panic(ms, 126);
 	}
 	execve(pl->cmd, pl->cmd_args, tab_env);
 	perror("minishell");
@@ -90,8 +103,6 @@ static void	get_status(int status, t_ms *ms)
 {
 	if (WIFEXITED(status))
 		ms->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		ms->exit_code = 128 + WTERMSIG(status);
 }
 
 int	exec_cmd(t_pl **pls, t_ms *ms)
@@ -112,6 +123,11 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 		{
 			if (pls[i]->pid == -1)
 				continue ;
+			if (pls[i]->pid == -2)
+			{
+				ms->exit_code = 1;
+				continue ;
+			}
 			signal(SIGINT, sig_handler_no);
 			waitpid(pls[i]->pid, &status, 0);
 			get_status(status, ms);

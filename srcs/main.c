@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/25 13:53:13 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 11:56:43 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,6 @@ int	main(int argc, char **argv, char **envp)
 	signal(SIGINT, sig_handler);
 	while (1)
 	{
-		if (g_sig)
-		{
-			ms.exit_code = g_sig;
-			g_sig = 0;
-		}
 		if (!get_valid_line_inter(&ms, -1))
 			break ;
 		if (ms.s_readline)

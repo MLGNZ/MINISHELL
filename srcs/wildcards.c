@@ -3,16 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/23 17:47:44 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:39:02 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*every_matching_files(char **wild_sequ, int first_n_last, int *check)
+int	is_dir(struct dirent *dirent)
+{
+	//come on
+	return (1);
+}
+
+char	*every_matching_files(char **wild_sequ, int first_n_last, int *check, int directory)
 {
 	char			*pwd;
 	DIR				*dir;
@@ -30,11 +36,17 @@ char	*every_matching_files(char **wild_sequ, int first_n_last, int *check)
 		dirent = readdir(dir);
 		if (!dirent)
 			break ;
-		if (match_wild_pattern(dirent->d_name, wild_sequ, first_n_last))
+		if (match_wild_pattern(dirent->d_name, wild_sequ, first_n_last) && (!directory || dirent->d_type == 4))
 		{
 			ret = wild_join(ret, (char *)dirent->d_name);
 			if (!ret)
 				return (freesplit(wild_sequ), *check = 0, NULL);
+			if (directory)
+			{
+				ret = ft_strjoin_free1(ret, "/");
+				if (!ret)
+					return (freesplit(wild_sequ), *check = 0, NULL);
+			}		
 		}
 	}
 	return (freesplit(wild_sequ), closedir(dir), ret);
@@ -43,7 +55,7 @@ char	*every_matching_files(char **wild_sequ, int first_n_last, int *check)
 int	first_and_last(char *str)
 {
 	int	ret;
-
+	
 	ret = 0;
 	if (!str)
 		return (ret);
@@ -92,7 +104,7 @@ char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check)
 	*first_n_last = first_and_last(temp_s);
 	wild_requ = ft_split_op(temp_s, &len);
 	if (!wild_requ)
-		return (free(temp_s), *check = 0, puts("vide"), NULL);
+		return (free(temp_s), *check = 0, NULL);
 	i = -1;
 	while (wild_requ[++i])
 	{

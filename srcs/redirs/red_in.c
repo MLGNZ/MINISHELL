@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/24 16:05:45 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 12:49:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@ static int	handle_infile(t_pl *pl, int in_pos)
 	fd = open(in_file, O_RDONLY);
 	if (fd == -1)
 		return (perror(in_file), 0);
+	if (access(in_file, R_OK))
+	{
+		pl->pid = -1;
+		return (0);
+	}
 	if (pl->cmd)
 	{
 		if (dup2(fd, 0) == -1)

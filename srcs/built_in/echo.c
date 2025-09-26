@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/24 16:05:56 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 12:38:47 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	echo(char **tab, t_ms *ms)
 	int		option;
 	char	**line;
 
-	if (!tab[1])
+	if (!tab[1] || !tab[1][0])
 	{
 		if (!is_n(tab))
 			ft_printf("\n");

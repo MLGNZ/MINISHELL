@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/24 16:06:07 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 13:17:44 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 		}
 		if ((!ft_strncmp(pl->redir[i], "<<", 2) || \
 		!ft_strncmp(pl->redir[i], "<", 1)) && !red_in(pl, ms))
-			return (dup2(pl->fd_in, 0), ms->exit_code = 1, 0);
+			return (dup2(pl->fd_in, 0), 0);
 		if ((!ft_strncmp(pl->redir[i], ">>", 2) || \
 		!ft_strncmp(pl->redir[i], ">", 1)) && !red_out(pl, ms))
-			return (dup2(pl->fd_out, 1), ms->exit_code = 1, 0);
+			return (dup2(pl->fd_out, 1), 0);
 	}
 	return (1);
 }
@@ -79,7 +79,6 @@ void	reset_out_fds(t_pl *pl)
 
 int	handle_fds(t_pl **pls, int i, t_ms *ms)
 {
-	my_dup2(ms->fd_out, 1, ms->fd_in, 0);
 	if (pls[i]->has_red_out && pls[i]->position != ALONE)
 		if (dup2(pls[i]->fd_out, 1) == -1)
 			return (0);
@@ -93,7 +92,7 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		(pls[i + 1])->previous_pipe[0] = pls[i]->current_pipe[0];
 		(pls[i + 1])->previous_pipe[1] = pls[i]->current_pipe[1];
 	}
-	if (pls[i]->position == ALONE)
+	if (pls[i]->position == ALONE && pls[i]->redir)
 		my_dup2(pls[i]->fd_in, 0, pls[i]->fd_out, 1);
 	close_fds(ms->fd_in, ms->fd_out, pls[i]->fd_in, pls[i]->fd_out);
 	return (1);
@@ -106,7 +105,7 @@ int	handle_redirs(t_ms *ms, t_pl **pls, int *i)
 		if (!redirect_fds(pls[*i], ms))
 		{
 			ms->exit_code = 1;
-			pls[*i]->pid = -1;
+			pls[*i]->pid = -2;
 			if (!handle_fds(pls, (*i)++, ms))
 				return (perror("dup2"), 0);
 			return (2);

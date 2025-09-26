@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/25 16:20:55 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 12:03:46 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 			return (0);
 		if (g_sig)
 		{
-			ms->prev_exit_code = g_sig;
 			dup2(ms->fd_in, 0);
 			break ;
 		}
@@ -42,11 +41,11 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 	free(rline);
 	ms->readline = NULL;
 	if (g_sig)
-		return (2);
+		return (ms->prev_exit_code = g_sig, 2);
 	return (1);
 }
 
-int get_valid_line_inter(t_ms *ms, int i)
+int	get_valid_line_inter(t_ms *ms, int i)
 {
 	int	vl_value;
 	
@@ -62,7 +61,6 @@ int get_valid_line_inter(t_ms *ms, int i)
 			break;
 		}
 	}
-	g_sig = 0;
 	return (1);
 }
 

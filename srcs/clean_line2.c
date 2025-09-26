@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:11:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/16 18:44:41 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:29:44 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	update_tab_needed2(int *superlen, char **tab, char ***supertab, int i)
 	return (1);
 }
 
-int   	update_tab(char ***tab_address, char **tab, int i)
+int	update_tab(char ***tab_address, char **tab, int i)
 {
 	char	***supertab;
 	char	**ret0;

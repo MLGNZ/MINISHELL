@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/24 16:10:01 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/25 16:20:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 12:01:29 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	sig_handler_no(int sig)
 
 void	sig_handler_hd(int sig)
 {
-	g_sig = sig + 128;
 	close(0);
+	g_sig = sig + 128;
 	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -40,8 +40,9 @@ void	sig_handler_hd(int sig)
 
 void	sig_handler_prompt(int sig)
 {
-	g_sig = sig + 128;
 	close(0);
+	g_sig = sig + 128;
+	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
 }

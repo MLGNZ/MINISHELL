@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/25 13:33:54 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/25 16:29:24 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,43 +39,43 @@ static void	set_to_zero(t_pl *pl, char **cmd_args1, char **redir1, char **var1)
 		*var1 = NULL;
 }
 
-static int    reassign(t_pl *pl, char **tab, int n_o_pls)
+static int	reassign(t_pl *pl, char **tab, int n_o_pls)
 {
-    char    **cmd_args1;
-    char    **redir1;
-    char    **var1;
-    int        i;
+	char	**cmd_args1;
+	char	**redir1;
+	char	**var1;
+	int		i;
 
-    i = -1;
-    cmd_args1 = pl->cmd_args;
-    redir1 = pl->redir;
-    var1 = pl->var;
-    while (tab[++i] && *tab[i] != '|')
-    {
-        if (redir1 && which_op(tab[i]))
-        {
-            *(redir1) = ft_strdup(tab[i++]);
-            if (!*(redir1++))
-                return (0);
-            *(redir1) = ft_strdup(tab[i]);
-            if (!*(redir1++))
-                return (0);
-        }
-        else if ((redir1 == pl->redir && cmd_args1 == pl->cmd_args && n_o_pls == 1) && is_var_ass(tab[i]))
-        {
-            *(var1) = ft_strdup(tab[i]);
-            if (!*(var1++))
-                return (0);
-        }
-        else if (cmd_args1 && (!i || !which_op(tab[i - 1]))) //always true
-        {
-            *(cmd_args1) = ft_strdup(tab[i]);
-            if (!*(cmd_args1++))
-                return (0);
-        }
-        set_to_zero(pl, cmd_args1, redir1, var1);
-    }
-    return (1);
+	i = -1;
+	cmd_args1 = pl->cmd_args;
+	redir1 = pl->redir;
+	var1 = pl->var;
+	while (tab[++i] && *tab[i] != '|')
+	{
+		if (redir1 && which_op(tab[i]))
+		{
+			*(redir1) = ft_strdup(tab[i++]);
+			if (!*(redir1++))
+				return (0);
+			*(redir1) = ft_strdup(tab[i]);
+			if (!*(redir1++))
+				return (0);
+		}
+		else if ((redir1 == pl->redir && cmd_args1 == pl->cmd_args && n_o_pls == 1) && is_var_ass(tab[i]))
+		{
+			*(var1) = ft_strdup(tab[i]);
+			if (!*(var1++))
+				return (0);
+		}
+		else if (cmd_args1 && (!i || !which_op(tab[i - 1])))
+		{
+			*(cmd_args1) = ft_strdup(tab[i]);
+			if (!*(cmd_args1++))
+				return (0);
+		}
+		set_to_zero(pl, cmd_args1, redir1, var1);
+	}
+	return (1);
 }
 
 int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
