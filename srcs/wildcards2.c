@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/26 12:37:30 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:18:26 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,9 @@ int	wildcards_in_redir(t_ms *ms, char **s)
 	first_n_last = 0;
 	if (!s)
 		return (1);
-	if (s && *s && s[ft_strlen(*s) - 1] == '/')
+	if (s && *s && **s && (*s)[ft_strlen(*s) - 1] == '/')
 	{
-		s[ft_strlen(*s) - 1] = 0;
+		(*s)[ft_strlen(*s) - 1] = 0;
 		directory = 1;
 	}
 	wild_requ = get_wild_pattern(s, &first_n_last, 0, &check);

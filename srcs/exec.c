@@ -6,21 +6,17 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/26 13:35:36 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 15:31:36 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_execve(t_pl *pl, int i, t_ms *ms)
+static void	check_errors(t_pl *pl, t_ms *ms)
 {
-	char	**tab_env;
 	struct stat st;
 
-	handle_pipe(pl);
-	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
-	tab_env = lst_to_tab(ms->lst_env);
-	if (access(pl->cmd, F_OK))
+	if (!ft_strchr(pl->cmd, '/'))
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(pl->cmd, 2);
@@ -38,8 +34,21 @@ int	handle_execve(t_pl *pl, int i, t_ms *ms)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		perror(pl->cmd);
-		panic(ms, 126);
+		if (access(pl->cmd, F_OK))
+			panic(ms, 127);
+		else
+			panic(ms, 126);
 	}
+}
+
+int	handle_execve(t_pl *pl, t_ms *ms)
+{
+	char	**tab_env;
+
+	handle_pipe(pl);
+	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
+	tab_env = lst_to_tab(ms->lst_env);
+	check_errors(pl, ms);
 	execve(pl->cmd, pl->cmd_args, tab_env);
 	perror("minishell");
 	panic(ms, 1);
@@ -64,7 +73,7 @@ int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 		if (pl->pid == -1)
 			return (perror("fork"), 0);
 		if (!pl->pid)
-			handle_execve(pl, *i, ms);
+			handle_execve(pl, ms);
 		else if (!handle_fds(pls, (*i)++, ms))
 			return (0);
 	}
