@@ -3,22 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/25 16:39:02 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:59:30 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_dir(struct dirent *dirent)
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcards.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/09/26 16:33:26 by tchevall         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+static char	*emf_loop(char **ret_add, struct dirent *dirent, int is_dir)
 {
-	//come on
-	return (1);
+	char	*ret;
+
+	ret = *ret_add;
+	ret = wild_join(ret, (char *)dirent->d_name);
+	if (!ret)
+		return (NULL);
+	if (is_dir)
+	{
+		ret = ft_strjoin_free1(ret, "/");
+		if (!ret)
+			return (NULL);
+	}
+	return (*ret_add = ret);
 }
 
-char	*every_matching_files(char **wild_sequ, int first_n_last, int *check, int directory)
+char	*matching_files(char **wild_sequ, int fst_n_lst, int *chk, int is_dir)
 {
 	char			*pwd;
 	DIR				*dir;
@@ -28,26 +53,17 @@ char	*every_matching_files(char **wild_sequ, int first_n_last, int *check, int d
 	ret = NULL;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		return (freesplit(wild_sequ), *check = 0, NULL);
+		return (freesplit(wild_sequ), *chk = 0, NULL);
 	dir = opendir(pwd);
 	free(pwd);
-	while (1)
+	dirent = readdir(dir);
+	while (dirent)
 	{
+		if (match_wild_pattern(dirent->d_name, wild_sequ, fst_n_lst) \
+		&& (!is_dir || dirent->d_type == 4))
+			if (!emf_loop(&ret, dirent, is_dir))
+				return (freesplit(wild_sequ), *chk = 0, NULL);
 		dirent = readdir(dir);
-		if (!dirent)
-			break ;
-		if (match_wild_pattern(dirent->d_name, wild_sequ, first_n_last) && (!directory || dirent->d_type == 4))
-		{
-			ret = wild_join(ret, (char *)dirent->d_name);
-			if (!ret)
-				return (freesplit(wild_sequ), *check = 0, NULL);
-			if (directory)
-			{
-				ret = ft_strjoin_free1(ret, "/");
-				if (!ret)
-					return (freesplit(wild_sequ), *check = 0, NULL);
-			}		
-		}
 	}
 	return (freesplit(wild_sequ), closedir(dir), ret);
 }
@@ -55,7 +71,7 @@ char	*every_matching_files(char **wild_sequ, int first_n_last, int *check, int d
 int	first_and_last(char *str)
 {
 	int	ret;
-	
+
 	ret = 0;
 	if (!str)
 		return (ret);

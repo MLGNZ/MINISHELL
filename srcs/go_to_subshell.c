@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/26 11:20:37 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/02 17:33:27 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,16 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 	pid = fork();
 	if (!pid)
 	{
-		minishell(ms, s_readline);
+		//dupsplit s_readline
+		freesplit(ms->s_readline);
+		if (!dup_split(s_readline, &ms->s_readline, 0))
+			panic(ms, 52);
+		//freetout ou presque
+		if (ms->lns)
+			erase_lines(&(ms->lns));
+		minishell(ms, ms->s_readline);
 		close(ms->fd_in);
-		exit(ms->exit_code);
+		panic(ms, ms->exit_code);
 	}
 	if (pid < 0)
 		return (0);
@@ -33,6 +40,8 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 
 int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 {
+	char **s_readline;
+	
 	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
 	pls[*i]->pid = fork();
 	if (pls[*i]->pid == -1)
@@ -40,9 +49,15 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 	else if (!pls[*i]->pid)
 	{
 		handle_pipe(pls[*i]);
-		minishell(ms, pls[*i]->raw_pipeline);
+		freesplit(ms->s_readline);
+		if (!dup_split(pls[*i]->raw_pipeline, &ms->s_readline, 0))
+			panic(ms, 52);
+		//freetout ou presque
+		if (ms->lns)
+			erase_lines(&(ms->lns));
+		minishell(ms, ms->s_readline);
 		close_fds(ms->fd_in, ms->fd_out, pls[*i]->current_pipe[1], 0);
-		exit(0);
+		panic(ms, 0);
 	}
 	else
 	{

@@ -41,67 +41,78 @@ static int	handle_infile(t_pl *pl, int in_pos)
 	return (1);
 }
 
-static int	hd_loop(t_pl **pl, char *delim, int check_free)
+static void	print_error_hd(char *delim)
+{
+	ft_putstr_fd("minishell: warning:", 2);
+	ft_putstr_fd(" here-document at current line delimited by end-of-file (wanted `", 2);
+	ft_putstr_fd(delim, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
+static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 {
 	char	*line;
 
+	signal(SIGINT, sig_handler_hd);
 	while (1)
 	{
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0, &check_free);
-		if ((!line && !check_free) || g_sig)
+		line =	readline("> ");
+		if (!line && g_sig != 130)
+		{
+			print_error_hd(delim);
 			return (free(line), 0);
-		else if (!line && check_free)
-			break ;
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = 0;
+		}
+		else if (!line)
+			return (free(line), 0);
 		if (!ft_strncmp(line, delim, ft_strlen(line) + 1))
 			return (free(line), 1);
-		ft_putstr_fd(line, (*pl)->current_pipe[1]);
-		ft_putstr_fd("\n", (*pl)->current_pipe[1]);
+		alias_expansion(ms, &line);
+		ft_putstr_fd(line, (*pl)->heredoc_pipe[1]);
+		ft_putstr_fd("\n", (*pl)->heredoc_pipe[1]);
 		free(line);
 	}
+	signal(SIGINT, sig_handler);
 	return (1);
 }
 
-static int	handle_heredoc(t_pl *pl, int hd_pos)
+static int	handle_heredoc(t_pl *pl, int hd_pos, t_ms *ms)
 {
 	char	*delim;
 	int		check_free;
 
 	check_free = 0;
 	delim = pl->redir[hd_pos + 1];
-	if (pipe(pl->current_pipe) == -1)
+	if (pipe(pl->heredoc_pipe) == -1)
 		return (perror("pipe"), 0);
-	if (!hd_loop(&pl, delim, check_free))
+	if (!hd_loop(&pl, delim, check_free, ms))
 		return (0);
-	close(pl->current_pipe[1]);
+	close(pl->heredoc_pipe[1]);
 	return (1);
 }
 
-int	look_hd(t_pl *pl, int *last_in_pos, int *last_hd_pos, int *last_hd_fd)
+int	look_hd(t_pl *pl, int last[3], t_ms *ms)
 {
 	if (!ft_strncmp(pl->redir[pl->i], "<<", 2))
 	{
 		pl->has_red_in = 1;
-		*last_hd_pos = pl->i;
-		if (*last_in_pos < *last_hd_pos)
+		last[1] = pl->i;
+		if (last[0] < last[1])
 		{
 			dup2(pl->fd_in, 0);
 			dup2(pl->fd_out, 1);
 		}
-		if (!handle_heredoc(pl, pl->i))
+		if (!handle_heredoc(pl, pl->i, ms))
 			return (0);
-		if (*last_hd_fd != -1)
-			close(*last_hd_fd);
-		*last_hd_fd = dup(pl->current_pipe[0]);
-		close(pl->current_pipe[0]);
+		if (last[2] != -1)
+			close(last[2]);
+		last[2] = dup(pl->heredoc_pipe[0]);
+		close(pl->heredoc_pipe[0]);
 	}
 	else if (!ft_strncmp(pl->redir[pl->i], "<", 1))
 	{
 		pl->has_red_in = 1;
-		*last_in_pos = pl->i;
-		if (!handle_infile(pl, *last_in_pos))
+		last[0] = pl->i;
+		if (!handle_infile(pl, last[0]))
 			return (0);
 	}
 	return (1);
@@ -109,26 +120,24 @@ int	look_hd(t_pl *pl, int *last_in_pos, int *last_hd_pos, int *last_hd_fd)
 
 int	red_in(t_pl *pl, t_ms *ms)
 {
-	static int	last_in_pos;
-	static int	last_hd_pos;
-	static int	last_hd_fd;
+	static int last[3];
 
 	if (!pl->i)
 	{
-		last_in_pos = -1;
-		last_hd_pos = -1;
-		last_hd_fd = -1;
+		last[0] = -1; // in_pos
+		last[1] = -1; //hd_pos
+		last[2] = -1; // hd_fd
 	}
 	if (!pl->redir)
 		return (1);
-	if (!look_hd(pl, &last_in_pos, &last_hd_pos, &last_hd_fd))
+	if (!look_hd(pl, last, ms))
 		return (ms->exit_code = 1, 0);
-	if (last_hd_pos != -1 && last_hd_fd != -1 && last_hd_pos > last_in_pos)
+	if (last[1] != -1 && last[2] != -1 && last[1] > last[0])
 	{
 		if (pl->cmd)
-			if (dup2(last_hd_fd, 0) == -1)
-				return (perror("dup2"), close(last_hd_fd), 0);
-		close(last_hd_fd);
+			if (dup2(last[2], 0) == -1)
+				return (perror("dup2"), close(last[2]), 0);
+		close(last[2]);
 	}
 	return (1);
 }

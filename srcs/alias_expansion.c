@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   alias_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 21:29:42 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/13 18:01:38 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/01 16:26:17 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static int	make_it_alias_exp(t_ms *ms, char **s, int *i, int ww)
 		}
 		*i += len;
 	}
+	(*i)++;
 	return (1);
 }
 

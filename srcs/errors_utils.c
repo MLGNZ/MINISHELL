@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:19:24 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/25 13:28:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 16:15:21 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,10 @@ int	is_var_ass(char *str)
 	if (*str == '+' && *(str + 1) && *(str + 1) != '=')
 		return (0);
 	return (1);
+}
+
+void	get_status(int status, t_ms *ms)
+{
+	if (WIFEXITED(status))
+		ms->exit_code = WEXITSTATUS(status);
 }

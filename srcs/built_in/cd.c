@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/24 16:06:00 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/01 15:21:01 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ void	cd(char **path, t_ms **ms)
 		return ;
 	}
 	if (!error_cd(file, path, ms))
+	{
+		free(oldpwd);
 		return ;
+	}
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
 	{

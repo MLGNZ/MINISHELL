@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/24 16:05:51 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:19:23 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,11 @@ char	*get_var(int pos, t_ms *ms)
 	i = -1;
 	while (++i < pos)
 		curr = curr->next;
-	return (curr->content);
 }
 
 int	is_valid_var_key(char *str)
 {
-	if (*str == '=' || ft_isdigit(*str))
+	if (*str == '=' || ft_isdigit(*str) || !*str)
 		return (0);
 	while (str && *str && *str != '=' && *str != '+')
 	{
@@ -63,7 +62,7 @@ void	remove_invalid_arguments(t_list **args, t_ms *ms)
 		{
 			ms->exit_code = 1;
 			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(invalid_key(temp->content), 2);
+			ft_putstr_fd((char *)temp->content, 2);
 			ft_putstr_fd("': not a valid identifier\n", 2);
 			ft_lst_remove(temp, args, 1);
 			return ;

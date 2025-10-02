@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:31:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/15 17:42:53 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/01 15:13:04 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 	else if (!ft_strncmp(pl->cmd, "cd", ft_strlen(pl->cmd)))
 		handle_cd(pl, ms);
 	else if (!ft_strncmp(pl->cmd, "env", ft_strlen(pl->cmd)))
-		env(ms);
+		env(ms, pl);
 	if (in_child)
 	{
 		close_fds(pl->fd_in, pl->fd_out, ms->fd_in, ms->fd_out);

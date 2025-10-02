@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/26 12:03:46 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/02 15:00:23 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +34,31 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 		freesplit(temp_spltd);
 	}
 	signal(SIGINT, sig_handler);
+	add_history(rline);
 	ms->s_readline = ft_split_op(rline, &ms->s_readline_len);
 	if (!ms->s_readline)
 		return (0);
-	add_history(rline);
+	if (g_sig)
+		return (ms->prev_exit_code = g_sig, free(rline), ms->readline = NULL, 2);
 	free(rline);
 	ms->readline = NULL;
-	if (g_sig)
-		return (ms->prev_exit_code = g_sig, 2);
 	return (1);
 }
 
 int	get_valid_line_inter(t_ms *ms, int i)
 {
 	int	vl_value;
-	
+
 	while (1)
 	{
+		// g_sig = 0;
 		vl_value = get_valid_line(ms, i);
 		if (!vl_value)
 			return (0);
 		else if (vl_value == 2)
 			break ;
 		if (!g_sig)
-		{
-			break;
-		}
+			break ;		
 	}
 	return (1);
 }
@@ -82,7 +81,7 @@ int	get_valid_line(t_ms *ms, int i)
 		}
 		temp_spltd = ft_split_op(rline, &ms->s_readline_len);
 		if (!temp_spltd)
-			return (printf("here"),panic(ms, 52));
+			return (panic(ms, 52));
 		if (!is_there_a_parse_error_near(temp_spltd))
 			return (add_history(rline), free(rline), freesplit(temp_spltd), -1);
 		freesplit(temp_spltd);

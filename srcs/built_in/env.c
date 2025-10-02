@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/15 17:40:16 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:08:24 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,15 @@ int	my_get_env(char *var, t_list *env)
 	return (-1);
 }
 
-void	env(t_ms *ms)
+void	env(t_ms *ms, t_pl *pl)
 {
 	t_list	*curr;
 
+	if (pl->cmd_args[1])
+	{
+		ft_putstr_fd("env : too many arguments\n", 2);
+		return ;
+	}
 	curr = ms->lst_env;
 	while (curr)
 	{

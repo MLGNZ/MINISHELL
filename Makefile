@@ -81,7 +81,7 @@ BOLD        = \033[1m
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT_A)
-	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet --metal
+	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet 
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make $(NAME)$(END)"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(LDFLAGS) -o $(NAME) && \
 	echo "   $(BLUE)⤷ $(END)Executable: $(BG_GREEN)$(BOLD)$(NAME)$(END)"

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/26 15:31:36 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/02 16:17:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	check_errors(t_pl *pl, t_ms *ms)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (!ft_strchr(pl->cmd, '/'))
 	{
@@ -41,21 +41,22 @@ static void	check_errors(t_pl *pl, t_ms *ms)
 	}
 }
 
-int	handle_execve(t_pl *pl, t_ms *ms)
+static int	handle_execve(t_pl *pl, t_ms *ms)
 {
 	char	**tab_env;
 
 	handle_pipe(pl);
 	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
-	tab_env = lst_to_tab(ms->lst_env);
 	check_errors(pl, ms);
+	tab_env = lst_to_tab(ms->lst_env);
 	execve(pl->cmd, pl->cmd_args, tab_env);
+	freesplit(tab_env);
 	perror("minishell");
 	panic(ms, 1);
 	return (1);
 }
 
-int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
+static int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 {
 	if (!pls[*i]->cmd)
 	{
@@ -80,7 +81,7 @@ int	exec_pl(t_pl *pl, t_ms *ms, int *i, t_pl **pls)
 	return (1);
 }
 
-int	exec_loop(t_pl **pls, t_ms *ms)
+static int	exec_loop(t_pl **pls, t_ms *ms)
 {
 	int	i;
 	int	redir_val;
@@ -108,42 +109,31 @@ int	exec_loop(t_pl **pls, t_ms *ms)
 	return (1);
 }
 
-static void	get_status(int status, t_ms *ms)
-{
-	if (WIFEXITED(status))
-		ms->exit_code = WEXITSTATUS(status);
-}
-
 int	exec_cmd(t_pl **pls, t_ms *ms)
 {
 	int		i;
 	int		status;
 
 	status = 0;
-	i = 0;
 	if (!exec_loop(pls, ms))
 		return (0);
 	i = -1;
 	while (pls[++i])
 	{
-		if (!is_build_in(pls[i]->cmd) || \
-		(pls[i]->position != ALONE \
+		if (!is_build_in(pls[i]->cmd) || (pls[i]->position != ALONE \
 		&& is_build_in(pls[i]->cmd)) || pls[i]->sub_shell)
 		{
-			if (pls[i]->pid == -1)
-				continue ;
-			if (pls[i]->pid == -2)
+			if (pls[i]->pid < 0)
 			{
-				ms->exit_code = 1;
+				if (pls[i]->pid == -2)
+					ms->exit_code = 1;
 				continue ;
 			}
 			signal(SIGINT, sig_handler_no);
 			waitpid(pls[i]->pid, &status, 0);
 			get_status(status, ms);
 		}
-		signal(SIGINT, sig_handler);
-		if (pls[i]->fds)
-			reset_out_fds(pls[i]);
+		reset_out_fds(pls[i]);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:27:34 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/12 16:42:50 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/09/26 16:23:16 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	find_cmd(char**tab, t_ms *ms)
 		return (1);
 	if (*tab && **tab == '/')
 		return (1);
-	if (!find_file(*tab, &cmd_file, ft_getenv("PATH", ms)))
+	if (!find_file(*tab, &cmd_file, ft_getenv("PATH", ms), -1))
 		return (0);
 	if (!cmd_file)
 		return (1);
