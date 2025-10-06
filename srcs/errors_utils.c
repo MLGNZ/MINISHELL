@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:19:24 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/26 16:15:21 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 11:46:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,6 @@ void	get_status(int status, t_ms *ms)
 {
 	if (WIFEXITED(status))
 		ms->exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		ms->exit_code = WTERMSIG(status);
 }

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 17:21:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/24 17:22:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:13:14 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	split_and_init_pipelines(t_ms *ms, t_line **lns, int i)
 			return (panic(ms, 52));
 	}
 	if (!clean_all_pipelines(ms, line))
-		return (panic(ms, 52));
+		return (panic(ms, 0));
 	return (1);
 }
 

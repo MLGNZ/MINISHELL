@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/02 18:17:04 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 11:45:31 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ char	*wild_join(char *src, char *d_name)
 	size = ft_strlen(src) + ft_strlen(d_name);
 	if (src)
 	{
-		ret = ft_strjoin_free1(src, " ");
+		ret = ft_strjoin_free1(src, " "); // Pas si le nom de dir/fichier = "pipi      caca"
 		if (!ret)
 			return (NULL);
 	}

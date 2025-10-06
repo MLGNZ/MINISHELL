@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/02 15:00:23 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 11:41:30 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,13 @@ int	get_valid_line_inter(t_ms *ms, int i)
 
 	while (1)
 	{
-		// g_sig = 0;
 		vl_value = get_valid_line(ms, i);
 		if (!vl_value)
 			return (0);
 		else if (vl_value == 2)
 			break ;
 		if (!g_sig)
-			break ;		
+			break ;
 	}
 	return (1);
 }

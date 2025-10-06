@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/01 18:42:01 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 11:28:25 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ void	reset_out_fds(t_pl *pl)
 {
 	t_fd	*tmp;
 
-	signal(SIGINT, sig_handler);
 	if (!pl->fds)
 		return ;
 	tmp = pl->fds;

@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/02 17:33:27 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:01:48 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 {
 	char **s_readline;
-	
+
 	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
 	pls[*i]->pid = fork();
 	if (pls[*i]->pid == -1)
