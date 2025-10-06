@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/02 18:19:23 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 15:23:31 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	*get_var(int pos, t_ms *ms)
 	i = -1;
 	while (++i < pos)
 		curr = curr->next;
+	return ((char *)curr->content);
 }
 
 int	is_valid_var_key(char *str)

@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/13 19:10:30 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/06 15:24:08 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static int	cat_over_quotes(const char *s0, char *s, char q);
 
 static int	clean_expand_in_array2(char **t0, char **t, char ***t_adr, int type)
 {
-	if (type == CMD_LT && !update_tab(&t0, t0, 0))
-		return (0);
 	t = t0;
 	while (t && *t)
 	{

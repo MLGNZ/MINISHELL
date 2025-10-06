@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_parsing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:27:34 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/26 16:23:16 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 15:24:33 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	find_cmd(char**tab, t_ms *ms)
 		return (1);
 	if (is_build_in(*tab))
 		return (1);
-	if (*tab && **tab == '/')
+	if (*tab && (**tab == '/' || **tab == '.' || **tab == '\0'))
 		return (1);
 	if (!find_file(*tab, &cmd_file, ft_getenv("PATH", ms), -1))
 		return (0);

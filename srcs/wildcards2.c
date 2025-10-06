@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/06 11:45:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/06 15:25:12 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last)
 {
 	int	i;
 
-	if (!wild_pattern || !d_name)
+	if (!wild_pattern || !d_name || d_name[0] == '.')
 		return (0);
 	if (!*wild_pattern)
 		return (1);
