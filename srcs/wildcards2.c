@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/06 15:25:12 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:31:48 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,58 @@
 /*	flags[0] = directory;
 	flags[1] = check;
 	flags[2] = first_n_last; */
-int	wildcards_expansion(char **s)
+int		wildcards_expansion(char **s, t_list **lst)
 {
 	char	**wild_requ;
-	char	*ret;
-	int flags[3];
+	char	**ret_tab;
+	int		flags[3];
+	t_list *ll;
+	t_list	*mf;
 
 	flags[0] = 0;
 	flags[1] = 1;
 	flags[2] = 0;
-	if (!s)
+	if (s && *s && **s && (*s)[ft_strlen(*s) - 1] == '/')
+	{
+		(*s)[ft_strlen(*s) - 1] = 0;
+		flags[0] = 1;
+	}
+	wild_requ = get_wild_pattern(s, &flags[2], 0, &flags[1]);
+	if (!flags[1])
+		return (0);
+	mf = matching_files_in_list(wild_requ, flags[2], &flags[1], flags[0]);
+	if (!flags[1])
+		return (0);
+	// lst_print(mf);
+	// printf("end\n");
+	if (!mf)
+	{
+		if (flags[0])
+			(*s)[ft_strlen(*s)] = '/';
+			
+		mf = ft_lstnew(ft_strdup(*s));//protec
+		ft_lstadd_back(lst, mf);
+		// lst_print(mf);
 		return (1);
+	}
+	// free(*s);
+	ft_lstadd_back(lst, mf);
+	// lst_print(lst);
+	return (1);
+}
+
+/*	flags[0] = directory;
+	flags[1] = check;
+	flags[2] = first_n_last; */
+int wildcards_expansion_var(char **s)
+{
+	char	**wild_requ;
+	char	*ret;
+	int		flags[3];
+
+	flags[0] = 0;
+	flags[1] = 1;
+	flags[2] = 0;
 	if (s && *s && **s && (*s)[ft_strlen(*s) - 1] == '/')
 	{
 		(*s)[ft_strlen(*s) - 1] = 0;
@@ -55,8 +96,6 @@ int	wildcards_in_redir(t_ms *ms, char **s)
 	flags[0] = 0;
 	flags[1] = 1;
 	flags[2] = 0;
-	if (!s)
-		return (1);
 	if (s && *s && **s && (*s)[ft_strlen(*s) - 1] == '/')
 	{
 		(*s)[ft_strlen(*s) - 1] = 0;
@@ -81,13 +120,15 @@ int	wildcards_in_redir(t_ms *ms, char **s)
 
 
 
-int	manage_wildcards(t_ms *ms, char **tab, int type)
+int	manage_wildcards(t_ms *ms, char **tab, int type, t_list **lst)
 {
-	if (type == CMD_LT && !wildcards_expansion(tab))
-		return (panic(ms, 52), 0);
+	char **wcs;
+
+	if (type == CMD_LT && !wildcards_expansion(tab, lst))
+			return (panic(ms, 52), 0);
 	if (type == REDIR && !wildcards_in_redir(ms, tab))
 		return (0);
-	if (type == VAR && !wildcards_expansion(tab))
+	if (type == VAR && !wildcards_expansion_var(tab))
 		return (panic(ms, 52), 0);
 	return (1);
 }
@@ -149,4 +190,12 @@ char	*wild_join(char *src, char *d_name)
 	}
 	ret = ft_strjoin_free1(ret, d_name);
 	return (ret);
+}
+
+
+
+
+int replace_in_tab(char ***tab_addr, char **tab, char **wcs)
+{
+	
 }

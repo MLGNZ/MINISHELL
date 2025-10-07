@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split_op.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:45:54 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/16 15:52:16 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:32:08 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "minishell.h"
 
 static int	is_op(char *s0, char *s);
-static char	*make_word(char *s0, int len);
+// static char	*make_word(char *s0, int len);
 
 //split the line into an array of 'words' and 'operators'
 char	**ft_split_op(char *s0, int *len)
@@ -130,7 +130,7 @@ static int	is_op(char *s0, char *s)
 }
 
 //make a word of length len starting at s.
-static char	*make_word(char *s, int len)
+char	*make_word(char *s, int len)
 {
 	char	*ret;
 	int		i;

@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/06 15:24:08 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:32:02 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,17 @@ static int	clean_expand_in_array2(char **t0, char **t, char ***t_adr, int type)
 	return (1);
 }
 
+void *nothing(void *whatever)
+{
+	(void)whatever;
+}
+
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
 	char	**tab;
+	t_list *lst_wc;
+	
+	lst_wc = NULL;
 
 	tab = tab0;
 	while (tab && *tab)
@@ -47,10 +55,21 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 	while (tab && *tab)
 	{
 		if (((tab == tab0) || which_op(*(tab - 1)) != HDOC) && \
-		!manage_wildcards(ms, tab, type))
+		!manage_wildcards(ms, tab, type, &lst_wc))
 			return (0);
 		tab++;
 	}
+	// lst_print(lst_wc);
+	if (lst_wc)
+	{
+		// freesplit(tab0);
+		freesplit(tab0);
+		tab0 = lst_to_tab(lst_wc);//protec
+		ft_lstclear(&lst_wc, nothing);
+		
+		*tab_addr = tab0;
+	}
+	tab = NULL;
 	if (!clean_expand_in_array2(tab0, tab, tab_addr, type))
 		return (*tab_addr = tab0, panic(ms, 52), 0);
 	return (1);

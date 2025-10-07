@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/06 15:17:34 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:19:26 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	handle_execve(t_pl *pl, t_ms *ms)
 	check_errors(pl, ms);
 	tab_env = lst_to_tab(ms->lst_env);
 	execve(pl->cmd, pl->cmd_args, tab_env);
-	freesplit(tab_env);
+	free(tab_env);
 	perror("minishell");
 	panic(ms, 1);
 	return (1);

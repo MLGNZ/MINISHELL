@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/01 15:15:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:33:00 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
 t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
 char	*cat_vars(char *var1, char *var2, int free2);
 int		size_of_key(char *content);
-char	*matching_files(char **wild_sequ, int first_n_last, int *check, int directory);
 int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
 
 //EXEC --> REDIRS / PIPE
@@ -238,14 +237,21 @@ int		exec_cmd(t_pl **pls, t_ms *ms);
 void	remove_quotes(const char *s0, char *s);
 void	remove_backslashes(const char *s0, char *s);
 int		wildcards_in_redir(t_ms *ms, char **s);
-int		wildcards_expansion(char **s);
-int		manage_wildcards(t_ms *ms, char **tab, int type);
+int		wildcards_expansion(char **s, t_list **lst);
+int		wildcards_expansion_in_var(char **s);
+int		manage_wildcards(t_ms *ms, char **tab, int type, t_list **lst_wc);
 void	ambiguous_message(char *s);
 char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check);
 char	*wild_join(char *src, char *d_name);
 int		match_wild_pattern(char *d_name, char **wild_pattern, int first_n_last);
+char	*matching_files(char **wild_sequ, int first_n_last, int *check, int directory);
+t_list *matching_files_in_list(char **wild_sequ, int first_n_last, int *check, int directory);
+
 
 //TBD
 int		get_valid_line_inter(t_ms *ms, int i);
+char	*make_word(char *s0, int len);
+char	**ft_split_reexpand(char *s0, int *len);
+
 
 #endif

@@ -58,7 +58,8 @@ SRC	=	srcs/main.c\
 		srcs/wildcards2.c \
 		srcs/exec_built_in.c \
 		srcs/errors_utils.c \
-		srcs/signal.c
+		srcs/signal.c \
+		ft_split_reexpand.c
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))
 

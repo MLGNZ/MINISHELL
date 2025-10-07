@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:11:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/25 16:29:44 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 14:30:13 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	update_tab_needed2(int *superlen, char **tab, char ***supertab, int i)
 	len = 0;
 	while (tab && tab[++(i)])
 	{
-		supertab[i] = ft_split_op(tab[i], &len);
+		supertab[i] = ft_split_reexpand(tab[i], &len);
 		if (!len)
 			len = 1;
 		if (!supertab[i])
