@@ -3,80 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   make_pipeline.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/29 16:51:44 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 18:51:57 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	reassign(t_pl *pl, char **tab, int n_o_pls);
-
-static int	reassign_p1(char **tab, int *i, char ***redir1, int stop)
-{
-	**(redir1) = ft_strdup(tab[*i]);
-	if (!(*(*redir1)++))
-		return (0);
-	if (!stop)
-		(*i)++;
-	if (stop)
-		return (1);
-	**(redir1) = ft_strdup(tab[*i]);
-	if (!(*(*redir1)++))
-		return (0);
-	return (1);
-}
-
-static void	set_to_zero(t_pl *pl, char **cmd_args1, char **redir1, char **var1)
-{
-	if (pl->cmd_args)
-		*cmd_args1 = NULL;
-	if (pl->redir)
-		*redir1 = NULL;
-	if (pl->var)
-		*var1 = NULL;
-}
-
-static int	reassign(t_pl *pl, char **tab, int n_o_pls)
-{
-	char	**cmd_args1;
-	char	**redir1;
-	char	**var1;
-	int		i;
-
-	i = -1;
-	cmd_args1 = pl->cmd_args;
-	redir1 = pl->redir;
-	var1 = pl->var;
-	while (tab[++i] && *tab[i] != '|')
-	{
-		if (redir1 && which_op(tab[i]))
-		{
-			*(redir1) = ft_strdup(tab[i++]);
-			if (!*(redir1++))
-				return (0);
-			*(redir1) = ft_strdup(tab[i]);
-			if (!*(redir1++))
-				return (0);
-		}
-		else if ((redir1 == pl->redir && cmd_args1 == pl->cmd_args && n_o_pls == 1) && is_var_ass(tab[i]))
-		{
-			*(var1) = ft_strdup(tab[i]);
-			if (!*(var1++))
-				return (0);
-		}
-		else if (cmd_args1 && (!i || !which_op(tab[i - 1])))
-		{
-			*(cmd_args1) = ft_strdup(tab[i]);
-			if (!*(cmd_args1++))
-				return (0);
-		}
-		set_to_zero(pl, cmd_args1, redir1, var1);
-	}
-	return (1);
-}
 
 int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 {
@@ -100,7 +34,7 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 	{
 		if (!make_arrays_pl(&pl, tb))
 			return (0);
-		if (!reassign(pl, tb, n_o_pls))
+		if (!reassign(pl, tb, n_o_pls, -1))
 			return (0);
 	}
 	return (1);

@@ -1,33 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   built_in_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 20:15:16 by mlagniez         ###   ########.fr       */
+/*   Created: 2025/10/08 20:06:21 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/08 20:14:51 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	env(t_ms *ms, t_pl *pl);
-
-void	env(t_ms *ms, t_pl *pl)
+int	my_get_env(char *var, t_list *env)
 {
+	int		i;
 	t_list	*curr;
 
-	if (pl->cmd_args[1])
-	{
-		ft_putstr_fd("env : too many arguments\n", 2);
-		return ;
-	}
-	curr = ms->lst_env;
+	i = 0;
+	curr = env;
 	while (curr)
 	{
-		if (curr->content && ft_strchr(curr->content, '='))
-			printf("%s\n", (char *)curr->content);
+		if (curr->content)
+			if (!ft_strncmp(var, curr->content, ft_strlen(var)))
+				return (i);
 		curr = curr->next;
+		i++;
 	}
+	return (-1);
+}
+
+char	*get_var(int pos, t_ms *ms)
+{
+	t_list	*curr;
+	int		i;
+
+	if (pos == -1)
+		return (getcwd(NULL, 0));
+	curr = ms->lst_env;
+	i = -1;
+	while (++i < pos)
+		curr = curr->next;
+	return ((char *)curr->content);
 }

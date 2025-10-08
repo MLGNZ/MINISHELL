@@ -6,21 +6,11 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 17:07:43 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 14:18:42 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 20:38:54 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	split_len(char **splt)
-{
-	int	len;
-
-	len = 0;
-	while (splt && *(splt) && ++len)
-		splt++;
-	return (len);
-}
 
 char	**join_split(char ***ret_addr, char **splt1, char **splt2, int freee)
 {

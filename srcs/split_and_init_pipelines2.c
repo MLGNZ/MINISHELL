@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_and_init_pipelines2.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:25:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/24 17:23:06 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 21:17:12 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,26 +72,4 @@ void	remove_parenthesis_of_line_subshell(t_line *line)
 	free(line->split_line[i]);
 	line->split_line[i] = NULL;
 	line->split_line[i - 1] = line->split_line[i];
-}
-
-int	update_vars_from_export_args(t_list **p_lst_args, t_list **p_lst_vars)
-{
-	t_list	*lst_vars;
-	t_list	*temp;
-	int		cat;
-
-	cat = 0;
-	lst_vars = *p_lst_vars;
-	while (lst_vars)
-	{
-		temp = exists_in_vars((char *)lst_vars->content, *p_lst_args, &cat);
-		if (cat)
-		{
-			lst_vars->content = cat_vars(lst_vars->content, temp->content, 0);
-			if (!lst_vars->content)
-				return (0);
-		}
-		lst_vars = lst_vars->next;
-	}
-	return (1);
 }

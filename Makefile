@@ -18,49 +18,65 @@ SRC	=	srcs/nothing.c \
 		srcs/main.c\
 		srcs/split_and_init_pipelines.c\
 		srcs/split_and_init_pipelines2.c\
-		srcs/ft_split_op.c\
 		srcs/make_pipeline.c\
 		srcs/make_pipeline2.c\
 		srcs/clean_line.c\
-		srcs/clean_line2.c\
+		srcs/update_tab.c\
 		srcs/cleaning_parsing.c\
-		srcs/alias_expansion.c\
-		srcs/alias_expansion2.c\
-		srcs/alias_expansion3.c\
-		srcs/ft_strjoin_free1.c\
 		srcs/split_lines.c\
 		srcs/parse_error_near.c\
 		srcs/dive_into_lines.c\
-		srcs/join_split.c\
-		srcs/update_split.c\
-		srcs/dup_split.c\
-		srcs/update_split_just_replace.c\
-		srcs/ft_strnjoin.c\
 		srcs/go_to_subshell.c\
 		srcs/panic.c\
 		srcs/exec_line.c\
 		srcs/utils.c\
+		srcs/env_utils.c \
 		srcs/utils2.c\
 		srcs/get_readline.c\
 		srcs/utils_parsing.c\
 		srcs/find_file.c\
 		srcs/update_lst.c\
 		srcs/exec.c \
+		srcs/make_arrays_in_pipelines.c\
+		\
 		srcs/built_in/cd.c \
 		srcs/built_in/unset.c \
 		srcs/built_in/echo.c \
 		srcs/built_in/env.c \
 		srcs/built_in/export.c \
+		srcs/built_in/exit.c \
+		srcs/built_in/pwd.c \
+		\
 		srcs/redirs/fd_n_pipe.c \
 		srcs/redirs/fds.c \
 		srcs/redirs/red_out.c \
 		srcs/redirs/red_in.c \
-		srcs/wildcards.c \
-		srcs/wildcards2.c \
 		srcs/exec_built_in.c \
-		srcs/errors_utils.c \
 		srcs/signal.c \
-		srcs/ft_split_reexpand.c
+		srcs/reassign.c\
+		\
+		srcs/wildcards/wildcards.c\
+		srcs/wildcards/wildcards_in_cmd.c\
+		srcs/wildcards/wildcards_in_redir.c\
+		srcs/wildcards/wildcards_pattern_and_match.c\
+		srcs/wildcards/wildcards_utils.c\
+		\
+		srcs/var_expansion/var_expansion.c\
+		srcs/var_expansion/alias_expansion.c\
+		srcs/var_expansion/alias_expansion_in_redir.c\
+		srcs/var_expansion/alias_utils.c\
+		\
+		srcs/split_and_join/ft_split_op.c\
+		srcs/split_and_join/ft_split_reexpand.c\
+		srcs/split_and_join/ft_strjoin_free.c\
+		srcs/split_and_join/ft_strnxjoin.c\
+		srcs/split_and_join/join_split.c\
+		srcs/split_and_join/split_utils.c\
+		srcs/split_and_join/update_split.c\
+		srcs/split_and_join/update_split_just_replace.c\
+		\
+		srcs/tbd.c
+
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))
 
@@ -83,7 +99,7 @@ BOLD        = \033[1m
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT_A)
-	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet 
+	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet --gay
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make $(NAME)$(END)"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(LDFLAGS) -o $(NAME) && \
 	echo "   $(BLUE)⤷ $(END)Executable: $(BG_GREEN)$(BOLD)$(NAME)$(END)"

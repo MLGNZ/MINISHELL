@@ -3,14 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/07 17:29:30 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 20:08:44 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static void	set_newvar(t_list **curr, char *pwd, char *to_find);
+static void	update_env(t_ms *ms, char *oldpwd, char *newpwd);
+static void	error_mess(char *msg, char *oldpwd);
+static int	error_cd(DIR *file, char **path, t_ms **ms);
+
+void	cd(char **path, t_ms **ms)
+{
+	char	*oldpwd;
+	char	*newpwd;
+	DIR		*file;
+
+	oldpwd = getcwd(NULL, 0);
+	if (!path[1])
+	{
+		if (chdir(get_var(my_get_env("HOME=", (*ms)->lst_env), *ms) + 5) == -1)
+			perror("cd");
+		newpwd = getcwd(NULL, 0);
+		update_env(*ms, oldpwd, newpwd);
+		return ;
+	}
+	if (!error_cd(file, path, ms))
+	{
+		free(oldpwd);
+		return ;
+	}
+	newpwd = getcwd(NULL, 0);
+	if (!newpwd)
+	{
+		error_mess("getcwd", oldpwd);
+		return ;
+	}
+	update_env(*ms, oldpwd, newpwd);
+	free(oldpwd);
+	free(newpwd);
+}
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find)
 {
@@ -54,35 +90,4 @@ static int	error_cd(DIR *file, char **path, t_ms **ms)
 		return (0);
 	}
 	return (1);
-}
-
-void	cd(char **path, t_ms **ms)
-{
-	char	*oldpwd;
-	char	*newpwd;
-	DIR		*file;
-
-	oldpwd = getcwd(NULL, 0);
-	if (!path[1])
-	{
-		if (chdir(get_var(my_get_env("HOME=", (*ms)->lst_env), *ms) + 5) == -1)
-			perror("cd");
-		newpwd = getcwd(NULL, 0);
-		update_env(*ms, oldpwd, newpwd);
-		return ;
-	}
-	if (!error_cd(file, path, ms))
-	{
-		free(oldpwd);
-		return ;
-	}
-	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
-	{
-		error_mess("getcwd", oldpwd);
-		return ;
-	}
-	update_env(*ms, oldpwd, newpwd);
-	free(oldpwd);
-	free(newpwd);
 }

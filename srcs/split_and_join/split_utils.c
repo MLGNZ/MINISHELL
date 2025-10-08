@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dup_split.c                                        :+:      :+:    :+:   */
+/*   split_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/18 22:05:44 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/08/26 13:54:44 by mlagniez         ###   ########.fr       */
+/*   Created: 2025/10/08 20:39:08 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/08 21:09:11 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	split_len(char **splt)
-{
-	int	len;
-
-	len = 0;
-	while (splt && *(splt) && ++len)
-		splt++;
-	return (len);
-}
+char	*make_word(char *s, int len);
+int		word_length(char *s0, char *s);
+int		dup_split(char **split, char ***split_address, int should_free);
+int		split_len(char **splt);
+void	printsplit(char **split);
 
 int	dup_split(char **split, char ***split_address, int should_free)
 {
@@ -46,4 +42,25 @@ int	dup_split(char **split, char ***split_address, int should_free)
 		freesplit(split);
 	*split_address = ret;
 	return (1);
+}
+
+int	split_len(char **splt)
+{
+	int	len;
+
+	len = 0;
+	while (splt && *(splt) && ++len)
+		splt++;
+	return (len);
+}
+
+void	printsplit(char **split)
+{
+	if (!split)
+		printf("none\n");
+	while (split && *split)
+	{
+		puts(*split);
+		split++;
+	}
 }

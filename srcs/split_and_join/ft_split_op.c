@@ -6,15 +6,18 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 10:45:54 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/07 14:32:08 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 21:03:26 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "minishell.h"
 
+char		**ft_split_op(char *s0, int *len);
 static int	is_op(char *s0, char *s);
-// static char	*make_word(char *s0, int len);
+static int	is_redir_and_len(char *s0, char *s);
+char		*make_word(char *s0, int len);
+int			word_length(char *s0, char *s);
 
 //split the line into an array of 'words' and 'operators'
 char	**ft_split_op(char *s0, int *len)
@@ -72,7 +75,7 @@ int	word_length(char *s0, char *s)
 	return (len);
 }
 
-int	is_redir_and_len(char *s0, char *s)
+static int	is_redir_and_len(char *s0, char *s)
 {
 	int	is_esp;
 	int	l_int;

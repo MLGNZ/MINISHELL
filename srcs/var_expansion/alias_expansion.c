@@ -3,33 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   alias_expansion.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 21:29:42 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/01 16:26:17 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:35:06 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	cw(char *s0, int *len)
-{
-	char	*s1;
-	int		nw;
+int			alias_expansion(t_ms *ms, char **s);
+static int	make_it_alias_exp(t_ms *ms, char **s, int *i, int ww);
+static int	make_it_alias_exp2(t_ms *ms, char **s, int *i, int ww);
 
-	nw = 0;
-	s1 = (char *)s0;
-	while (*s1)
+int	alias_expansion(t_ms *ms, char **s)
+{
+	int		len;
+	int		i;
+	char	ww;
+
+	i = 0;
+	len = 0;
+	while (s && *s && (*s)[i])
 	{
-		if (*s1 == ' ')
-				s1++;
+		ww = which_word(&(*s)[i], *s);
+		if ((*s)[i] == ' ')
+			while ((*s)[i] == ' ')
+				i++;
+		else if (ww == '\'' && ++i)
+			while ((*s)[i] && which_word(&(*s)[i++], *s) != ww)
+				(void)i;
+		else if (ww == '\"' && ++i)
+			make_it_alias_exp(ms, s, &i, ww);
 		else
-		{
-			nw++;
-			s1 += word_length(s0, s1);
-		}
+			make_it_alias_exp2(ms, s, &i, ww);
 	}
-	return (*len = nw);
+	return (1);
 }
 
 static int	make_it_alias_exp(t_ms *ms, char **s, int *i, int ww)
@@ -66,39 +75,5 @@ static int	make_it_alias_exp2(t_ms *ms, char **s, int *i, int ww)
 		}
 		*i += len;
 	}
-	return (1);
-}
-
-int	alias_expansion(t_ms *ms, char **s)
-{
-	int		len;
-	int		i;
-	char	ww;
-
-	i = 0;
-	len = 0;
-	while (s && *s && (*s)[i])
-	{
-		ww = which_word(&(*s)[i], *s);
-		if ((*s)[i] == ' ')
-			while ((*s)[i] == ' ')
-				i++;
-		else if (ww == '\'' && ++i)
-			while ((*s)[i] && which_word(&(*s)[i++], *s) != ww)
-				(void)i;
-		else if (ww == '\"' && ++i)
-			make_it_alias_exp(ms, s, &i, ww);
-		else
-			make_it_alias_exp2(ms, s, &i, ww);
-	}
-	return (1);
-}
-
-int	replace_token(char **string_address, char *expanded_string)
-{
-	if (!expanded_string)
-		return (0);
-	free(*string_address);
-	*string_address = expanded_string;
 	return (1);
 }

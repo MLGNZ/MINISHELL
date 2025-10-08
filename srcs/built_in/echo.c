@@ -3,14 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:25:50 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/26 12:38:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 20:07:45 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int			echo(char **tab, t_ms *ms);
+static int	its_opt(char *str);
+static int	is_n(char **tab);
+static char	**get_lines(char **tab);
+static int	write_line(char **line, int option);
+
+int	echo(char **tab, t_ms *ms)
+{
+	int		option;
+	char	**line;
+
+	if (!tab[1] || !tab[1][0])
+	{
+		if (!is_n(tab))
+			ft_printf("\n");
+		return (0);
+	}
+	option = is_n(tab);
+	line = get_lines(tab);
+	if (!line)
+		return (0);
+	ms->exit_code = write_line(line, option);
+	if (ms->exit_code)
+		return (freesplit(line), 0);
+	return (freesplit(line), 1);
+}
 
 static int	its_opt(char *str)
 {
@@ -93,25 +120,4 @@ static int	write_line(char **line, int option)
 		if (!ft_printf("\n"))
 			return (perror("printf"), 1);
 	return (0);
-}
-
-int	echo(char **tab, t_ms *ms)
-{
-	int		option;
-	char	**line;
-
-	if (!tab[1] || !tab[1][0])
-	{
-		if (!is_n(tab))
-			ft_printf("\n");
-		return (0);
-	}
-	option = is_n(tab);
-	line = get_lines(tab);
-	if (!line)
-		return (0);
-	ms->exit_code = write_line(line, option);
-	if (ms->exit_code)
-		return (freesplit(line), 0);
-	return (freesplit(line), 1);
 }

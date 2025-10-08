@@ -6,22 +6,11 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:24:05 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/13 18:07:39 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 21:08:46 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	printsplit(char **split)
-{
-	if (!split)
-		printf("none\n");
-	while (split && *split)
-	{
-		puts(*split);
-		split++;
-	}
-}
 
 char	is_meta(char *c_address, char meta, char *s0)
 {

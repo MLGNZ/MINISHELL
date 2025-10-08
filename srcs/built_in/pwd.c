@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nothing.c                                          :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/08 15:38:44 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 19:46:30 by mlagniez         ###   ########.fr       */
+/*   Created: 2025/10/08 20:05:18 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/08 20:05:31 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	nothing(void *whatever)
+int	pwd(t_ms *ms)
 {
-	(void)whatever;
+	char	*pwd;
+
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+	{
+		printf("%s\n", get_var(my_get_env("PWD=", ms->lst_env), ms) + 4);
+		return (0);
+	}
+	printf("%s\n", pwd);
+	free(pwd);
+	return (1);
 }
