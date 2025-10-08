@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/06 11:28:25 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:47:18 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	reset_out_fds(t_pl *pl)
 {
 	t_fd	*tmp;
 
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	if (!pl->fds)
 		return ;
 	tmp = pl->fds;
@@ -81,10 +83,10 @@ void	reset_out_fds(t_pl *pl)
 
 int	handle_fds(t_pl **pls, int i, t_ms *ms)
 {
-	if (pls[i]->has_red_out && pls[i]->position != ALONE)
+	if (pls[i]->has_red_out)
 		if (dup2(pls[i]->fd_out, 1) == -1)
 			return (0);
-	if (pls[i]->has_red_in && pls[i]->position != ALONE)
+	if (pls[i]->has_red_in)
 		if (dup2(pls[i]->fd_in, 0) == -1)
 			return (0);
 	if (i > 0)
@@ -94,8 +96,6 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		(pls[i + 1])->previous_pipe[0] = pls[i]->current_pipe[0];
 		(pls[i + 1])->previous_pipe[1] = pls[i]->current_pipe[1];
 	}
-	if (pls[i]->position == ALONE && pls[i]->redir)
-		my_dup2(pls[i]->fd_in, 0, pls[i]->fd_out, 1);
 	close_fds(ms->fd_in, ms->fd_out, pls[i]->fd_in, pls[i]->fd_out);
 	return (1);
 }

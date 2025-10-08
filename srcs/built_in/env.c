@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:59 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/01 18:08:24 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 17:29:21 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,18 +97,20 @@ the  value  shall  be the exit value of the last command executed, or zero if no
 command was executed. When exit is executed in a trap action, the  last  command
 is considered to be the command that executed immediately preceding the trap ac‐
 tion.*/
-void	ft_exit(t_ms *ms, char **cmd_args)
+void	ft_exit(t_ms *ms, char **cmd_args, int in_child)
 {
 	long long int	exit_code;
 
 	if (!cmd_args[1])
 	{
-		printf("exit\n");
+		if (!in_child)
+			printf("exit\n");
 		exit(0);
 	}
 	if (!check_errors(cmd_args, ms))
 		return ;
 	exit_code = ft_atoi(cmd_args[1]);
-	printf("exit\n");
+	if (!in_child)
+		printf("exit\n");
 	exit(exit_code);
 }

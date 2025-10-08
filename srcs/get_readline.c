@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/06 11:41:30 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:45:03 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 	while (!valid_read_line(rline, rline))
 	{
 		rl_on_new_line();
-		signal(SIGINT, sig_handler_prompt);
+		signal(SIGINT, sig_handler_close);
 		rline = ft_strjoin_free12(rline, readline("> "));
 		if (!rline)
 			return (0);
@@ -39,10 +39,8 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 	if (!ms->s_readline)
 		return (0);
 	if (g_sig)
-		return (ms->prev_exit_code = g_sig, free(rline), ms->readline = NULL, 2);
-	free(rline);
-	ms->readline = NULL;
-	return (1);
+		return (ms->prev_exit_code = g_sig, free(rline), ms->readline = 0, 2);
+	return (ms->readline = NULL, free(rline), 1);
 }
 
 int	get_valid_line_inter(t_ms *ms, int i)
@@ -62,6 +60,24 @@ int	get_valid_line_inter(t_ms *ms, int i)
 	return (1);
 }
 
+int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
+{
+	if (!rline)
+		return (panic(ms, 0));
+	if (g_sig)
+	{
+		ms->prev_exit_code = g_sig;
+		g_sig = 0;
+	}
+	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);
+	if (!*temp_spltd)
+		return (panic(ms, 52));
+	if (!is_there_a_parse_error_near(*temp_spltd))
+		return (add_history(rline), free(rline), freesplit(*temp_spltd), -1);
+	freesplit(*temp_spltd);
+	return (0);
+}
+
 int	get_valid_line(t_ms *ms, int i)
 {
 	char	*rline;
@@ -71,19 +87,8 @@ int	get_valid_line(t_ms *ms, int i)
 	{
 		rl_on_new_line();
 		rline = readline("minishell% ");
-		if (!rline)
-			return (panic(ms, 0));
-		if (g_sig)
-		{
-			ms->prev_exit_code = g_sig;
-			g_sig = 0;
-		}
-		temp_spltd = ft_split_op(rline, &ms->s_readline_len);
-		if (!temp_spltd)
-			return (panic(ms, 52));
-		if (!is_there_a_parse_error_near(temp_spltd))
-			return (add_history(rline), free(rline), freesplit(temp_spltd), -1);
-		freesplit(temp_spltd);
+		if (get_valid_loop(rline, ms, &temp_spltd) == -1)
+			return (-1);
 		i = 0;
 		while (rline[i] && rline[i] == ' ')
 			i++;

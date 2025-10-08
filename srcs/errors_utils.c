@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:19:24 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/06 11:46:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:02:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,13 @@ int	is_var_ass(char *str)
 void	get_status(int status, t_ms *ms)
 {
 	if (WIFEXITED(status))
+	{
 		ms->exit_code = WEXITSTATUS(status);
+	}
 	else if (WIFSIGNALED(status))
-		ms->exit_code = WTERMSIG(status);
+	{
+		ms->exit_code = WTERMSIG(status) + 128;
+		if (ms->exit_code == 131)
+			ft_putstr_fd("Quit (core dumped)\n", 2);
+	}
 }

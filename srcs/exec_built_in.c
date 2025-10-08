@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:31:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/01 15:13:04 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 13:54:54 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 	if (!ft_strncmp(pl->cmd, "echo", ft_strlen(pl->cmd)))
 		echo(pl->cmd_args, ms);
 	else if (!ft_strncmp(pl->cmd, "exit", ft_strlen(pl->cmd)))
-		ft_exit(ms, pl->cmd_args);
+		ft_exit(ms, pl->cmd_args, in_child);
 	else if (!ft_strncmp(pl->cmd, "pwd", ft_strlen(pl->cmd)))
 		pwd(ms);
 	else if (!ft_strncmp(pl->cmd, "export", ft_strlen(pl->cmd)))

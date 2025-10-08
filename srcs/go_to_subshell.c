@@ -6,13 +6,12 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/04 14:01:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:57:50 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//ne pas effacer, si pas change, ajouter waitpid dans le gt subshell in line
 int	go_to_subshell(t_ms *ms, char **s_readline)
 {
 	int	pid;
@@ -22,11 +21,9 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 	pid = fork();
 	if (!pid)
 	{
-		//dupsplit s_readline
 		freesplit(ms->s_readline);
 		if (!dup_split(s_readline, &ms->s_readline, 0))
 			panic(ms, 52);
-		//freetout ou presque
 		if (ms->lns)
 			erase_lines(&(ms->lns));
 		minishell(ms, ms->s_readline);
@@ -38,9 +35,18 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 	return (pid);
 }
 
+void	protect_subshell(t_ms *ms, t_pl **pls, int *i)
+{
+	freesplit(ms->s_readline);
+	if (!dup_split(pls[*i]->raw_pipeline, &ms->s_readline, 0))
+		panic(ms, 52);
+	if (ms->lns)
+		erase_lines(&(ms->lns));
+}
+
 int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 {
-	char **s_readline;
+	char	**s_readline;
 
 	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
 	pls[*i]->pid = fork();
@@ -49,12 +55,7 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 	else if (!pls[*i]->pid)
 	{
 		handle_pipe(pls[*i]);
-		freesplit(ms->s_readline);
-		if (!dup_split(pls[*i]->raw_pipeline, &ms->s_readline, 0))
-			panic(ms, 52);
-		//freetout ou presque
-		if (ms->lns)
-			erase_lines(&(ms->lns));
+		protect_subshell(ms, pls, i);
 		minishell(ms, ms->s_readline);
 		close_fds(ms->fd_in, ms->fd_out, pls[*i]->current_pipe[1], 0);
 		panic(ms, 0);

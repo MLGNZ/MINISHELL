@@ -14,7 +14,8 @@ LDFLAGS 	= -lreadline -lncurses
 
 LIBFT_A     = $(LIBFT_DIR)/libft.a
 
-SRC	=	srcs/main.c\
+SRC	=	srcs/nothing.c \
+		srcs/main.c\
 		srcs/split_and_init_pipelines.c\
 		srcs/split_and_init_pipelines2.c\
 		srcs/ft_split_op.c\
@@ -59,7 +60,7 @@ SRC	=	srcs/main.c\
 		srcs/exec_built_in.c \
 		srcs/errors_utils.c \
 		srcs/signal.c \
-		ft_split_reexpand.c
+		srcs/ft_split_reexpand.c
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))
 

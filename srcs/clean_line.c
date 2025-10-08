@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/07 13:32:02 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 15:38:40 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,39 @@ void		remove_quotes(const char *s0, char *s);
 void		remove_backslashes(const char *s0, char *s);
 static int	cat_over_quotes(const char *s0, char *s, char q);
 
-static int	clean_expand_in_array2(char **t0, char **t, char ***t_adr, int type)
+static int	clean_ex_in_array2(char **t0, t_list **lst, char ***t_adr, int type)
 {
-	t = t0;
-	while (t && *t)
-	{
-		remove_quotes(*t, *t);
-		remove_backslashes(*t, *t);
-		t++;
-	}
-	*t_adr = t0;
-	return (1);
-}
+	char	**t;
 
-void *nothing(void *whatever)
-{
-	(void)whatever;
+	if (*lst)
+	{
+		freesplit(t0);
+		t0 = lst_to_tab(*lst);
+		if (!t0)
+			return (ft_lstclear(lst, free), 0);
+		ft_lstclear(lst, nothing);
+		*t_adr = t0;
+	}
+	else
+	{
+		t = t0;
+		while (t && *t)
+		{
+			remove_quotes(*t, *t);
+			remove_backslashes(*t, *t);
+			t++;
+		}
+		*t_adr = t0;
+	}
+	return (1);
 }
 
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
 	char	**tab;
-	t_list *lst_wc;
-	
-	lst_wc = NULL;
+	t_list	*lst_wc;
 
+	lst_wc = NULL;
 	tab = tab0;
 	while (tab && *tab)
 	{
@@ -59,19 +67,8 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 			return (0);
 		tab++;
 	}
-	// lst_print(lst_wc);
-	if (lst_wc)
-	{
-		// freesplit(tab0);
-		freesplit(tab0);
-		tab0 = lst_to_tab(lst_wc);//protec
-		ft_lstclear(&lst_wc, nothing);
-		
-		*tab_addr = tab0;
-	}
-	tab = NULL;
-	if (!clean_expand_in_array2(tab0, tab, tab_addr, type))
-		return (*tab_addr = tab0, panic(ms, 52), 0);
+	if (!clean_ex_in_array2(tab0, &lst_wc, tab_addr, type))
+		return (panic(ms, 52), 0);
 	return (1);
 }
 

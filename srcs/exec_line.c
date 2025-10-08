@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/29 18:08:02 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/07 17:34:14 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	exec_line(t_ms *ms, t_line *line)
 			return (0);
 		ms->prev_exit_code = ms->exit_code;
 	}
-	// dup2(ms->fd_in, 0);
+	dup2(ms->fd_in, 0);
 	return (1);
 }
 

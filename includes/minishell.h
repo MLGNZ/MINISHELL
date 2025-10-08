@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/07 14:33:00 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:01:43 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,12 +113,15 @@ typedef struct s_pipeline
 int		go_to_subshell(t_ms *ms, char **s_readline);
 
 int		minishell(t_ms *ms, char **s_readline);
+void	nothing(void *whatever);
 void	sig_handler(int sig);
 int		dive_into_lines(t_ms *ms, t_line **lns);
 void	sig_handler_no(int sig);
-void	sig_handler_prompt(int sig);
+void	sig_handler_close(int sig);
 void	sig_handler(int sig);
-void	sig_handler_hd(int sig);
+void	sig_handler_quit(int sig);
+int		emf_loop_in_loop(t_list **list, struct dirent *dirent, int is_dir);
+void	incr_shlvl(t_list **env, t_ms *ms);
 int		handle_subshell(t_pl **pls, int *i, t_ms *ms);
 
 //parsing
@@ -146,6 +149,7 @@ int		is_there_a_parse_error_near(char **tb);
 
 //aliases
 int		alias_in_redir(t_ms *ms, char **s);
+void	sig_handler_noendl(int sig);
 int		alias_expansion(t_ms *ms, char **s);
 int		clean_expand_in_array(char **tab, char ***tab_addr, t_ms *ms, int type);
 int		manage_aliases(t_ms *ms, char **tab, int type);
@@ -201,7 +205,7 @@ char	*get_var(int pos, t_ms *ms);
 void	cd(char **path, t_ms **env);
 void	env(t_ms *ms, t_pl *pl);
 int		echo(char **tab, t_ms *ms);
-void	ft_exit(t_ms *ms, char **cmd_args);
+void	ft_exit(t_ms *ms, char **cmd_args, int in_child);
 int		my_get_env(char *var, t_list *env);
 int		pwd(t_ms *ms);
 
@@ -239,6 +243,8 @@ void	remove_backslashes(const char *s0, char *s);
 int		wildcards_in_redir(t_ms *ms, char **s);
 int		wildcards_expansion(char **s, t_list **lst);
 int		wildcards_expansion_in_var(char **s);
+void	sort_wild(t_list **lst);
+int		ft_strcasecmp(const char *s1, const char *s2);
 int		manage_wildcards(t_ms *ms, char **tab, int type, t_list **lst_wc);
 void	ambiguous_message(char *s);
 char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check);

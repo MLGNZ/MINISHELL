@@ -43,7 +43,7 @@ static int	handle_infile(t_pl *pl, int in_pos)
 
 static void	print_error_hd(char *delim)
 {
-	ft_putstr_fd("minishell: warning:", 2);
+	ft_putstr_fd("\nminishell: warning:", 2);
 	ft_putstr_fd(" here-document at current line delimited by end-of-file (wanted `", 2);
 	ft_putstr_fd(delim, 2);
 	ft_putstr_fd("')\n", 2);
@@ -53,17 +53,21 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 {
 	char	*line;
 
-	signal(SIGINT, sig_handler_hd);
+	signal(SIGINT, sig_handler_close);
 	while (1)
 	{
-		line =	readline("> ");
-		if (!line && g_sig != 130)
+		ft_putstr_fd("> ", 1);
+		line = get_next_line(0, &check_free);
+		if ((!line && !check_free))
 		{
-			print_error_hd(delim);
+			if (!g_sig)
+				print_error_hd(delim);
 			return (free(line), 0);
 		}
-		else if (!line)
-			return (free(line), 0);
+		else if (!line && check_free)
+			break ;
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = 0;
 		if (!ft_strncmp(line, delim, ft_strlen(line) + 1))
 			return (free(line), 1);
 		alias_expansion(ms, &line);
@@ -71,8 +75,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 		ft_putstr_fd("\n", (*pl)->heredoc_pipe[1]);
 		free(line);
 	}
-	signal(SIGINT, sig_handler);
-	return (1);
+	return (panic(ms, 52), 1);
 }
 
 static int	handle_heredoc(t_pl *pl, int hd_pos, t_ms *ms)
@@ -85,7 +88,7 @@ static int	handle_heredoc(t_pl *pl, int hd_pos, t_ms *ms)
 	if (pipe(pl->heredoc_pipe) == -1)
 		return (perror("pipe"), 0);
 	if (!hd_loop(&pl, delim, check_free, ms))
-		return (0);
+		return (signal(SIGINT, sig_handler),0);
 	close(pl->heredoc_pipe[1]);
 	return (1);
 }

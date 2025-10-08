@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/04 14:07:45 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/08 16:58:36 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	fill_new_env(t_list **p_lst)
 	int		i;
 	char	*content;
 	t_list	*temp_list;
-	
+
 	content = ft_strjoin("PWD=", getcwd(NULL, 0));
 	if (!content)
 		return (ft_lstclear(p_lst, free), 0);
@@ -41,7 +41,8 @@ int	fill_new_env(t_list **p_lst)
 	if (!temp_list)
 		return (ft_lstclear(p_lst, free), free(content), 0);
 	ft_lstadd_back(p_lst, temp_list);
-	if (!add_new_elem(p_lst, content, "SHLVL=1") || !add_new_elem(p_lst, content, "_=/usr/bin/env"))
+	if (!add_new_elem(p_lst, content, "SHLVL=1") || \
+	!add_new_elem(p_lst, content, "_=/usr/bin/env"))
 		return (ft_lstclear(p_lst, free), free(content), 0);
 	return (1);
 }
@@ -65,29 +66,6 @@ int	tab_to_lst(char **tab, t_list **p_lst)
 	return (1);
 }
 
-void	incr_shlvl(t_list **env, t_ms *ms)
-{
-	char	*val;
-	char *new_sh;
-	char *shlvl;
-	t_list *sh_lst;
-
-	if (my_get_env("SHLVL", *env) == -1)
-		return ;
-	shlvl = get_var(my_get_env("SHLVL", *env), ms);
-	val = ft_itoa(ft_atoi(shlvl + 6) + 1);
-	if (!val)
-		panic(ms, 52);
-	new_sh = ft_strjoin_free2("SHLVL=", val);
-	if (!new_sh)
-		panic(ms, 52);
-	sh_lst = ft_lstnew(new_sh);
-	if (!sh_lst)
-		panic(ms, 52);
-	if (!update_lst(&ms->lst_env, &sh_lst))
-		panic(ms, 52);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_ms	ms;
@@ -97,8 +75,8 @@ int	main(int argc, char **argv, char **envp)
 		return (ft_putstr_fd("Malloc error\n", 2), 1);
 	if (!ms.lst_env)
 		fill_new_env(&ms.lst_env);
-	// else
-	// 	incr_shlvl(&ms.lst_env, &ms);
+	else
+		incr_shlvl(&ms.lst_env, &ms);
 	ms.fd_in = dup(0);
 	ms.fd_out = dup(1);
 	signal(SIGQUIT, SIG_IGN);

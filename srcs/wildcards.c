@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/06 17:09:56 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 17:01:27 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,44 +26,7 @@
 
 #include "minishell.h"
 
-static char	*emf_loop(char **ret_add, struct dirent *dirent, int is_dir)
-{
-	char	*ret;
-
-	ret = *ret_add;
-	ret = wild_join(ret, (char *)dirent->d_name);
-	if (!ret)
-		return (NULL);
-	if (is_dir)
-	{
-		ret = ft_strjoin_free1(ret, "/");
-		if (!ret)
-			return (NULL);
-	}
-	return (*ret_add = ret);
-}
-
-
-int	emf_loop_in_loop(t_list **list, struct dirent *dirent, int is_dir)
-{
-	char	*ret;
-	t_list *new;
-
-	ret = ft_strdup((char *)dirent->d_name);
-	if (!ret)
-		return (0);
-	if (is_dir)
-	{
-		ret = ft_strjoin_free1(ret, "/");
-		if (!ret)
-			return (0);
-	}
-	new = ft_lstnew(ret);//protec
-	ft_lstadd_back(list, new);
-	return (1);
-}
-
-t_list	*matching_files_in_list(char **wild_sequ, int fst_n_lst, int *chk, int is_dir)
+t_list	*matching_files_in_list(char **wd_sq, int f_n_l, int *chk, int is_dir)
 {
 	char			*pwd;
 	DIR				*dir;
@@ -73,20 +36,20 @@ t_list	*matching_files_in_list(char **wild_sequ, int fst_n_lst, int *chk, int is
 	ret = NULL;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		return (freesplit(wild_sequ), *chk = 0, NULL);
+		return (freesplit(wd_sq), *chk = 0, NULL);
 	dir = opendir(pwd);
 	free(pwd);
 	dirent = readdir(dir);
 	while (dirent)
 	{
-		if (match_wild_pattern(dirent->d_name, wild_sequ, fst_n_lst) \
+		if (match_wild_pattern(dirent->d_name, wd_sq, f_n_l) \
 		&& (!is_dir || dirent->d_type == 4))
 			if (!emf_loop_in_loop(&ret, dirent, is_dir))
-				return (freesplit(wild_sequ), *chk = 0, NULL);
+				return (freesplit(wd_sq), *chk = 0, NULL);
 		dirent = readdir(dir);
 	}
-	// lst_print(ret);
-	return (freesplit(wild_sequ), closedir(dir), ret);
+	sort_wild(&ret);
+	return (freesplit(wd_sq), closedir(dir), ret);
 }
 
 char	*matching_files(char **wild_sequ, int fst_n_lst, int *chk, int is_dir)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/07 13:19:26 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/08 14:55:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static int	handle_execve(t_pl *pl, t_ms *ms)
 {
 	char	**tab_env;
 
+	signal(SIGQUIT, sig_handler_quit);
 	handle_pipe(pl);
 	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
 	check_errors(pl, ms);
