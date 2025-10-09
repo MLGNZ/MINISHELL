@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 16:31:16 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 13:54:54 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:09:11 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	exec_build_in(t_pl *pl, t_ms *ms, int in_child)
 		env(ms, pl);
 	if (in_child)
 	{
-		close_fds(pl->fd_in, pl->fd_out, ms->fd_in, ms->fd_out);
+		close_fds(&(pl->fd_in), &(pl->fd_out), &(ms->fd_in), &(ms->fd_out));
 		exit(0);
 	}
 	return (1);
@@ -84,14 +84,15 @@ int	handle_built_in(t_pl **pls, int *i, t_ms *ms)
 		if (pls[*i]->redir && pls[*i]->has_red_in)
 		{
 			dup2(pls[*i]->current_pipe[0], 0);
-			close_fds(pls[*i]->current_pipe[1], pls[*i]->current_pipe[0], 0, 0);
+			close_fds(&(pls[*i]->current_pipe[1]), \
+			&(pls[*i]->current_pipe[0]), NULL, NULL);
 		}
 		exec_build_in(pls[*i], ms, 0);
 		dup2(pls[*i]->fd_in, 0);
 		dup2(pls[*i]->fd_out, 1);
 		if (pls[*i]->fds)
 			reset_out_fds(pls[*i]);
-		close_fds(pls[*i]->fd_in, pls[(*i)++]->fd_out, 0, 0);
+		close_fds(&(pls[*i]->fd_in), &(pls[(*i)++]->fd_out), NULL, NULL);
 	}
 	else
 		if (piped_built_in(pls, ms, i))

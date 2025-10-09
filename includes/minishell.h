@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 15:14:50 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:03:17 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int		pipe_needed(t_pl *pl);
 void	reset_out_fds(t_pl *pl);
 int		handle_built_in(t_pl **pls, int *i, t_ms *ms);
 int		handle_fds(t_pl **pls, int i, t_ms *ms);
-void	close_fds(int fd1, int fd2, int fd3, int fd4);
+void	close_fds(int *fd1, int *fd2, int *fd3, int *fd4);
 void	my_dup2(int fd1, int fd2, int fd3, int fd4);
 int		red_out(t_pl *pl, t_ms *ms);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);

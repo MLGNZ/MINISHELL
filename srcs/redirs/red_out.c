@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:28:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/29 18:07:58 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:02:53 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,28 @@ Pour >  : (which_op(\le char * de la redirection\)) == ROUT)
 
 #include "minishell.h"
 
-void	close_fds(int fd1, int fd2, int fd3, int fd4)
+void	close_fds(int *fd1, int *fd2, int *fd3, int *fd4)
 {
-	if (fd1)
-		close(fd1);
-	if (fd2)
-		close(fd2);
-	if (fd3)
-		close(fd3);
-	if (fd4)
-		close(fd4);
+	if (fd1 && *fd1 != -1)
+	{
+		close(*fd1);
+		*fd1 = -1;
+	}
+	if (fd2 && *fd2 != -1)
+	{
+		close(*fd2);
+		*fd2 = -1;
+	}
+	if (fd3 && *fd3 != -1)
+	{
+		close(*fd3);
+		*fd3 = -1;
+	}
+	if (fd4 && *fd4 != -1)
+	{
+		close(*fd4);
+		*fd4 = -1;
+	}
 }
 
 static int	handle_outfile(t_pl *pl, int out_pos, int option)

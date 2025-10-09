@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 14:55:49 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:11:47 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	handle_execve(t_pl *pl, t_ms *ms)
 
 	signal(SIGQUIT, sig_handler_quit);
 	handle_pipe(pl);
-	close_fds(ms->fd_in, ms->fd_out, pl->fd_in, pl->fd_out);
+	close_fds(&(ms->fd_in), &(ms->fd_out), &(pl->fd_in), &(pl->fd_out));
 	check_errors(pl, ms);
 	tab_env = lst_to_tab(ms->lst_env);
 	execve(pl->cmd, pl->cmd_args, tab_env);

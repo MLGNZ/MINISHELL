@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   look_hd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 14:32:57 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 14:35:18 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 16:45:47 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ static int	handle_heredoc(t_pl *pl, int hd_pos, t_ms *ms)
 		return (perror("pipe"), 0);
 	if (!hd_loop(&pl, delim, check_free, ms))
 		return (signal(SIGINT, sig_handler), 0);
-	close(pl->heredoc_pipe[1]);
+	if (pl->heredoc_pipe[1] != -1)
+		close(pl->heredoc_pipe[1]);
 	return (1);
 }
 
@@ -79,7 +80,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 		{
 			if (!g_sig)
 				print_error_hd(delim);
-			return (free(line), 0);
+			return (free(line), close((*pl)->heredoc_pipe[1]), 0);
 		}
 		else if (!line && check_free)
 			break ;
@@ -92,7 +93,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 		ft_putstr_fd("\n", (*pl)->heredoc_pipe[1]);
 		free(line);
 	}
-	return (panic(ms, 52), 1);
+	return (panic(ms, 52), close((*pl)->heredoc_pipe[1]), 1);
 }
 
 static int	handle_infile(t_pl *pl, int in_pos)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:16:09 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:12:29 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ int	main(int argc, char **argv, char **envp)
 		if (ms.s_readline)
 			ms.prev_exit_code = minishell(&ms, ms.s_readline);
 	}
-	close(ms.fd_in);
-	close(ms.fd_out);
 	panic(&ms, ms.exit_code);
 	return (0);
 }

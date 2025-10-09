@@ -26,12 +26,10 @@ SRC	=	srcs/nothing.c \
 		srcs/dive_into_lines.c\
 		srcs/go_to_subshell.c\
 		srcs/panic.c\
-		srcs/exec_line.c\
 		srcs/env_utils.c \
 		srcs/get_readline.c\
 		srcs/find_file.c\
 		srcs/update_lst.c\
-		srcs/exec.c \
 		srcs/make_arrays_in_pipelines.c\
 		\
 		srcs/built_in/cd.c \
@@ -44,9 +42,12 @@ SRC	=	srcs/nothing.c \
 		\
 		srcs/redirs/fd_n_pipe.c \
 		srcs/redirs/fds.c \
+		srcs/redirs/look_hd.c\
 		srcs/redirs/red_out.c \
 		srcs/redirs/red_in.c \
-		srcs/exec_built_in.c \
+		srcs/exec/exec_line.c\
+		srcs/exec/exec.c \
+		srcs/exec/exec_built_in.c \
 		srcs/signal.c \
 		srcs/reassign.c\
 		\
@@ -74,7 +75,6 @@ SRC	=	srcs/nothing.c \
 		srcs/tab_and_lst.c\
 		srcs/lst_utils.c\
 		srcs/erase.c\
-		srcs/look_hd.c\
 		srcs/ambiguous.c\
 		\
 		srcs/utils_parsing_1.c\
@@ -111,7 +111,6 @@ $(NAME): $(OBJ) $(LIBFT_A)
 $(LIBFT_A):
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)compiling libft... $(END)"
 	@make -s -C $(LIBFT_DIR) bonus && echo "   $(BLUE)⤷ $(END)Success $(GREEN)(libft.a)$(END)"
-
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)

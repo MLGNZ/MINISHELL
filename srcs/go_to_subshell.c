@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   go_to_subshell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:17:46 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:14:10 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 {
 	char	**s_readline;
 
-	close_fds(pls[*i]->fd_in, pls[*i]->fd_out, 0, 0);
+	close_fds(&(pls[*i]->fd_in), &(pls[*i]->fd_out), NULL, NULL);
 	pls[*i]->pid = fork();
 	if (pls[*i]->pid == -1)
 		return (perror("fork"), 0);
@@ -62,7 +62,6 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 		handle_pipe(pls[*i]);
 		protect_subshell(ms, pls, i);
 		minishell(ms, ms->s_readline);
-		close_fds(ms->fd_in, ms->fd_out, pls[*i]->current_pipe[1], 0);
 		panic(ms, 0);
 	}
 	else

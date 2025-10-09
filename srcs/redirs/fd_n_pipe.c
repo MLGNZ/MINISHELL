@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 15:47:18 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 17:26:31 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,30 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 
 void	handle_pipe(t_pl *pl)
 {
-	if (pl->position == ALONE)
+	if (pl->position == FIRST)
+	{
+		if (!pl->has_red_out && (pl->cmd || pl->sub_shell))
+			dup2(pl->current_pipe[1], 1);
+		close_fds(&(pl->current_pipe[0]), &(pl->current_pipe[1]), NULL, NULL);
 		return ;
-	if (pl->position == FIRST && pl->has_red_out)
-		return ;
+	}
 	if (pl->position == LAST && pl->has_red_in)
 	{
-		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
+		close_fds(&(pl->previous_pipe[0]), &(pl->previous_pipe[1]), NULL, NULL);
 		return ;
 	}
 	if ((pl->position == LAST || pl->position == INTER) && (pl->cmd \
 	|| pl->sub_shell))
 	{
-		dup2(pl->previous_pipe[0], 0);
-		close_fds(pl->previous_pipe[0], pl->previous_pipe[1], 0, 0);
+		if (!pl->has_red_in)
+			dup2(pl->previous_pipe[0], 0);
+		close_fds(&(pl->previous_pipe[0]), &(pl->previous_pipe[1]), NULL, NULL);
 	}
 	if ((pl->position == FIRST || pl->position == INTER) && \
 	!pl->has_red_out && (pl->cmd || pl->sub_shell))
 	{
 		dup2(pl->current_pipe[1], 1);
-		close_fds(pl->current_pipe[0], pl->current_pipe[1], 0, 0);
+		close_fds(&(pl->current_pipe[0]), &(pl->current_pipe[1]), NULL, NULL);
 	}
 }
 
@@ -90,13 +94,14 @@ int	handle_fds(t_pl **pls, int i, t_ms *ms)
 		if (dup2(pls[i]->fd_in, 0) == -1)
 			return (0);
 	if (i > 0)
-		close_fds(pls[i]->previous_pipe[0], pls[i]->previous_pipe[1], 0, 0);
+		close_fds(&(pls[i]->previous_pipe[0]), \
+		&(pls[i]->previous_pipe[1]), NULL, NULL);
 	if (pls[i]->position == FIRST || pls[i]->position == INTER)
 	{
 		(pls[i + 1])->previous_pipe[0] = pls[i]->current_pipe[0];
 		(pls[i + 1])->previous_pipe[1] = pls[i]->current_pipe[1];
 	}
-	close_fds(ms->fd_in, ms->fd_out, pls[i]->fd_in, pls[i]->fd_out);
+	close_fds(&(ms->fd_in), &(ms->fd_out), &(pls[i]->fd_in), &(pls[i]->fd_out));
 	return (1);
 }
 
