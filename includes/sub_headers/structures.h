@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   structures.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/09 15:15:13 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/09 15:15:57 by mlagniez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef STRUCTURES_H
 # define STRUCTURES_H
 
-#include "../minishell.h"
+# include "../minishell.h"
 
 typedef struct s_ms
 {

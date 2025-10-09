@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_join.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/09 15:15:16 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/09 15:15:54 by mlagniez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SPLIT_JOIN_H
 # define SPLIT_JOIN_H
 
-#include "../minishell.h"
+# include "../minishell.h"
 
 //join_free
 char	*ft_strjoin_free1(char *s1, char const *s2);

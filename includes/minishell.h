@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 14:40:12 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 15:14:50 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int		minishell(t_ms *ms, char **s_readline);
 void	nothing(void *whatever);
 
 //make arrays of pipelines
-int	make_arrays_pl(t_pl **pl, char **tb);
+int		make_arrays_pl(t_pl **pl, char **tb);
 
 //UPDATE TAB
 int		update_tab(char ***tab_address, char **tab, int i);
@@ -57,7 +57,7 @@ t_line	**split_and_init_lines(t_ms *ms, char **rline);
 int		split_and_init_pipelines(t_ms *ms, t_line **lns, int i);
 int		make_pipeline(char **tb, t_pl **pl_add, int len, int n_o_pls);
 int		clean_all_pipelines(t_ms *ms, t_line *ln);
-int		clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type);
+int		clean_expand_in_array(char **tab0, char ***tab_add, t_ms *ms, int type);
 
 //Utils parsing.c
 int		find_cmd(char**tab, t_ms *ms);
@@ -74,16 +74,16 @@ int		cw(char *s0, int *len);
 char	which_word(char *s, char *s0);
 
 //reassign.c
-int	reassign(t_pl *pl, char **tab, int n_o_pls, int i);
+int		reassign(t_pl *pl, char **tab, int n_o_pls, int i);
 
 //find_file.c
-int			find_file(char *cmd, char **file_address, char *path, int i);
+int		find_file(char *cmd, char **file_address, char *path, int i);
 
 //updatelst.c
-int			update_lst(t_list **p_lst_a, t_list **p_lst_b);
-t_list		*exists_in_vars(char *content, t_list *vars, int *cat);
-char		*cat_vars(char *var1, char *var2, int free2);
-int			size_of_key(char *content);
+int		update_lst(t_list **p_lst_a, t_list **p_lst_b);
+t_list	*exists_in_vars(char *content, t_list *vars, int *cat);
+char	*cat_vars(char *var1, char *var2, int free2);
+int		size_of_key(char *content);
 
 //go to subshell.c
 int		go_to_subshell(t_ms *ms, char **s_readline);
@@ -91,11 +91,9 @@ void	protect_subshell(t_ms *ms, t_pl **pls, int *i);
 int		handle_subshell(t_pl **pls, int *i, t_ms *ms);
 int		is_subshell(char **tab);
 
-
 //lstutils.c
 void	lst_print(t_list *lst);
 void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
-
 
 //RANGER MIEUX TOUT CE QUI EST EN DESSOUS
 
@@ -104,10 +102,9 @@ int		dive_into_lines(t_ms *ms, t_line **lns);
 int		exec_line(t_ms *ms, t_line *line);
 int		exec_cmd(t_pl **pls, t_ms *ms);
 
-
 //red in
 int		red_in(t_pl *pipeline, t_ms *ms);
-int	look_hd(t_pl *pl, int last[3], t_ms *ms);
+int		look_hd(t_pl *pl, int last[3], t_ms *ms);
 
 //ambiguous
 int		is_ambiguous(char *exp);
@@ -127,11 +124,6 @@ void	my_dup2(int fd1, int fd2, int fd3, int fd4);
 int		red_out(t_pl *pl, t_ms *ms);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
 void	get_status(int status, t_ms *ms);
-
-
 void	incr_shlvl(t_list **env, t_ms *ms);
-
-
-
 
 #endif

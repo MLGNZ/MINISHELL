@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_in.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/09 15:15:35 by mlagniez          #+#    #+#             */
+/*   Updated: 2025/10/09 15:15:43 by mlagniez         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef BUILT_IN_H
 # define BUILT_IN_H
 
-#include "../minishell.h"
+# include "../minishell.h"
 
 //BUILT-IN
 int		ft_export(char **args, t_ms *ms);
