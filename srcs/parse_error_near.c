@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 18:16:09 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 11:58:36 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:21:01 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,41 +109,3 @@ static int	parenthesis(char **tb)
 	}
 	return (count);
 }
-
-// static char	*operator_code_to_string2(int operator_code)
-// {
-// 	if (operator_code == DBSEMICOLON)
-// 		return (";;");
-// 	if (operator_code == ESP)
-// 		return ("&");
-// 	if (operator_code == AND)
-// 		return ("&&");
-// 	if (operator_code == OR)
-// 		return ("||");
-// 	if (operator_code == O_PAR)
-// 		return ("(");
-// 	if (operator_code == C_PAR)
-// 		return (")");
-// 	return (0);
-// }
-
-// char	*operator_code_to_string(int operator_code)
-// {
-// 	if (operator_code == EOL)
-// 		return ("newline");
-// 	if (operator_code == PIPE)
-// 		return ("|");
-// 	if (operator_code == RIN)
-// 		return ("<");
-// 	if (operator_code == ROUT)
-// 		return (">");
-// 	if (operator_code == HDOC)
-// 		return ("<<");
-// 	if (operator_code == AROUT)
-// 		return (">>");
-// 	if (operator_code == SEMICOLON)
-// 		return (";");
-// 	return (operator_code_to_string2(operator_code));
-// }
-
-

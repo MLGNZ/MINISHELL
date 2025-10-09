@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 20:57:50 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:05:02 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:05:35 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,6 @@ static void	set_cmd_and_args(t_pl *pl)
 		pl->cmd = pl->cmd_args[0];
 	else
 		pl->cmd = 0;
-}
-
-void	lst_print(t_list *lst)
-{	
-	while (lst)
-	{
-		puts(lst->content);
-		lst = lst->next;
-	}
 }
 
 static int	clean_pipeline(t_ms *ms, t_line *ln, t_pl *pl, int position)

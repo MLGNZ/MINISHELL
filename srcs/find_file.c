@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:28:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:19:23 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:12:28 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ static int	file_for_no_path(char *cmd_test, char **file_address)
 	free(cmd_test2);
 	return (1);
 }
-
-
 
 static int	len_of_path(char *path)
 {

@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:27:34 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:16:18 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:20:14 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	find_cmd(char**tab, t_ms *ms)
 	return (1);
 }
 
-
 int	is_build_in(char *str)
 {
 	if (!str)
@@ -45,24 +44,6 @@ int	is_build_in(char *str)
 		!ft_strncmp(str, "env", 4) || \
 		!ft_strncmp(str, "exit", 5))
 		return (1);
-	return (0);
-}
-
-char	*ft_getenv(char *key, t_ms *ms)
-{
-	t_list	*env;
-	int		key_len;
-
-	key_len = ft_strlen(key);
-	env = ms->lst_env;
-	while (env)
-	{
-		if (!ft_strncmp(env->content, key, key_len) && \
-		ft_strlen(env->content) > (size_t)key_len && \
-		((char *)env->content)[key_len] == '=')
-			return (&(((char *)env->content)[key_len + 1]));
-		env = env->next;
-	}
 	return (0);
 }
 
@@ -105,8 +86,6 @@ static int	cat_over_quotes(const char *s0, char *s, char q)
 	ft_strlcpy(s, s + 1, ft_strlen(s));
 	return (len);
 }
-
-
 
 void	remove_backslashes(const char *s0, char *s)
 {

@@ -17,7 +17,6 @@ LIBFT_A     = $(LIBFT_DIR)/libft.a
 SRC	=	srcs/nothing.c \
 		srcs/main.c\
 		srcs/split_and_init_pipelines.c\
-		srcs/split_and_init_pipelines2.c\
 		srcs/make_pipeline.c\
 		srcs/make_pipeline2.c\
 		srcs/clean_line.c\
@@ -29,9 +28,7 @@ SRC	=	srcs/nothing.c \
 		srcs/go_to_subshell.c\
 		srcs/panic.c\
 		srcs/exec_line.c\
-		srcs/utils.c\
 		srcs/env_utils.c \
-		srcs/utils2.c\
 		srcs/get_readline.c\
 		srcs/utils_parsing.c\
 		srcs/find_file.c\
@@ -76,7 +73,9 @@ SRC	=	srcs/nothing.c \
 		srcs/split_and_join/update_split_just_replace.c\
 		\
 		srcs/tbd.c\
-		srcs/tab_and_lst.c
+		srcs/tab_and_lst.c\
+		srcs/lst_utils.c\
+		srcs/erase.c
 
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))

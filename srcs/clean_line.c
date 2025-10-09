@@ -6,14 +6,13 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:10:28 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:22:17 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int			clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type);
-static int	clean_ex_in_array2(char **t0, t_list **lst, char ***t_adr, int type);
+static int	ceia2(char **t0, t_list **lst, char ***t_adr, int type);
 
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
@@ -39,12 +38,12 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 			return (0);
 		tab++;
 	}
-	if (!clean_ex_in_array2(tab0, &lst_wc, tab_addr, type))
+	if (!ceia2(tab0, &lst_wc, tab_addr, type))
 		return (panic(ms, 52), 0);
 	return (1);
 }
 
-static int	clean_ex_in_array2(char **t0, t_list **lst, char ***t_adr, int type)
+static int	ceia2(char **t0, t_list **lst, char ***t_adr, int type)
 {
 	char	**t;
 

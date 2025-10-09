@@ -6,13 +6,11 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 19:39:02 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:16:15 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:20:39 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 void	incr_shlvl(t_list **env, t_ms *ms)
 {
@@ -37,8 +35,6 @@ void	incr_shlvl(t_list **env, t_ms *ms)
 		panic(ms, 52);
 }
 
-
-
 void	get_status(int status, t_ms *ms)
 {
 	if (WIFEXITED(status))
@@ -52,4 +48,3 @@ void	get_status(int status, t_ms *ms)
 			ft_putstr_fd("Quit (core dumped)\n", 2);
 	}
 }
-

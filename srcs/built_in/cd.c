@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 20:08:44 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:23:45 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ void	cd(char **path, t_ms **ms)
 		error_mess("getcwd", oldpwd);
 		return ;
 	}
-	update_env(*ms, oldpwd, newpwd);
-	free(oldpwd);
-	free(newpwd);
+	(update_env(*ms, oldpwd, newpwd), free(oldpwd), free(newpwd));
 }
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find)

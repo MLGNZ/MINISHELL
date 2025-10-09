@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/07 17:34:14 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:22:45 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int			exec_line(t_ms *ms, t_line *line);
 static int	update_vars(t_ms *ms, t_line *line);
 
 int	exec_line(t_ms *ms, t_line *line)
@@ -41,34 +42,6 @@ int	exec_line(t_ms *ms, t_line *line)
 	}
 	dup2(ms->fd_in, 0);
 	return (1);
-}
-
-void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content)
-{
-	t_list	*list;
-
-	if (!to_rem || !*p_list)
-		return ;
-	list = *p_list;
-	if (list == to_rem)
-	{
-		*p_list = list->next;
-		if (free_content)
-			free(to_rem->content);
-		free(to_rem);
-		return ;
-	}
-	while (list && list->next)
-	{
-		if (list->next == to_rem)
-		{
-			list->next = to_rem->next;
-			if (free_content)
-				free(to_rem->content);
-			free(to_rem);
-		}
-		list = list->next;
-	}
 }
 
 static int	update_vars(t_ms *ms, t_line *line)

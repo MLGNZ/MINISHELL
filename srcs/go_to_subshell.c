@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   go_to_subshell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 16:57:50 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:17:46 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int		go_to_subshell(t_ms *ms, char **s_readline);
+void	protect_subshell(t_ms *ms, t_pl **pls, int *i);
+int		handle_subshell(t_pl **pls, int *i, t_ms *ms);
+int		is_subshell(char **tab);
 
 int	go_to_subshell(t_ms *ms, char **s_readline)
 {
@@ -70,4 +75,28 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 		handle_fds(pls, (*i)++, ms);
 	}
 	return (1);
+}
+
+int	is_subshell(char **tab)
+{
+	int	i;
+	int	c;
+
+	c = 0;
+	i = 0;
+	if (tab && tab[0][0] == '(')
+	{
+		while (tab && tab[(++i) + 1])
+		{
+			if (tab[i][0] == '(')
+				c++;
+			if (tab[i][0] == ')')
+				c--;
+			if (c < 0)
+				return (0);
+		}
+		if (tab[i][0] == ')')
+			return (1);
+	}
+	return (0);
 }

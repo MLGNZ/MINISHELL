@@ -6,48 +6,13 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 12:25:12 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 13:16:09 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 volatile sig_atomic_t	g_sig = 0;
-
-int	add_new_elem(t_list **p_lst, char *content, char *var)
-{
-	t_list	*temp_list;
-
-	content = ft_strdup(var);
-	if (!content)
-		return (ft_lstclear(p_lst, free), 0);
-	temp_list = ft_lstnew(content);
-	if (!temp_list)
-		return (ft_lstclear(p_lst, free), free(content), 0);
-	ft_lstadd_back(p_lst, temp_list);
-	return (1);
-}
-
-int	fill_new_env(t_list **p_lst)
-{
-	int		i;
-	char	*content;
-	t_list	*temp_list;
-
-	content = ft_strjoin("PWD=", getcwd(NULL, 0));
-	if (!content)
-		return (ft_lstclear(p_lst, free), 0);
-	temp_list = ft_lstnew(content);
-	if (!temp_list)
-		return (ft_lstclear(p_lst, free), free(content), 0);
-	ft_lstadd_back(p_lst, temp_list);
-	if (!add_new_elem(p_lst, content, "SHLVL=1") || \
-	!add_new_elem(p_lst, content, "_=/usr/bin/env"))
-		return (ft_lstclear(p_lst, free), free(content), 0);
-	return (1);
-}
-
-
 
 int	main(int argc, char **argv, char **envp)
 {
