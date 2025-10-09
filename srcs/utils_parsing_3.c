@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:27:34 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 14:44:04 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 18:26:30 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int	is_int(char *s)
 
 int	is_var_ass(char *str)
 {
+	if (str && ft_isdigit(*str))
+		return (0);
 	while (str && *str && *str != '=' && *str != '+')
 	{
 		if (!ft_isalnum(*str) && *str != '_')

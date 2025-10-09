@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 03:09:25 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 19:45:49 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 18:24:59 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*expanded_string(const char *s0, char *s, char *exp, int *len)
 	alias_l = 1;
 	while (s && (ft_isalnum(s[alias_l]) || s[alias_l] == '_'))
 		alias_l++;
-	if (s && s[1] == '?')
+	if (s && (s[1] == '?' || ft_isdigit(s[1])))
 		alias_l = 2;
 	*len = ft_strlen(exp);
 	ret = malloc(sizeof(char) * ((int)ft_strlen(s0) - alias_l + *len + 1));
@@ -49,6 +49,8 @@ char	*get_expansion(const char *s0, t_list *env, t_list *var, t_ms *ms)
 	s = (char *)s0;
 	if (*s == '?')
 		return (ft_itoa(ms->prev_exit_code));
+	if (ft_isdigit(*s))
+		return (NULL);
 	while (ft_isalnum(*s) || *s == '_')
 	{
 		len++;
