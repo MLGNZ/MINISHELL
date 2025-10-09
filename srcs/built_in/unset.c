@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 16:15:46 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/01 15:42:39 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:24:42 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,31 +28,4 @@ int	ft_unset(char **args, t_ms *ms)
 		args++;
 	}
 	return (1);
-}
-
-char	**lst_to_tab(t_list *env)
-{
-	t_list	*curr;
-	char	**tab;
-	int		i;
-
-	curr = env;
-	i = 0;
-	while (curr)
-	{
-		curr = curr->next;
-		i++;
-	}
-	tab = malloc(sizeof(char *) * (i + 1));
-	if (!tab)
-		return (NULL);
-	curr = env;
-	i = 0;
-	while (curr)
-	{
-		tab[i++] = curr->content;
-		curr = curr->next;
-	}
-	tab[i] = NULL;
-	return (tab);
 }

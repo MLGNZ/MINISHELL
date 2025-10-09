@@ -6,25 +6,23 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 17:21:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/06 15:28:33 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:03:49 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int			split_and_init_pipelines(t_ms *ms, t_line **lns, int i);
 static int	count_pipelines(char **tb);
 static int	create_pipelines(t_line *line, char **split_line);
-
-int			get_previous_data(t_line *line, t_line *previous_line);
-void		remove_parenthesis_of_line_subshell(t_line *line);
+static void	remove_parenthesis_of_line_subshell(t_line *line);
+static int	pipeline_len(char **tb);
 
 int	split_and_init_pipelines(t_ms *ms, t_line **lns, int i)
 {
 	t_line	*line;
 
 	line = lns[i];
-	if (i > 1)
-		get_previous_data(line, lns[i - 1]);
 	if (is_subshell(line->split_line))
 	{
 		line->sub_shell = 1;
@@ -85,9 +83,40 @@ static int	count_pipelines(char **tb)
 	return (count);
 }
 
-int	get_previous_data(t_line *line, t_line *previous_line)
+static void	remove_parenthesis_of_line_subshell(t_line *line)
 {
-	(void)line;
-	(void)previous_line;
-	return (0);
+	int	i;
+
+	free(line->split_line[0]);
+	i = 1;
+	while (line->split_line[i + 1])
+	{
+		line->split_line[i - 1] = line->split_line[i];
+		i++;
+	}
+	free(line->split_line[i]);
+	line->split_line[i] = NULL;
+	line->split_line[i - 1] = line->split_line[i];
+}
+
+static int	pipeline_len(char **tb)
+{
+	int	len;
+	int	p;
+	int	i;
+
+	i = -1;
+	p = 0;
+	len = 0;
+	while (tb && tb[++i])
+	{
+		if ((!p && *tb[i] == '|'))
+			break ;
+		len++;
+		if (which_op(tb[i]) == O_PAR)
+			p++;
+		if (which_op(tb[i]) == C_PAR)
+			p--;
+	}
+	return (len);
 }

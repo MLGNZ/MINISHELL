@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 16:58:36 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:25:12 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,7 @@ int	fill_new_env(t_list **p_lst)
 	return (1);
 }
 
-int	tab_to_lst(char **tab, t_list **p_lst)
-{
-	char	*content;
-	t_list	*temp_list;
 
-	while (tab && *tab)
-	{
-		content = ft_strdup(*tab);
-		if (!content)
-			return (ft_lstclear(p_lst, free), 0);
-		temp_list = ft_lstnew(content);
-		if (!temp_list)
-			return (ft_lstclear(p_lst, free), free(content), 0);
-		ft_lstadd_back(p_lst, temp_list);
-		tab++;
-	}
-	return (1);
-}
 
 int	main(int argc, char **argv, char **envp)
 {

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   split_lines.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/16 16:58:18 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/09/14 17:07:35 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 11:59:58 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_line	**split_and_init_lines(t_ms *ms, char **rline);
 static int		line_len(char **rline, int *len);
 static int		count_lines(char **rline, int *nb_of_lines);
 static t_line	*make_line(char **rline, int len);

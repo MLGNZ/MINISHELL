@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:30:01 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 20:30:54 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:22:09 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int			make_arrays_pl(t_pl **pl, char **tb);
 static void	get_length_of(char **tab, int *op, int *cmd, int *var);
+static int	malloc_shit(char ***tab, int size);
 
 int	make_arrays_pl(t_pl **pl, char **tb)
 {
@@ -51,4 +52,13 @@ static void	get_length_of(char **tab, int *op, int *cmd, int *var)
 		else if (!i || !which_op(tab[i - 1]))
 			(*cmd)++;
 	}
+}
+
+static int	malloc_shit(char ***tab, int size)
+{
+	*tab = malloc(sizeof(char *) * (size + 1));
+	if (!*tab)
+		return (0);
+	**tab = NULL;
+	return (1);
 }

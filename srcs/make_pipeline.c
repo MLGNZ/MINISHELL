@@ -6,11 +6,15 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 16:15:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 18:51:57 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 12:22:50 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int			make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls);
+static char	**raw_pipeline(char **tb, int len);
+static void	update_r_l(t_pl *pl);
 
 int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 {
@@ -38,4 +42,39 @@ int	make_pipeline(char **tb, t_pl **pl_address, int len, int n_o_pls)
 			return (0);
 	}
 	return (1);
+}
+
+static char	**raw_pipeline(char **tb, int len)
+{
+	char	**ret;
+	int		i;
+
+	i = -1;
+	ret = malloc(sizeof(char *) * (len + 1));
+	if (!ret)
+		return (0);
+	while (++i < len)
+	{
+		ret[i] = ft_strdup(tb[i]);
+		if (!ret[i])
+			return (freesplit(ret), NULL);
+	}
+	ret[i] = NULL;
+	return (ret);
+}
+
+static void	update_r_l(t_pl *pl)
+{
+	int	i;
+
+	free(pl->raw_pipeline[0]);
+	i = 1;
+	while (pl->raw_pipeline[i + 1])
+	{
+		pl->raw_pipeline[i - 1] = pl->raw_pipeline[i];
+		i++;
+	}
+	free(pl->raw_pipeline[i]);
+	pl->raw_pipeline[i] = NULL;
+	pl->raw_pipeline[i - 1] = pl->raw_pipeline[i];
 }

@@ -3,16 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   get_readline.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 15:45:03 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/09 11:50:49 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int			get_valid_line_inter(t_ms *ms, int i);
+static int	get_valid_line(t_ms *ms, int i);
+static int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd);
+static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd);
 static int	valid_read_line(char *rline0, char *rline);
+
+int	get_valid_line_inter(t_ms *ms, int i)
+{
+	int	vl_value;
+
+	while (1)
+	{
+		vl_value = get_valid_line(ms, i);
+		if (!vl_value)
+			return (0);
+		else if (vl_value == 2)
+			break ;
+		if (!g_sig)
+			break ;
+	}
+	return (1);
+}
+
+static int	get_valid_line(t_ms *ms, int i)
+{
+	char	*rline;
+	char	**temp_spltd;
+
+	while (1)
+	{
+		rl_on_new_line();
+		rline = readline("minishell% ");
+		if (get_valid_loop(rline, ms, &temp_spltd) == -1)
+			return (-1);
+		i = 0;
+		while (rline[i] && rline[i] == ' ')
+			i++;
+		if (rline[i])
+			break ;
+		free(rline);
+	}
+	if (!rline)
+		return (0);
+	return (gvl_part2(ms, rline, temp_spltd));
+}
+
+static int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
+{
+	if (!rline)
+		return (panic(ms, 0));
+	if (g_sig)
+	{
+		ms->prev_exit_code = g_sig;
+		g_sig = 0;
+	}
+	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);
+	if (!*temp_spltd)
+		return (panic(ms, 52));
+	if (!is_there_a_parse_error_near(*temp_spltd))
+		return (add_history(rline), free(rline), freesplit(*temp_spltd), -1);
+	freesplit(*temp_spltd);
+	return (0);
+}
 
 static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 {
@@ -41,64 +103,6 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 	if (g_sig)
 		return (ms->prev_exit_code = g_sig, free(rline), ms->readline = 0, 2);
 	return (ms->readline = NULL, free(rline), 1);
-}
-
-int	get_valid_line_inter(t_ms *ms, int i)
-{
-	int	vl_value;
-
-	while (1)
-	{
-		vl_value = get_valid_line(ms, i);
-		if (!vl_value)
-			return (0);
-		else if (vl_value == 2)
-			break ;
-		if (!g_sig)
-			break ;
-	}
-	return (1);
-}
-
-int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
-{
-	if (!rline)
-		return (panic(ms, 0));
-	if (g_sig)
-	{
-		ms->prev_exit_code = g_sig;
-		g_sig = 0;
-	}
-	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);
-	if (!*temp_spltd)
-		return (panic(ms, 52));
-	if (!is_there_a_parse_error_near(*temp_spltd))
-		return (add_history(rline), free(rline), freesplit(*temp_spltd), -1);
-	freesplit(*temp_spltd);
-	return (0);
-}
-
-int	get_valid_line(t_ms *ms, int i)
-{
-	char	*rline;
-	char	**temp_spltd;
-
-	while (1)
-	{
-		rl_on_new_line();
-		rline = readline("minishell% ");
-		if (get_valid_loop(rline, ms, &temp_spltd) == -1)
-			return (-1);
-		i = 0;
-		while (rline[i] && rline[i] == ' ')
-			i++;
-		if (rline[i])
-			break ;
-		free(rline);
-	}
-	if (!rline)
-		return (0);
-	return (gvl_part2(ms, rline, temp_spltd));
 }
 
 /*devrais checker si il y a des parentheses ouvertes*/
