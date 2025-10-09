@@ -18,7 +18,6 @@ SRC	=	srcs/nothing.c \
 		srcs/main.c\
 		srcs/split_and_init_pipelines.c\
 		srcs/make_pipeline.c\
-		srcs/make_pipeline2.c\
 		srcs/clean_line.c\
 		srcs/update_tab.c\
 		srcs/cleaning_parsing.c\
@@ -30,7 +29,6 @@ SRC	=	srcs/nothing.c \
 		srcs/exec_line.c\
 		srcs/env_utils.c \
 		srcs/get_readline.c\
-		srcs/utils_parsing.c\
 		srcs/find_file.c\
 		srcs/update_lst.c\
 		srcs/exec.c \
@@ -75,7 +73,13 @@ SRC	=	srcs/nothing.c \
 		srcs/tbd.c\
 		srcs/tab_and_lst.c\
 		srcs/lst_utils.c\
-		srcs/erase.c
+		srcs/erase.c\
+		srcs/look_hd.c\
+		srcs/ambiguous.c\
+		\
+		srcs/utils_parsing_1.c\
+		srcs/utils_parsing_2.c\
+		srcs/utils_parsing_3.c
 
 
 OBJ         = $(addprefix $(BUILD_DIR)/, $(subst $(SRC_DIR)/,,$(SRC:.c=.o)))

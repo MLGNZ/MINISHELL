@@ -6,7 +6,7 @@
 /*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:18:10 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/09 14:40:12 by mlagniez         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,7 @@ int		how_many_backslashes(char *s0, char *s);
 int		which_op(char *str);
 int		is_var_ass(char *str);
 int		cw(char *s0, int *len);
-void	ambiguous_message(char *s);
 char	which_word(char *s, char *s0);
-int		is_ambiguous(char *exp);
 
 //reassign.c
 int	reassign(t_pl *pl, char **tab, int n_o_pls, int i);
@@ -102,14 +100,23 @@ void	ft_lst_remove(t_list *to_rem, t_list **p_list, int free_content);
 //RANGER MIEUX TOUT CE QUI EST EN DESSOUS
 
 //exec
+int		dive_into_lines(t_ms *ms, t_line **lns);
 int		exec_line(t_ms *ms, t_line *line);
 int		exec_cmd(t_pl **pls, t_ms *ms);
+
+
+//red in
+int		red_in(t_pl *pipeline, t_ms *ms);
+int	look_hd(t_pl *pl, int last[3], t_ms *ms);
+
+//ambiguous
+int		is_ambiguous(char *exp);
+void	ambiguous_message(char *s);
 
 //bordel
 
 void	handle_pipe(t_pl *pl);
 int		handle_built_in(t_pl **pls, int *i, t_ms *ms);
-int		red_in(t_pl *pipeline, t_ms *ms);
 int		redirect_out_fd(t_pl **pl, char *redir, t_pl *temp, int i);
 int		pipe_needed(t_pl *pl);
 void	reset_out_fds(t_pl *pl);
@@ -121,11 +128,6 @@ int		red_out(t_pl *pl, t_ms *ms);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
 void	get_status(int status, t_ms *ms);
 
-
-
-//TBD
-
-int		dive_into_lines(t_ms *ms, t_line **lns);
 
 void	incr_shlvl(t_list **env, t_ms *ms);
 
