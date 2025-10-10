@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 11:25:30 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 19:27:02 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:28:01 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,9 @@
 
 int	manage_wildcards(t_ms *ms, char **tab, int type, t_list **lst)
 {
-	char	**wcs;
-
 	if (type == CMD_LT && !wildcards_expansion_in_cmd(tab, lst))
 		return (panic(ms, 52), 0);
-	if (type == REDIR && !wildcards_in_redir(ms, tab))
+	if (type == REDIR && !wildcards_in_redir(tab))
 		return (0);
 	return (1);
 }

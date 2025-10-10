@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:26:53 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/09 17:26:31 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:27:17 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	redirect_fds(t_pl *pl, t_ms *ms)
 		!ft_strncmp(pl->redir[i], "<", 1)) && !red_in(pl, ms))
 			return (dup2(pl->fd_in, 0), 0);
 		if ((!ft_strncmp(pl->redir[i], ">>", 2) || \
-		!ft_strncmp(pl->redir[i], ">", 1)) && !red_out(pl, ms))
+		!ft_strncmp(pl->redir[i], ">", 1)) && !red_out(pl))
 			return (dup2(pl->fd_out, 1), 0);
 	}
 	return (1);

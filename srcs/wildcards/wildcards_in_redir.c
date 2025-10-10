@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards_in_redir.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/08 19:28:54 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:27:27 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static char	*mf_in_redir(char **wild_sequ, int fst_n_lst, int *chk, int is_dir);
 static char	*mf_loop_in_redir(char **ret_add, struct dirent *dirent, int isdir);
 
-int	wildcards_in_redir(t_ms *ms, char **s)
+int	wildcards_in_redir(char **s)
 {
 	char	**wild_requ;
 	char	*ret;

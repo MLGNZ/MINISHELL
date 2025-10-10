@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 15:15:02 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 15:16:04 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:27:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 //WILDCARDS
 int		manage_wildcards(t_ms *ms, char **tab, int type, t_list **lst_wc);
 int		wildcards_expansion_in_cmd(char **s, t_list **lst);
-int		wildcards_in_redir(t_ms *ms, char **s);
+int		wildcards_in_redir(char **s);
 //pattern and match
 char	**get_wild_pattern(char **s, int *first_n_last, int wc, int *check);
 int		match_wild_pattern(char *d_name, char **wild_pattern, int fnl);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:06:21 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:14:30 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:24:56 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	add_new_elem(t_list **p_lst, char *content, char *var)
 
 int	fill_new_env(t_list **p_lst)
 {
-	int		i;
 	char	*content;
 	t_list	*temp_list;
 

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   clean_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:22:17 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:23:51 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ceia2(char **t0, t_list **lst, char ***t_adr, int type);
+static int	ceia2(char **t0, t_list **lst, char ***t_adr);
 
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
@@ -38,12 +38,12 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 			return (0);
 		tab++;
 	}
-	if (!ceia2(tab0, &lst_wc, tab_addr, type))
+	if (!ceia2(tab0, &lst_wc, tab_addr))
 		return (panic(ms, 52), 0);
 	return (1);
 }
 
-static int	ceia2(char **t0, t_list **lst, char ***t_adr, int type)
+static int	ceia2(char **t0, t_list **lst, char ***t_adr)
 {
 	char	**t;
 

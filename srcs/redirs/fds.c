@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:24:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/09/23 18:38:18 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:26:45 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ static int	redirect_out_fd2(t_pl **pl, t_fd *new_fd)
 int	redirect_out_fd(t_pl **pl, char *redir, t_pl *temp, int i)
 {
 	int		j;
-	char	*num;
 	t_fd	*new_fd;
 
 	j = 0;

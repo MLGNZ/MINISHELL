@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:27:07 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 17:03:17 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:27:05 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int		handle_built_in(t_pl **pls, int *i, t_ms *ms);
 int		handle_fds(t_pl **pls, int i, t_ms *ms);
 void	close_fds(int *fd1, int *fd2, int *fd3, int *fd4);
 void	my_dup2(int fd1, int fd2, int fd3, int fd4);
-int		red_out(t_pl *pl, t_ms *ms);
+int		red_out(t_pl *pl);
 int		handle_redirs(t_ms *ms, t_pl **pls, int *i);
 void	get_status(int status, t_ms *ms);
 void	incr_shlvl(t_list **env, t_ms *ms);

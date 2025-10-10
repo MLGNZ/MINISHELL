@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 20:14:36 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:26:41 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int			ft_export(char **args, t_ms *ms);
 static void	remove_invalid_arguments(t_list **args, t_ms *ms);
 static int	update_vars_from_exp_args(t_list **p_lst_args, t_list **p_lst_vars);
-static char	*invalid_key(char *var);
 static int	is_valid_var_key(char *str);
 
 int	ft_export(char **args, t_ms *ms)
@@ -50,17 +49,6 @@ static int	is_valid_var_key(char *str)
 	if (*str == '+' && *(str + 1) && *(str + 1) != '=')
 		return (0);
 	return (1);
-}
-
-static char	*invalid_key(char *var)
-{
-	int	i;
-
-	i = -1;
-	while (var && var[++i])
-		if (var[i] == '+' || var[i] == '=')
-			var[i] = 0;
-	return (var);
 }
 
 static void	remove_invalid_arguments(t_list **args, t_ms *ms)

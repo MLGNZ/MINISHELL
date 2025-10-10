@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards_in_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 18:55:23 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 19:26:40 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:27:21 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ static int		mf_loop_in_cmd(t_list **list, struct dirent *dirent, int isdir);
 int	wildcards_expansion_in_cmd(char **s, t_list **lst)
 {
 	char	**wild_requ;
-	char	**ret_tab;
 	int		flags[3];
 	t_list	*mf;
 

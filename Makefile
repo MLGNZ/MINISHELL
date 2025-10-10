@@ -7,7 +7,7 @@ BUILD_DIR   = build
 INC         = includes
 
 CC          = cc
-CFLAGS      =  -g3 -I$(INC) -I$(LIBFT_DIR)
+CFLAGS      =  -Wall -Wextra -Werror -g3 -I$(INC) -I$(LIBFT_DIR)
 LDFLAGS 	= -lreadline -lncurses
 
 # -Wall -Wextra -Werror

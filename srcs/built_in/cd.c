@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 19:27:27 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/09 13:23:45 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 12:26:31 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find);
-static void	update_env(t_ms *ms, char *oldpwd, char *newpwd);
+static void	update_env(t_ms *ms, char **oldpwd, char **newpwd);
 static void	error_mess(char *msg, char *oldpwd);
 static int	error_cd(DIR *file, char **path, t_ms **ms);
 
@@ -29,9 +29,10 @@ void	cd(char **path, t_ms **ms)
 		if (chdir(get_var(my_get_env("HOME=", (*ms)->lst_env), *ms) + 5) == -1)
 			perror("cd");
 		newpwd = getcwd(NULL, 0);
-		update_env(*ms, oldpwd, newpwd);
+		update_env(*ms, &oldpwd, &newpwd);
 		return ;
 	}
+	file = NULL;
 	if (!error_cd(file, path, ms))
 	{
 		free(oldpwd);
@@ -39,11 +40,9 @@ void	cd(char **path, t_ms **ms)
 	}
 	newpwd = getcwd(NULL, 0);
 	if (!newpwd)
-	{
 		error_mess("getcwd", oldpwd);
-		return ;
-	}
-	(update_env(*ms, oldpwd, newpwd), free(oldpwd), free(newpwd));
+	else
+		update_env(*ms, &oldpwd, &newpwd);
 }
 
 static void	set_newvar(t_list **curr, char *pwd, char *to_find)
@@ -57,13 +56,15 @@ static void	set_newvar(t_list **curr, char *pwd, char *to_find)
 	ft_lstadd_back(curr, var);
 }
 
-static void	update_env(t_ms *ms, char *oldpwd, char *newpwd)
+static void	update_env(t_ms *ms, char **oldpwd, char **newpwd)
 {
 	t_list	*curr;
 
 	curr = ms->lst_env;
-	set_newvar(&curr, newpwd, "PWD=");
-	set_newvar(&curr, oldpwd, "OLDPWD=");
+	set_newvar(&curr, *newpwd, "PWD=");
+	set_newvar(&curr, *oldpwd, "OLDPWD=");
+	free(*oldpwd);
+	free(*newpwd);
 }
 
 static void	error_mess(char *msg, char *oldpwd)
