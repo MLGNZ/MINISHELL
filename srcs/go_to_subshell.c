@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 10:49:52 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/10 12:30:48 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:15:40 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ int	go_to_subshell(t_ms *ms, char **s_readline)
 			panic(ms, 52);
 		if (ms->lns)
 			erase_lines(&(ms->lns));
+		ms->og_shlvl++;
 		minishell(ms, ms->s_readline);
-		close_fds(&(ms->fd_in), NULL, NULL, NULL);
+		close_fds(&(ms->fd_in), &(ms->fd_out), NULL, NULL);
 		panic(ms, ms->exit_code);
 	}
 	if (pid < 0)
@@ -59,6 +60,7 @@ int	handle_subshell(t_pl **pls, int *i, t_ms *ms)
 	{
 		handle_pipe(pls[*i]);
 		protect_subshell(ms, pls, i);
+		ms->og_shlvl++;
 		minishell(ms, ms->s_readline);
 		panic(ms, 0);
 	}

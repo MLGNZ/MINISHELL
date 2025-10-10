@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 11:26:22 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 17:12:29 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:13:03 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **envp)
 		if (ms.s_readline)
 			ms.prev_exit_code = minishell(&ms, ms.s_readline);
 	}
+	close_fds(&(ms.fd_in), &(ms.fd_out), NULL, NULL);
 	panic(&ms, ms.exit_code);
 	return (0);
 }

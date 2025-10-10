@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structures.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 15:15:13 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 15:15:57 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 13:51:10 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_ms
 	unsigned char	exit_code;
 	int				fd_in;
 	int				fd_out;
+	int				og_shlvl;
 }	t_ms;
 
 typedef struct s_line

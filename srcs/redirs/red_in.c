@@ -30,7 +30,7 @@ int	red_in(t_pl *pl, t_ms *ms)
 	if (!pl->redir)
 		return (1);
 	if (!look_hd(pl, last, ms))
-		return (ms->exit_code = 1, 0);
+		return (0);
 	if (last[1] != -1 && last[2] != -1 && last[1] > last[0])
 	{
 		if (pl->cmd)

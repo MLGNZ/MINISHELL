@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 20:27:47 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 17:11:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 13:42:43 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,8 +121,8 @@ int	exec_cmd(t_pl **pls, t_ms *ms)
 	i = -1;
 	while (pls[++i])
 	{
-		if (!is_build_in(pls[i]->cmd) || (pls[i]->position != ALONE \
-		&& is_build_in(pls[i]->cmd)) || pls[i]->sub_shell)
+		if ((!is_build_in(pls[i]->cmd) || pls[i]->sub_shell) || \
+		(is_build_in(pls[i]->cmd) && pls[i]->position != ALONE))
 		{
 			if (pls[i]->pid < 0)
 			{

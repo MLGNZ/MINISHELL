@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 14:32:57 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 16:45:47 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:10:40 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 		{
 			if (!g_sig)
 				print_error_hd(delim);
-			return (free(line), close((*pl)->heredoc_pipe[1]), 0);
+			return (free(line), close((*pl)->heredoc_pipe[1]), \
+			close((*pl)->heredoc_pipe[0]), !g_sig);
 		}
 		else if (!line && check_free)
 			break ;
@@ -90,8 +91,7 @@ static int	hd_loop(t_pl **pl, char *delim, int check_free, t_ms *ms)
 			return (free(line), 1);
 		alias_expansion(ms, &line);
 		ft_putstr_fd(line, (*pl)->heredoc_pipe[1]);
-		ft_putstr_fd("\n", (*pl)->heredoc_pipe[1]);
-		free(line);
+		(ft_putstr_fd("\n", (*pl)->heredoc_pipe[1]), free(line));
 	}
 	return (panic(ms, 52), close((*pl)->heredoc_pipe[1]), 1);
 }

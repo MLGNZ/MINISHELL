@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_readline.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 11:50:49 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:05:41 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ int	get_valid_line_inter(t_ms *ms, int i)
 	while (1)
 	{
 		vl_value = get_valid_line(ms, i);
-		if (!vl_value)
+		if (!vl_value || vl_value == -1)
 			return (0);
-		else if (vl_value == 2)
-			break ;
 		if (!g_sig)
 			break ;
 	}
@@ -61,10 +59,10 @@ static int	get_valid_line(t_ms *ms, int i)
 static int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
 {
 	if (!rline)
-		return (panic(ms, 0));
+		return (-1);
 	if (g_sig)
 	{
-		ms->prev_exit_code = g_sig;
+		ms->prev_exit_code = g_sig + 128;
 		g_sig = 0;
 	}
 	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);
@@ -95,14 +93,14 @@ static int	gvl_part2(t_ms *ms, char *rline, char **temp_spltd)
 			return (add_history(rline), free(rline), freesplit(temp_spltd), -1);
 		freesplit(temp_spltd);
 	}
-	signal(SIGINT, sig_handler);
 	add_history(rline);
 	ms->s_readline = ft_split_op(rline, &ms->s_readline_len);
 	if (!ms->s_readline)
 		return (0);
 	if (g_sig)
-		return (ms->prev_exit_code = g_sig, free(rline), ms->readline = 0, 2);
-	return (ms->readline = NULL, free(rline), 1);
+		return (ms->prev_exit_code = g_sig + 128, \
+		free(rline), ms->readline = 0, 2);
+	return (ms->readline = NULL, free(rline), signal(SIGINT, sig_handler), 1);
 }
 
 /*devrais checker si il y a des parentheses ouvertes*/

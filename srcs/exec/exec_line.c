@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 12:57:26 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:22:45 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 13:45:06 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	exec_line(t_ms *ms, t_line *line)
 		pid = go_to_subshell(ms, line->split_line);
 		if (pid)
 			waitpid(pid, &status, 0);
-		ms->prev_exit_code = status;
+		get_status(status, ms);
 	}
 	else
 	{

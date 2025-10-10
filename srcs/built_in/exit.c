@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:05:45 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/08 20:10:08 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 14:25:49 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		ft_exit(t_ms *ms, char **cmd_args, int in_child);
-static int	check_errors(char **cmd_args, t_ms *ms);
+static int	check_errors(char **cmd_args);
 
 /*The  exit  status shall be n, if specified,
 except that the behavior is unspecified if n is not an unsigned 
@@ -29,18 +29,17 @@ void	ft_exit(t_ms *ms, char **cmd_args, int in_child)
 	if (!cmd_args[1])
 	{
 		if (!in_child)
-			printf("exit\n");
+			ft_putstr_fd("exit\n", 2);
 		exit(0);
 	}
-	if (!check_errors(cmd_args, ms))
-		return ;
 	exit_code = ft_atoi(cmd_args[1]);
-	if (!in_child)
-		printf("exit\n");
+	if (!in_child && !ms->og_shlvl)
+		ft_putstr_fd("exit\n", 2);
+	check_errors(cmd_args);
 	exit(exit_code);
 }
 
-static int	check_errors(char **cmd_args, t_ms *ms)
+static int	check_errors(char **cmd_args)
 {
 	int	i;
 
@@ -52,17 +51,18 @@ static int	check_errors(char **cmd_args, t_ms *ms)
 			i++;
 		if (!ft_isdigit(cmd_args[1][i]))
 		{
-			ft_putstr_fd("minishell:", 2);
-			ft_putstr_fd(" numeric argument required\n", 2);
-			ms->exit_code = 2;
-			return (0);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_args[0], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			exit(2);
 		}
 	}
 	if (cmd_args[2])
 	{
-		ft_putstr_fd(" too many arguments", 2);
-		ms->exit_code = 1;
-		return (0);
+		ft_putstr_fd("minishell : ", 2);
+		ft_putstr_fd(cmd_args[0], 2);
+		ft_putstr_fd(": too many arguments\n", 2);
+		exit(1);
 	}
 	return (1);
 }
