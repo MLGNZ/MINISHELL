@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/10 14:05:41 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 16:03:39 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,10 @@ int	get_valid_line_inter(t_ms *ms, int i)
 	while (1)
 	{
 		vl_value = get_valid_line(ms, i);
-		if (!vl_value || vl_value == -1)
+		if (!vl_value)
 			return (0);
+		else if (vl_value == 2)
+			break ;
 		if (!g_sig)
 			break ;
 	}
@@ -59,10 +61,11 @@ static int	get_valid_line(t_ms *ms, int i)
 static int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
 {
 	if (!rline)
-		return (-1);
+		return (close_fds(&(ms->fd_in), &(ms->fd_out), \
+		NULL, NULL), panic(ms, 0));
 	if (g_sig)
 	{
-		ms->prev_exit_code = g_sig + 128;
+		ms->prev_exit_code = g_sig;
 		g_sig = 0;
 	}
 	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);

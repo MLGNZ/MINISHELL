@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlagniez <mlagniez@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:28:32 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/09 13:12:28 by mlagniez         ###   ########.fr       */
+/*   Updated: 2025/10/10 15:49:58 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static int	file_for_no_path(char *cmd_test, char **file_address)
 	if (!access(cmd_test2, X_OK))
 		return (free(cmd_test), *file_address = cmd_test2, 1);
 	free(cmd_test2);
+	free(cmd_test);
 	return (1);
 }
 

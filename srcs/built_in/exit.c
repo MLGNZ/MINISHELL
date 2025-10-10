@@ -6,14 +6,14 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:05:45 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/10 14:25:49 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 16:00:09 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 void		ft_exit(t_ms *ms, char **cmd_args, int in_child);
-static int	check_errors(char **cmd_args);
+static int	check_errors(char **cmd_args, t_ms *ms);
 
 /*The  exit  status shall be n, if specified,
 except that the behavior is unspecified if n is not an unsigned 
@@ -30,16 +30,24 @@ void	ft_exit(t_ms *ms, char **cmd_args, int in_child)
 	{
 		if (!in_child)
 			ft_putstr_fd("exit\n", 2);
-		exit(0);
+		panic(ms, 0);
 	}
 	exit_code = ft_atoi(cmd_args[1]);
 	if (!in_child && !ms->og_shlvl)
 		ft_putstr_fd("exit\n", 2);
-	check_errors(cmd_args);
+	check_errors(cmd_args, ms);
+	if (ms)
+	{
+		freesplit(ms->s_readline);
+		ft_lstclear(&ms->lst_env, free);
+		ft_lstclear(&ms->lst_vars, free);
+		if (ms->lns)
+			erase_lines(&(ms->lns));
+	}
 	exit(exit_code);
 }
 
-static int	check_errors(char **cmd_args)
+static int	check_errors(char **cmd_args, t_ms *ms)
 {
 	int	i;
 
@@ -54,15 +62,15 @@ static int	check_errors(char **cmd_args)
 			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd_args[0], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
-			exit(2);
+			panic(ms, 2);
 		}
 	}
 	if (cmd_args[2])
 	{
-		ft_putstr_fd("minishell : ", 2);
+		ft_putstr_fd("minishell :", 2);
 		ft_putstr_fd(cmd_args[0], 2);
 		ft_putstr_fd(": too many arguments\n", 2);
-		exit(1);
+		panic(ms, 1);
 	}
 	return (1);
 }
