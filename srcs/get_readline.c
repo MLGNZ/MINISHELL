@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 13:01:35 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/10 16:03:39 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:00:17 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static int	get_valid_loop(char *rline, t_ms *ms, char ***temp_spltd)
 		NULL, NULL), panic(ms, 0));
 	if (g_sig)
 	{
-		ms->prev_exit_code = g_sig;
+		ms->prev_exit_code = g_sig + 128;
 		g_sig = 0;
 	}
 	*temp_spltd = ft_split_op(rline, &ms->s_readline_len);

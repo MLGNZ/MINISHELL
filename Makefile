@@ -10,8 +10,6 @@ CC          = cc
 CFLAGS      =  -Wall -Wextra -Werror -g3 -I$(INC) -I$(LIBFT_DIR)
 LDFLAGS 	= -lreadline -lncurses
 
-# -Wall -Wextra -Werror
-
 LIBFT_A     = $(LIBFT_DIR)/libft.a
 
 SRC	=	srcs/nothing.c \
@@ -103,7 +101,6 @@ BOLD        = \033[1m
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT_A)
-# 	@echo "WELCOME TO THE BIGGEST GIGA SHELL" | toilet
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make $(NAME)$(END)"
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT_A) $(LDFLAGS) -o $(NAME) && \
 	echo "   $(BLUE)⤷ $(END)Executable: $(BG_GREEN)$(BOLD)$(NAME)$(END)"
@@ -121,18 +118,17 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 
 # ================================[ Nettoyage ]===============================
 
-c clean:
+clean:
 	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make clean$(END)"
 	@rm -f $(OBJ) && echo "   $(BG_WHITE)⤷ $(END)Removed object files"
 	@make -s -C $(LIBFT_DIR) clean
 	
-fc fclean:
-	@echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make fclean$(END)"
-	@if [ -f $(NAME) ]; then rm -f $(NAME) && echo "   $(BLUE)⤷ $(END)Removed binary $(NAME)"; fi
+fclean:
+	@if [ -f $(NAME) ]; then echo "$(GREY_LIGHT)🔘 $(UNDERLINE)$(TITLE)make fclean$(END)" && rm -f $(NAME) && echo "   $(BLUE)⤷ $(END)Removed binary $(NAME)"; fi
 	@if [ -d $(BUILD_DIR) ]; then rm -rf $(BUILD_DIR) && echo "   $(BLUE)⤷ $(END)Removed build dir"; fi
 	@make -s -C $(LIBFT_DIR) fclean
 
 
-re: fc all
+re: fclean all
 
-.PHONY: all clean c fclean fc re
+.PHONY: all clean fclean re

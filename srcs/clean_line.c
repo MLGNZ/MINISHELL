@@ -6,13 +6,13 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/15 15:25:28 by mlagniez          #+#    #+#             */
-/*   Updated: 2025/10/10 12:23:51 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:33:23 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ceia2(char **t0, t_list **lst, char ***t_adr);
+static int	ceia2(t_ms *ms, char **t0, t_list **lst, char ***t_adr);
 
 int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 {
@@ -31,19 +31,18 @@ int	clean_expand_in_array(char **tab0, char ***tab_addr, t_ms *ms, int type)
 	if (type == CMD_LT && !update_tab(&tab0, tab0, 0))
 		return (*tab_addr = tab0, panic(ms, 52), 0);
 	tab = tab0;
+	*tab_addr = tab0;
 	while (tab && *tab)
 	{
 		if (((tab == tab0) || which_op(*(tab - 1)) != HDOC) && \
 		!manage_wildcards(ms, tab, type, &lst_wc))
-			return (0);
+			return (*tab_addr = tab0, 0);
 		tab++;
 	}
-	if (!ceia2(tab0, &lst_wc, tab_addr))
-		return (panic(ms, 52), 0);
-	return (1);
+	return (ceia2(ms, tab0, &lst_wc, tab_addr));
 }
 
-static int	ceia2(char **t0, t_list **lst, char ***t_adr)
+static int	ceia2(t_ms *ms, char **t0, t_list **lst, char ***t_adr)
 {
 	char	**t;
 
@@ -52,9 +51,8 @@ static int	ceia2(char **t0, t_list **lst, char ***t_adr)
 		freesplit(t0);
 		t0 = lst_to_tab(*lst);
 		if (!t0)
-			return (ft_lstclear(lst, free), 0);
+			return (ft_lstclear(lst, free), *t_adr = t0, panic(ms, 52), 0);
 		ft_lstclear(lst, nothing);
-		*t_adr = t0;
 	}
 	else
 	{
@@ -65,7 +63,7 @@ static int	ceia2(char **t0, t_list **lst, char ***t_adr)
 			remove_backslashes(*t, *t);
 			t++;
 		}
-		*t_adr = t0;
 	}
+	*t_adr = t0;
 	return (1);
 }

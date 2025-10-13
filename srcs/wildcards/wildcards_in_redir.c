@@ -6,7 +6,7 @@
 /*   By: tchevall <tchevall@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/09 18:11:57 by tchevall          #+#    #+#             */
-/*   Updated: 2025/10/10 12:27:27 by tchevall         ###   ########.fr       */
+/*   Updated: 2025/10/10 19:03:13 by tchevall         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static char	*mf_in_redir(char **wild_sequ, int fst_n_lst, int *chk, int is_dir)
 	ret = NULL;
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
-		return (freesplit(wild_sequ), *chk = 0, NULL);
+		return (freesplit(wild_sequ), NULL);
 	dir = opendir(pwd);
 	free(pwd);
 	dirent = readdir(dir);
